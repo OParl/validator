@@ -1,5 +1,5 @@
-Validator
-=========
+OParl Validator
+===============
 
 Dieses Repository dient der Entwicklung eines API-Clients zur Überprüfung einer OParl-API.
 
