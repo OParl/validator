@@ -1,0 +1,16 @@
+*.pyc
+*.swp
+/bin/
+/src/
+/downloads/*
+/develop-eggs/
+/eggs/*
+/logs/*
+/parts/
+.installed.cfg
+*.egg-info
+*.orig
+*.mo
+!.keep
+/oparlgui/production.py
+supervisord.pid
