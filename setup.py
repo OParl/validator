@@ -11,7 +11,7 @@ setup(
     install_requires=[
         'setuptools',
         'requests==2.2.1',
-        'schematics==0.9-4',
+        'jsonschema==2.3.0',
     ],
     zip_safe=False,
     entry_points={
