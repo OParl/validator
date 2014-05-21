@@ -15,7 +15,7 @@ def main():
     parser.add_argument('-l', '--max-depth', metavar='depth', type=int,
         dest='depth', default=None, help='set max recursion depth')
     parser.add_argument('-n', '--max-documents', metavar='number', type=int,
-        dest='number', default=None,
+        dest='num_docs', default=None,
         help='set max number of documents to test per document type')
     parser.add_argument('-c', '--compact', action='store_true',
         dest='compact', help='gives a compact error report')
