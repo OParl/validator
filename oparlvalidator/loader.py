@@ -19,4 +19,5 @@ class Loader(object):
                 content = self._load(url)
                 doc = validator.OParlDocument(content)
                 doc.validate()
+                self.to_visit.update(doc.links)
         return True
