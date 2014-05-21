@@ -3,7 +3,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 import argparse
-from oparlvalidator import version
+from oparlvalidator import version, loader
 
 def main():
     parser = argparse.ArgumentParser(description='''
@@ -25,3 +25,4 @@ def main():
     parser.add_argument('-V', '--version', action='version',
         version='%(prog)s ' + version.__version__)
     args = parser.parse_args()
+    loader.Loader(args.url, args.depth).validate(args.num_docs)
