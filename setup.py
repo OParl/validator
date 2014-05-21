@@ -15,6 +15,6 @@ setup(
     ],
     zip_safe=False,
     entry_points={
-        'console_scripts': []
+        'console_scripts': ['validator = oparlvalidator.bin.validator:main']
     }
 )
