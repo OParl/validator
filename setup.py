@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 from setuptools import setup
+
+# get version
+with open('oparlvalidator/version.py') as version_file:
+    exec(version_file.read())
+
 setup(
     name='oparlvalidator',
-    version='0.0.1',
+    version=__version__,
     author='OParl Consortium',
     include_package_data=True,
     extras_require=dict(
