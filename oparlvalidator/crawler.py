@@ -1,9 +1,11 @@
 # -*- encoding: utf-8 -*-
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-from oparlvalidator import validator
+from .validator import OParl
 
-class Loader(object):
+
+class Crawler(object):
+
     def __init__(self, url, depth=None):
         self.visited = set()
         self.to_visit = set([url])
@@ -17,7 +19,7 @@ class Loader(object):
             if url not in self.visited:
                 self.visited.add(url)
                 content = self._load(url)
-                doc = validator.OParlDocument(content)
+                doc = OParl(content)
                 doc.validate()
                 self.to_visit.update(doc.links)
         return True
