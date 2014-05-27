@@ -14,7 +14,6 @@ setup(
         test=[],
     ),
     install_requires=[
-        'setuptools',
         'requests==2.2.1',
         'jsonschema==2.3.0',
     ],
