@@ -4,6 +4,8 @@ OParl Validator
 Dieses Repository dient der Entwicklung eines API-Clients zur Überprüfung einer OParl-API.
 
 Dabei sollen die [Schema-Definitionen](https://github.com/OParl/schema) berücksichtigt werden.
+=======
+# OParl Validator
 
 ## Running
 
@@ -11,10 +13,6 @@ Dabei sollen die [Schema-Definitionen](https://github.com/OParl/schema) berücks
 python2.7 -S bootstrap.py
 bin/buildout
 ```
-
-## Todo
-
-- Implement things
 
 ## Bear in Mind
 
@@ -26,7 +24,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 ```
 
-## Anforderungsliste:
+## Anforderungsliste
 
 
 ### Servereigenschaften
@@ -83,6 +81,7 @@ callback, startdate, enddate
 
 
 ### Dokumenteigenschaften
+
 5.2.3 Name und NameLong dürfen nicht identisch sein
 
 1. Backlinks sollten, sofern semantisch zwingened, zu dem richtigen Objekt

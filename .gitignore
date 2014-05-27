@@ -1,2 +1,16 @@
-venv
+/venv
 *.pyc
+*.pyc
+*.swp
+/bin/
+/src/
+/downloads/*
+/develop-eggs/
+/eggs/*
+/logs/*
+/parts/
+.installed.cfg
+*.egg-info
+*.orig
+*.mo
+!.keep

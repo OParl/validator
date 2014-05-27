@@ -20,6 +20,8 @@ setup(
     ],
     zip_safe=False,
     entry_points={
-        'console_scripts': ['oparlval = oparlvalidator.bin.oparlval:main']
+        'console_scripts': [
+            'oparlval = oparlvalidator.cli:main'
+        ]
     }
 )

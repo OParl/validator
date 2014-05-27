@@ -2,13 +2,16 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
+from jsonschema.validators import Draft4Validator
+from .schema import OPARL
 
-class OParlDocument(object):
+
+class OParl(object):
 
     def __init__(self, string):
         self.string = string
         self.data = json.loads(string)
-        self.links = list()
 
     def validate(self):
-        raise Exception('Ponies!')
+        Draft4Validator(OPARL).validate(self.data)
+        return True  # Maybe

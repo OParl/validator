@@ -1,10 +1,12 @@
-from __future__ import (unicode_literals, absolute_import,
-                        division, print_function)
-
+# -*- encoding: utf-8 -*-
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 import unittest
-from oparlvalidator import version
+from .. import version
+
 
 class TestVersion(unittest.TestCase):
+
     def test_version_exists(self):
         self.assertTrue('__version__' in version.__dict__)
 
