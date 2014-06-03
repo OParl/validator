@@ -42,8 +42,62 @@ OPARL = {
         },
     },
     'definitions': {
-        'system': {},  # TODO: Move newObjects, updatedObjects,
-                       # and removedObjects
+        'system': {
+            'type': 'object',
+            'properties': {
+                '@type': {
+                    'type': 'string'
+                },
+                '@id': {
+                    'type': 'string'
+                },
+                'oparlVersion': {
+                    'type': 'string'
+                },
+                'name': {
+                    'type': 'string'
+                },
+                'website': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'contactEmail': {
+                    'type': 'string'
+                },
+                'contactName': {
+                    'type': 'string'
+                },
+                'vendor': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'product': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'bodies': {
+                    'type': 'string'
+                },
+                'newObjects': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'updatedObjects': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'removedObjects': {
+                    'type': 'string',
+                    'format': 'uri'
+                }
+            },
+            'required': [
+                '@type',
+                '@id',
+                'oparlVersion',
+                'bodies'
+            ],
+        },
         'body': {},
         'organization': {},
         'person': {},
