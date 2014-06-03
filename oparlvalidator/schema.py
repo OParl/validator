@@ -98,7 +98,99 @@ OPARL = {
                 'bodies'
             ],
         },
-        'body': {},
+        'body': {
+            'type': 'object',
+            'properties': {
+                '@type': {
+                    'type': 'string'
+                },
+                '@id': {
+                    'type': 'string'
+                },
+                'system': {
+                    '$ref': '#/definitions/system'
+                },
+                'name': {
+                    'type': 'string'
+                },
+                'nameLong': {
+                    'type': 'string'
+                },
+                'website': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'license': {
+                    'type': 'string',
+                    'format': 'uri'
+                },
+                'licenseValidSinceDay': {
+                    'type': 'date-time'
+                },
+                'rga': {
+                    'type': 'string'
+                },
+                'equivalentBody': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'format': 'uri'
+                    }
+                },
+                'contactEmail': {
+                    'type': 'string'
+                },
+                'contactName': {
+                    'type': 'string'
+                },
+                'paper': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/paper'
+                    }
+                },
+                'member': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/person'
+                    }
+                },
+                'meeting': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/meeting'
+                    }
+                },
+                'organization': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/organization'
+                    }  
+                },
+                'keyword': {
+                    'type': 'string' # skos:Concept
+                },
+                'allConcepts': {
+                    'type': 'string' # skos:Concept
+                },
+                'created': {
+                    'type': 'date-time'
+                },
+                'lastModified': {
+                    'type': 'date-time'
+                }
+            },
+            'required': [
+                '@type',
+                '@id',
+                'system',
+                'name',
+                'paper',
+                'member',
+                'meeting',
+                'organization'
+            ],
+        },
         'organization': {},
         'person': {},
         'meeting': {
