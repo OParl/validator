@@ -249,7 +249,86 @@ OPARL = {
                 'member'
             ]
         },
-        'person': {},
+        'person': {
+            'type': 'object',
+            'properties': {
+                # @context?
+                '@type': {
+                    'type': 'string'    # ^oparl:Person$
+                },
+                '@id': {
+                    'type': 'string'    # IRI?
+                },
+                'name': {
+                    'type': 'string'
+                },
+                'familyName': {
+                    'type': 'string'
+                },
+                'formOfAddress': {
+                    'type': 'string'    # skos:Concept
+                },
+                'title': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string'    # skos:Concept
+                    }
+                },
+                'gender': {
+                    'type': 'string'    # "Kardinalität 0 bis *" ??
+                },
+                'phone': {
+                    'type': 'string'    # ^tel:\+?\d+$
+                },
+                'email': {
+                    'type': 'string'    # ^mailto:$ + email-address
+                },
+                'streetAddress': {
+                    'type': 'string'
+                },
+                'postalCode': {
+                    'type': 'string'
+                },
+                'locality': {
+                    'type': 'string'    # vcard:locality
+                },
+                'organization': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/organization'
+                    }
+                },
+                'status': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string'    # skos:Concept
+                    }
+                },
+                'hasMembership': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/membership'
+                    }
+                },
+                'keyword': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string'    # skos:Concept
+                    }
+                },
+                'created': {
+                    'type': 'date-time'
+                },
+                'lastModified': {
+                    'type': 'date-time'
+                }
+            },
+            'required': [
+                '@type',
+                '@id',
+                'name'
+            ]
+        },
         'meeting': {
             'type': 'object',
             'properties': {
