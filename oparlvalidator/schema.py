@@ -191,7 +191,64 @@ OPARL = {
                 'organization'
             ],
         },
-        'organization': {},
+        'organization': {
+            'type': 'object',
+            'properties': {
+                # @context?
+                '@type': {
+                    'type': 'string'
+                },
+                '@id': {
+                    'type': 'string'
+                },
+                'body': {
+                    '$ref': '#/definitions/body'
+                },
+                'nameLong': {
+                    'type': 'string'
+                },
+                'nameShort': {
+                    'type': 'string'
+                },
+                'post': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/post'
+                    }
+                },
+                'member': {
+                    'type': 'array',
+                    'items': {
+                        '$ref': '#/definitions/person'
+                    }
+                },
+                'subOrganizationOf': {
+                    '$ref': '#/definitions/organization'
+                },
+                'organiziationType': {
+                    'type': 'string'    # skos:Concept
+                },
+                'keyword': {
+                    'type': 'array',
+                    'items':{
+                        'type': 'string'
+                    }
+                },
+                'created': {
+                    'type': 'date-time'
+                },
+                'modified': {
+                    'type': 'date-time'
+                }
+            },
+            'required': [
+                '@type',
+                '@id',
+                'body',
+                'nameLong',
+                'member'
+            ]
+        },
         'person': {},
         'meeting': {
             'type': 'object',
