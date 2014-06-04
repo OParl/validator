@@ -4,6 +4,7 @@ Dieses Repository dient der Entwicklung eines validierenden OParl-Clients zur Ü
 eines OParl Servers. Es richtet sich an Server-Entwickler und -Betreiber.
 
 [![Build Status](https://travis-ci.org/OParl/validator.svg?branch=master)](https://travis-ci.org/OParl/validator)
+[![Coverage Status](https://img.shields.io/coveralls/OParl/validator.svg)](https://coveralls.io/r/OParl/validator)
 
 ## Running
 
