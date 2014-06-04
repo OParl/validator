@@ -6,7 +6,7 @@ from .validator import OParl
 
 class Crawler(object):
 
-    def __init__(self, url, depth=None):
+    def __init__(self, url, types=None, whole_system=False):
         self.visited = set()
         self.to_visit = set([url])
 

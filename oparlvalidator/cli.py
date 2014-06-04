@@ -14,8 +14,12 @@ def main():
 	''')
     parser.add_argument('url', metavar='URL',
         help='URL of the system to test; - for stdin')
-    parser.add_argument('-l', '--max-depth', metavar='depth', type=int,
-        dest='depth', default=None, help='set max recursion depth')
+    parser.add_argument('-t', '--type', metavar='type', dest='types',
+        default=None, action='append',
+        help='set the document types that should be checked '
+             '(could be used multiple times)')
+    parser.add_argument('-a', '--all', dest='whole_system',
+        action='store_true', help='test the whole system')
     parser.add_argument('-n', '--max-documents', metavar='number', type=int,
         dest='num_docs', default=None,
         help='set max number of documents to test per document type')
@@ -27,7 +31,10 @@ def main():
     parser.add_argument('-V', '--version', action='version',
         version='%(prog)s ' + version.__version__)
     args = parser.parse_args()
+    if len(args.types) == 1:
+        args.types = args.types[0].split(',')
+
     if args.url == '-':
         OParl(sys.stdin.read()).validate()
     else:
-        crawler.Crawler(args.url, args.depth).validate(args.num_docs)
+        crawler.Crawler(args.url, args.types, args.whole_system).validate(args.num_docs)
