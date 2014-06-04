@@ -3,6 +3,8 @@
 Dieses Repository dient der Entwicklung eines validierenden OParl-Clients zur Überprüfung
 eines OParl Servers. Es richtet sich an Server-Entwickler und -Betreiber.
 
+[![Build Status](https://travis-ci.org/OParl/validator.svg?branch=master)](https://travis-ci.org/OParl/validator)
+
 ## Running
 
 ```bash
