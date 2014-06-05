@@ -1,5 +1,5 @@
 {
-    "system": {
+    "oparl:System": {
         "type": "object",
         "properties": {
             "@type": {
@@ -82,7 +82,7 @@
             }
         ]
     },
-    "body": {
+    "oparl:Body": {
         "type": "object",
         "properties": {
             "@type": {
@@ -185,7 +185,7 @@
             "organization"
         ]
     },
-    "organization": {
+    "oparl:Organization": {
         "type": "object",
         "properties": {
             "@type": {
@@ -250,7 +250,7 @@
             "member"
         ]
     },
-    "person": {
+    "oparl:Person": {
         "type": "object",
         "properties": {
             "@type": {
@@ -333,7 +333,7 @@
             "name"
         ]
     },
-    "meeting": {
+    "oparl:Meeting": {
         "type": "object",
         "properties": {
             "@context": {},
@@ -428,9 +428,9 @@
             "start"
         ]
     },
-    "paper": {},
-    "document": {},
-    "consultation": {
+    "oparl:Paper": {},
+    "oparl:Document": {},
+    "oparl:Consultation": {
         "type": "object",
         "properties": {
             "id": {
@@ -459,7 +459,7 @@
             "committee"
         ]
     },
-    "location": {
+    "oparl:Location": {
         "type": "object",
         "properties": {
             "description": {
@@ -473,7 +473,7 @@
             "description"
         ]
     },
-    "membership": {
+    "oparl:Membership": {
         "type": "object",
         "properties": {
             "person": {
