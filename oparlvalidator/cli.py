@@ -31,9 +31,6 @@ def main():
     parser.add_argument('-V', '--version', action='version',
         version='%(prog)s ' + version.__version__)
     args = parser.parse_args()
-    if len(args.types) == 1:
-        args.types = args.types[0].split(',')
-
     if args.url == '-':
         OParl(sys.stdin.read()).validate()
     else:
