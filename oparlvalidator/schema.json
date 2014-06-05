@@ -366,7 +366,7 @@
                     "oparl:linksTo": "document"
                 }
             },
-            "agendaItem": {
+     "agendaItem": {
                 "type": "array",
                 "items": {
                     "type": "string",
@@ -430,5 +430,64 @@
             "person",
             "organization"
         ]
-    }
+    },
+    
+    
+    
+"paper" :  {
+
+
+            },
+        
+        
+        
+"document": {
+           
+            
+             },
+             
+"consultation": {
+            "type": "object";
+            "properties":{
+
+            "id": {
+                
+            "type": "string"}, 
+            "paper": {
+                
+                 "type ": "string", 
+                 "format" :"URI"},
+            "agendaitem" : {
+                
+                "type ": "string",
+                "format" :"URI"},
+                "committee" : {
+                    
+                    "type ": "string",
+                    "format" :"URI"},
+                "authoritative": {
+                    
+                    "type ": "boolean"}
+                    }
+"required": ["id", "paper", "agendaitem", "committee"]
+            },
+            
+"location": { 
+            "type": "object", 
+            
+            "properties":{
+                
+            "description":{
+                "type":"string"},
+            "geometry": {  
+            "type": "array"}
+ }
+ 
+ "required": ["description"]
+}
+
+        
+        
+
+
 }
