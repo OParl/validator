@@ -2,46 +2,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
-OPARL = {
-    '$schema': 'http://json-schema.org/draft-04/schema#',
-    'description': 'OParl schema',
-    'type': 'object',
-    'properties': {
-        'system': {
-            'type': {'$ref': '#/definitions/system'},
-        },
-        'body': {
-            'type': {'$ref': '#/definitions/body'},
-        },
-        'organization': {
-            'type': {'$ref': '#/definitions/organization'},
-        },
-        'person': {
-            'type': {'$ref': '#/definitions/person'},
-        },
-        'meeting': {
-            'type': {'$ref': '#/definitions/meeting'},
-        },
-        'agendaItem': {
-            'type': {'$ref': '#/definitions/agendaItem'},
-        },
-        'paper': {
-            'type': {'$ref': '#/definitions/paper'},
-        },
-        'document': {
-            'type': {'$ref': '#/definitions/document'},
-        },
-        'consultation': {
-            'type': {'$ref': '#/definitions/consultation'},
-        },
-        'location': {
-            'type': {'$ref': '#/definitions/location'},
-        },
-        'membership': {
-            'type': {'$ref': '#/definitions/membership'},
-        },
-    },
-    'definitions': {
+OPARL_SCHEMAS = {
         'system': {
             'type': 'object',
             'properties': {
@@ -96,7 +57,7 @@ OPARL = {
                 '@id',
                 'oparlVersion',
                 'bodies'
-            ],
+            ]
         },
         'body': {
             'type': 'object',
@@ -108,7 +69,9 @@ OPARL = {
                     'type': 'string'
                 },
                 'system': {
-                    '$ref': '#/definitions/system'
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'system'
                 },
                 'name': {
                     'type': 'string'
@@ -146,25 +109,33 @@ OPARL = {
                 'paper': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/paper'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'paper'
                     }
                 },
                 'member': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/person'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'person'
                     }
                 },
                 'meeting': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/meeting'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'meeting'
                     }
                 },
                 'organization': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/organization'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'organization'
                     }  
                 },
                 'keyword': {
@@ -189,7 +160,7 @@ OPARL = {
                 'member',
                 'meeting',
                 'organization'
-            ],
+            ]
         },
         'organization': {
             'type': 'object',
@@ -202,7 +173,9 @@ OPARL = {
                     'type': 'string'
                 },
                 'body': {
-                    '$ref': '#/definitions/body'
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'body'
                 },
                 'nameLong': {
                     'type': 'string'
@@ -213,17 +186,23 @@ OPARL = {
                 'post': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/post'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'post'
                     }
                 },
                 'member': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/person'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'person'
                     }
                 },
                 'subOrganizationOf': {
-                    '$ref': '#/definitions/organization'
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'organization'
                 },
                 'organiziationType': {
                     'type': 'string'    # skos:Concept
@@ -295,7 +274,9 @@ OPARL = {
                 'organization': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/organization'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'organization'
                     }
                 },
                 'status': {
@@ -307,7 +288,9 @@ OPARL = {
                 'hasMembership': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/membership'
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'membership'
                     }
                 },
                 'keyword': {
@@ -349,36 +332,52 @@ OPARL = {
                     'type': 'date-time',
                 },
                 'location': {
-                    '$ref': '#/definitions/location',
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'location',
                 },
                 'organization': {
-                    '$ref': '#/definitions/location',
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'location',
                 },
                 'participant': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/person',
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'person',
                     },
                 },
                 'invitation': {
-                    '$ref': '#/definitions/document',
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'document',
                 },
                 'resultsProtocol': {
-                    '$ref': '#/definitions/document',
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'document',
                 },
                 'verbatimProtocol': {
-                    '$ref': '#/definitions/document',
+                    'type':'string',
+                    'format':'uri',
+                    'oparl:linksTo':'document',
                 },
                 'auxiliaryDocument': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/document',
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'document',
                     },
                 },
                 'agendaItem': {
                     'type': 'array',
                     'items': {
-                        '$ref': '#/definitions/agendaItem',
+                        'type':'string',
+                        'format':'uri',
+                        'oparl:linksTo':'agendaItem',
                     },
                 },
                 'created': {
@@ -396,7 +395,7 @@ OPARL = {
                 'organization',
                 'participant',
                 'start',
-            ],
+            ]
         },
         'agendaItem': {},
         'paper': {},
@@ -439,5 +438,4 @@ OPARL = {
             ]
         }
     }
-}
 
