@@ -15,3 +15,21 @@ class TestSchema(unittest.TestCase):
 
     def test_sample_object_validates(self):
         self.assertTrue(OParl(self.sample_object).validate())
+
+    def test_spec_version():
+        """
+        oparl:System.oparlVersion must equal http://oparl.org/specs/1.0/
+        """
+        pass    # TODO: [RB|Jun 5, 2014|todo] implement
+
+    def test_must_have_mailto_prefix():
+        """
+        email address must be prefixed with "mailto:"
+        """
+        pass    # TODO: [RB|Jun 5, 2014|todo] implement
+
+    def test_is_valid_email():
+        """
+        check for valid email address
+        """
+        pass
