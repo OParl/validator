@@ -132,7 +132,7 @@
                     "type": "string",
                     "format": "uri",
                     "oparl:linksTo": "organization"
-                }  
+                }
             },
             "keyword": {
                 "type": "string"
@@ -204,7 +204,7 @@
             },
             "keyword": {
                 "type": "array",
-                "items":{
+                "items": {
                     "type": "string"
                 }
             },
@@ -320,15 +320,23 @@
                 "type": "string"
             },
             "start": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "end": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "location": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "location"
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "geometry": {
+                        "type": "array"
+                    }
+                }
             },
             "organization": {
                 "type": "string",
@@ -366,7 +374,7 @@
                     "oparl:linksTo": "document"
                 }
             },
-     "agendaItem": {
+            "agendaItem": {
                 "type": "array",
                 "items": {
                     "type": "string",
@@ -375,10 +383,12 @@
                 }
             },
             "created": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "modified": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             }
         },
         "required": [
@@ -391,11 +401,51 @@
             "start"
         ]
     },
-    "agendaItem": {},
     "paper": {},
     "document": {},
-    "consultation": {},
-    "location": {},
+    "consultation": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "paper": {
+                "type ": "string",
+                "format": "URI"
+            },
+            "agendaitem": {
+                "type ": "string",
+                "format": "URI"
+            },
+            "committee": {
+                "type ": "string",
+                "format": "URI"
+            },
+            "authoritative": {
+                "type ": "boolean"
+            }
+        },
+        "required": [
+            "id",
+            "paper",
+            "agendaitem",
+            "committee"
+        ]
+    },
+    "location": {
+        "type": "object",
+        "properties": {
+            "description": {
+                "type": "string"
+            },
+            "geometry": {
+                "type": "array"
+            }
+        },
+        "required": [
+            "description"
+        ]
+    },
     "membership": {
         "type": "object",
         "properties": {
@@ -430,64 +480,5 @@
             "person",
             "organization"
         ]
-    },
-    
-    
-    
-"paper" :  {
-
-
-            },
-        
-        
-        
-"document": {
-           
-            
-             },
-             
-"consultation": {
-            "type": "object";
-            "properties":{
-
-            "id": {
-                
-            "type": "string"}, 
-            "paper": {
-                
-                 "type ": "string", 
-                 "format" :"URI"},
-            "agendaitem" : {
-                
-                "type ": "string",
-                "format" :"URI"},
-                "committee" : {
-                    
-                    "type ": "string",
-                    "format" :"URI"},
-                "authoritative": {
-                    
-                    "type ": "boolean"}
-                    }
-"required": ["id", "paper", "agendaitem", "committee"]
-            },
-            
-"location": { 
-            "type": "object", 
-            
-            "properties":{
-                
-            "description":{
-                "type":"string"},
-            "geometry": {  
-            "type": "array"}
- }
- 
- "required": ["description"]
-}
-
-        
-        
-
-
+    }
 }
