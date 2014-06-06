@@ -32,6 +32,26 @@ def main():
         version='%(prog)s ' + version.__version__)
     args = parser.parse_args()
     if args.url == '-':
-        OParl(sys.stdin.read()).validate()
+        try:
+            OParl(sys.stdin.read()).validate()
+            print("valid!")
+
+        # TODO: define proper Exceptions for the Validator
+        except ValueError as e:
+            print('JSON error: ' + str(e))
+
+        except KeyError as e:
+            print('@type is missing or not correct')
+
+        except Exception as e:  # exception from jsonschema validator
+            path = ""
+
+            if(len(e.path) > 0):
+                path = '.'.join(e.path)
+                path = '"{}": '.format(path)
+               
+            error_msg = path + e.message
+            print(error_msg)
+
     else:
         crawler.Crawler(args.url, args.types, args.whole_system).validate(args.num_docs)
