@@ -418,57 +418,66 @@
                 "type": "string"
             },
             "auxiliaryDocument": {
-                "format": "Uri",
+                "oparl:linksTo": "oparl:Document",
+                "format": "uri",
                 "type": "string"
             },
             "body": {
-                "format": "URI",
+                "format": "uri",
                 "type": "string"
             },
             "consultation": {
-                "format": "Uri",
-                "type": "string"
-            },
-            "context": {},
-            "location": [
-                {
-                    "description": {
-                        "type": "string"
-                    },
-                    "geometry": {
-                        "type": "array"
-                    }
+                "type": "array",
+                "items": {
+                    "oparl:linksTo": "oparl:Consultation"
                 }
-            ],
+            },
+            "location": {
+                "type": "array",
+                "items": {
+                    "oparl:linksTo": "oparl:Location"
+                }
+            },
             "mainDocument": {
-                "format": "Uri",
-                "type": "string"
+                "format": "uri",
+                "type": "string",
+                "oparl:linksTo": "oparl:Document"
             },
             "modified": {
                 "type": "string",
-                "format": "date-time"
+                "pattern": "^\\d+$"
             },
             "name": {
                 "type": "string"
             },
             "originator": {
-                "format": "Uri",
-                "type": "string"
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        {"oparl:linksTo": "oparl:Person"},
+                        {"oparl:linksTo": "oparl:Organization"}
+                    ]
+                }
             },
             "paperType": {
                 "format": "uri",
                 "type": "string"
             },
             "publishedDate": {
-                "type": "string"
+                "type": "string",
+                "oneOf": [
+                    {"format": "date-time"},
+                    {"pattern": "^\\d{4}-((0[1-9])|(1[0-2]))-((0[1-9])|([1-2][0-9])|(3(0|1)))$"}
+                ]
             },
             "reference": {
                 "format": "uri",
                 "type": "string"
             },
             "relatedPaper": {
-                "format": "Uri",
-                "type": "string"
+                "format": "uri",
+                "type": "string",
+                "oparl:linksTo": "oparl:Paper"
             }
         },
         "required": [
