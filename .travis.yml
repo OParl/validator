@@ -10,3 +10,5 @@ notifications:
   email:
     - oparl-validator@lists.spline.inf.fu-berlin.de
   irc: "chat.freenode.net#oparl"
+after_success:
+  - coveralls
