@@ -30,20 +30,4 @@ class TestSchema(unittest.TestCase):
         for structure in self.sample_structures:
             self.assertTrue(OParl(structure).validate())
 
-    def test_spec_version(self):
-        """
-        oparl:System.oparlVersion must equal http://oparl.org/specs/1.0/
-        """
-        pass    # TODO: [RB|Jun 5, 2014|todo] implement
 
-    def test_must_have_mailto_prefix(self):
-        """
-        email address must be prefixed with "mailto:"
-        """
-        pass    # TODO: [RB|Jun 5, 2014|todo] implement
-
-    def test_is_valid_email(self):
-        """
-        check for valid email address
-        """
-        pass    # TODO: [RB|Jun 5, 2014|todo] implement
