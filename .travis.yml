@@ -5,7 +5,7 @@ python:
 install:
   - python bootstrap.py
   - bin/buildout
-script: bin/test
+script: bin/coverage run bin/test
 notifications:
   email:
     - oparl-validator@lists.spline.inf.fu-berlin.de

@@ -10,6 +10,7 @@
 /logs/*
 /parts/
 .installed.cfg
+.coverage
 *.egg-info
 *.orig
 *.mo
