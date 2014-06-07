@@ -17,7 +17,8 @@
                 "type": "string"
             },
             "created": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "equivalentBody": {
                 "items": {
@@ -30,14 +31,16 @@
                 "type": "string"
             },
             "lastModified": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "license": {
                 "format": "uri",
                 "type": "string"
             },
             "licenseValidSinceDay": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "meeting": {
                 "items": {
@@ -142,7 +145,8 @@
                 "type": "string"
             },
             "date": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "documentRole": {
                 "type": "string"
@@ -166,7 +170,8 @@
                 "type": "string"
             },
             "modified": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "name": {
                 "type": "string"
@@ -354,7 +359,8 @@
                 "type": "string"
             },
             "created": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "keyword": {
                 "items": {
@@ -371,7 +377,8 @@
                 "type": "array"
             },
             "modified": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "nameLong": {
                 "type": "string"
@@ -438,7 +445,8 @@
                 "type": "string"
             },
             "modified": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "name": {
                 "type": "string"
@@ -479,7 +487,8 @@
                 "type": "string"
             },
             "created": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "email": {
                 "format": "email",
@@ -509,7 +518,8 @@
                 "type": "array"
             },
             "lastModified": {
-                "type": "date-time"
+                "type": "string",
+                "format": "date-time"
             },
             "locality": {
                 "type": "string"
