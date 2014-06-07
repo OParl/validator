@@ -5,6 +5,7 @@ python:
 install:
   - python bootstrap.py
   - bin/buildout
+  - pip install coveralls
 script: bin/coverage run bin/test
 notifications:
   email:
