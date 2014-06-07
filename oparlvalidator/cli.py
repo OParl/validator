@@ -40,9 +40,6 @@ def main():
         except ValueError as e:
             print('JSON error: ' + str(e))
 
-        except KeyError as e:
-            print('@type is missing or not correct')
-
         except Exception as e:  # exception from jsonschema validator
             path = ""
 
