@@ -13,10 +13,6 @@ class OParl(object):
         self.data = json.loads(string)
 
     def validate(self):
-        try:
-            obj_type = self.data['@type']
-            Draft4Validator(OPARL[obj_type]).validate(self.data)
-            return True
-
-        except Exception as e:
-            raise e
+        obj_type = self.data['@type']
+        Draft4Validator(OPARL[obj_type]).validate(self.data)
+        return True
