@@ -19,7 +19,8 @@
                 "format": "uri"
             },
             "contactEmail": {
-                "type": "string"
+                "type": "string",
+                "format": "email"
             },
             "contactName": {
                 "type": "string"
@@ -33,7 +34,7 @@
                 "format": "uri"
             },
             "bodies": {
-                "type": "string",
+                "type": ["string", "array"],
                 "oparl:linksTo": "oparl:Body"
             },
             "newObjects": {
@@ -74,11 +75,6 @@
                 "section": "5.3.1",
                 "message": "oparl:System.contactEmail must have \"mailto:\" prefix",
                 "test": "oparl.validator.schema:test_must_have_mailto_prefix"
-            },
-            {
-                "section": "5.3.1",
-                "message": "oparl:System.contactEmail must contain a valid email address",
-                "test": "oparl.validator.schema:test_is_valid_email"
             }
         ]
     },
@@ -281,7 +277,8 @@
                 "type": "string"
             },
             "email": {
-                "type": "string"
+                "type": "string",
+                "format": "email"
             },
             "streetAddress": {
                 "type": "string"
@@ -433,13 +430,12 @@
         "type": "object",
         "properties": {
         "context": {},
-            
-            "id": {
+            "@id": {
                 "type": "string"
                     },
             "body": {
                 "type": "string", 
-                "format": "URI"}    
+                "format": "URI"},
             "name": {
                 "type": "string"
                     },
@@ -491,16 +487,16 @@
                     },
             "modified": 
             {
-                "type":"date-time",
+                "type":"date-time"
                     }
-                        }
+                        },
             "required": [
                 "body",
                 "name",
-                "mainDocument",
+                "mainDocument"
                 
                 ]                    
-                        }
+                        },
 
     
     "oparl:Document": {
@@ -508,8 +504,8 @@
         
         "properties":{
             
-            "id": {
-                "type ": "string",
+            "@id": {
+                "type": "string",
                 "format": "URI"},
                 
             "name": {
@@ -520,12 +516,12 @@
                      },
             "paper":
                     {
-                "type ": "string",
+                "type": "string",
                 "format": "URI"},
                 
             "mimeType": {
-                "type ": "string"
-                    }
+                "type": "string"
+                    },
             "date": {
                 "type": "date-time"
                     },
@@ -534,7 +530,7 @@
                 "type": "date-time"
                     },
             "sha1Checksum": {
-                "type ": "string",
+                "type": "string"
                  },
             "size": {
                 "type": "integer"
@@ -542,28 +538,28 @@
                 
             "accessUrl":{
                 
-                "type ": "string",
+                "type": "string",
                 "format": "URI"},
             
             "downloadUrl": {
-                "type ": "string",
+                "type": "string",
                 "format": "URI"},
                 
              "text": {
-                "type ": "string"
+                "type": "string"
                 },
             "masterDocument":{
-                "type ": "string",
+                "type": "string",
                 "format": "URI"
                 },
             "license": {
-                "type ": "string",
+                "type": "string",
                 "format": "URI"},
             "documentRole":{
                 "type": "string"
-                 },
+                 }
 
-             }
+             },
              "required":[
                  "fileName",
                  "mimeType",
@@ -578,29 +574,29 @@
     "oparl:Consultation": {
         "type": "object",
         "properties": {
-            "id": {
+            "@id": {
                 "type": "string"
             },
             "paper": {
-                "type ": "string",
+                "type": "string",
                 "format": "URI"
             },
-            "agendaitem": {
-                "type ": "string",
+            "agendaItem": {
+                "type": "string",
                 "format": "URI"
             },
             "committee": {
-                "type ": "string",
+                "type": "string",
                 "format": "URI"
             },
             "authoritative": {
-                "type ": "boolean"
+                "type": "boolean"
             }
         },
         "required": [
-            "id",
+            "@id",
             "paper",
-            "agendaitem",
+            "agendaItem",
             "committee"
         ]
     },
