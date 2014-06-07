@@ -122,7 +122,7 @@
             "meeting": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "meeting",
+                    "oparl:linksTo": "oparl:Meeting",
                     "type": "string"
                 },
                 "type": ["array", "string"]
@@ -130,7 +130,7 @@
             "member": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "person",
+                    "oparl:linksTo": "oparl:Person",
                     "type": "string"
                 },
                 "type": ["array", "string"]
@@ -144,7 +144,7 @@
             "organization": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "organization",
+                    "oparl:linksTo": "oparl:Organization",
                     "type": "string"
                 },
                 "type": ["array", "string"]
@@ -152,7 +152,7 @@
             "paper": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "paper",
+                    "oparl:linksTo": "oparl:Paper",
                     "type": "string"
                 },
                 "type": ["array", "string"]
@@ -162,7 +162,7 @@
             },
             "system": {
                 "format": "uri",
-                "oparl:linksTo": "system",
+                "oparl:linksTo": "oparl:System",
                 "type": "string"
             },
             "website": {
@@ -304,7 +304,7 @@
             "agendaItem": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "agendaItem",
+                    "oparl:linksTo": "oparl:AgendaItem",
                     "type": "string"
                 },
                 "type": "array"
@@ -312,7 +312,7 @@
             "auxiliaryDocument": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "document",
+                    "oparl:linksTo": "oparl:Document",
                     "type": "string"
                 },
                 "type": "array"
@@ -327,7 +327,7 @@
             },
             "invitation": {
                 "format": "uri",
-                "oparl:linksTo": "document",
+                "oparl:linksTo": "oparl:Document",
                 "type": "string"
             },
             "location": {
@@ -350,20 +350,20 @@
             },
             "organization": {
                 "format": "uri",
-                "oparl:linksTo": "location",
+                "oparl:linksTo": "oparl:Location",
                 "type": "string"
             },
             "participant": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "person",
+                    "oparl:linksTo": "oparl:Person",
                     "type": "string"
                 },
                 "type": "array"
             },
             "resultsProtocol": {
                 "format": "uri",
-                "oparl:linksTo": "document",
+                "oparl:linksTo": "oparl:Document",
                 "type": "string"
             },
             "start": {
@@ -372,7 +372,7 @@
             },
             "verbatimProtocol": {
                 "format": "uri",
-                "oparl:linksTo": "document",
+                "oparl:linksTo": "oparl:Document",
                 "type": "string"
             }
         },
@@ -432,7 +432,7 @@
             },
             "body": {
                 "format": "uri",
-                "oparl:linksTo": "body",
+                "oparl:linksTo": "oparl:Body",
                 "type": "string"
             },
             "created": {
@@ -448,7 +448,7 @@
             "member": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "person",
+                    "oparl:linksTo": "oparl:Person",
                     "type": "string"
                 },
                 "type": "array"
@@ -469,14 +469,14 @@
             "post": {
                 "items": {
                     "format": "uri",
-                    "oparl:linksTo": "post",
+                    "oparl:linksTo": "oparl:Post",
                     "type": "string"
                 },
                 "type": "array"
             },
             "subOrganizationOf": {
                 "format": "uri",
-                "oparl:linksTo": "organization",
+                "oparl:linksTo": "oparl:Organization",
                 "type": "string"
             }
         },
