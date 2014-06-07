@@ -428,8 +428,153 @@
             "start"
         ]
     },
-    "oparl:Paper": {},
-    "oparl:Document": {},
+    "oparl:Paper": {
+         
+        "type": "object",
+        "properties": {
+        "context": {},
+            
+            "id": {
+                "type": "string"
+                    },
+            "body": {
+                "type": "string", 
+                "format": "URI"}    
+            "name": {
+                "type": "string"
+                    },
+                    "reference": {
+                        "type": "string", 
+                        "format": "uri"
+                    },
+            "publishedDate": {
+                "type": "string"},
+            "paperType": {
+                "type":"string",
+                "format" :"uri"
+                    },
+                    
+            "relatedPaper": {
+                "type":"string",
+                "format" :"Uri"
+                    },
+            "mainDocument":
+            {
+                "type":"string",
+                "format" :"Uri"
+                    },
+            "auxiliaryDocument":
+            {
+                "type":"string",
+                "format" :"Uri"
+                    },
+            "location": [
+                    {
+                "description": {
+                    "type":"string"
+                },
+                "geometry": {
+                    "type": "array"}
+                    }
+                    ],
+                    
+            "originator": 
+                    {
+                "type":"string",
+                "format" :"Uri"
+                    },
+
+            "consultation":
+            {
+                "type":"string",
+                "format" :"Uri"
+                    },
+            "modified": 
+            {
+                "type":"date-time",
+                    }
+                        }
+            "required": [
+                "body",
+                "name",
+                "mainDocument",
+                
+                ]                    
+                        }
+
+    
+    "oparl:Document": {
+        "type": "object", 
+        
+        "properties":{
+            
+            "id": {
+                "type ": "string",
+                "format": "URI"},
+                
+            "name": {
+                "type" : "string"},
+                
+            "fileName": {
+                "type": "string"
+                     },
+            "paper":
+                    {
+                "type ": "string",
+                "format": "URI"},
+                
+            "mimeType": {
+                "type ": "string"
+                    }
+            "date": {
+                "type": "date-time"
+                    },
+            
+            "modified": {
+                "type": "date-time"
+                    },
+            "sha1Checksum": {
+                "type ": "string",
+                 },
+            "size": {
+                "type": "integer"
+                    },
+                
+            "accessUrl":{
+                
+                "type ": "string",
+                "format": "URI"},
+            
+            "downloadUrl": {
+                "type ": "string",
+                "format": "URI"},
+                
+             "text": {
+                "type ": "string"
+                },
+            "masterDocument":{
+                "type ": "string",
+                "format": "URI"
+                },
+            "license": {
+                "type ": "string",
+                "format": "URI"},
+            "documentRole":{
+                "type": "string"
+                 },
+
+             }
+             "required":[
+                 "fileName",
+                 "mimeType",
+                 "date",
+                 "modified",
+                 "size",
+                 "text",
+                 "accessUrl"
+                 ]
+        },
+   
     "oparl:Consultation": {
         "type": "object",
         "properties": {
