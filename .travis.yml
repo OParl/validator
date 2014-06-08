@@ -10,6 +10,10 @@ script: bin/coverage run bin/test
 notifications:
   email:
     - oparl-validator@lists.spline.inf.fu-berlin.de
-  irc: "chat.freenode.net#oparl"
+  irc:
+    channels:
+      - "chat.freenode.net#oparl"
+    use_notice: true
+    skip_join: true
 after_success:
   - coveralls
