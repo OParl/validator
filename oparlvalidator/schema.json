@@ -667,13 +667,6 @@
             "updatedObjects",
             "removedObjects"
         ],
-        "oparl:test": [
-            {
-                "message": "oparl:System.contactEmail must have \"mailto:\" prefix",
-                "section": "5.3.1",
-                "test": "oparl.validator.schema:test_must_have_mailto_prefix"
-            }
-        ],
         "properties": {
             "@id": {
                 "type": "string"
@@ -690,6 +683,7 @@
             },
             "contactEmail": {
                 "format": "email",
+                "pattern": "^mailto:.+$",
                 "type": "string"
             },
             "contactName": {
