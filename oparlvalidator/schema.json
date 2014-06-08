@@ -46,14 +46,14 @@
                 "type": ["string", "array"]
             },
             "paper": {
+                "type": "string",
                 "format": "uri",
-                "oparl:linksTo": "oparl:Paper",
-                "type": "string"
+                "oparl:linksTo": "oparl:Paper"
             },
             "auxiliaryDocument": {
+                "type": "string",
                 "format": "uri",
-                "oparl:linksTo": "oparl:Document",
-                "type": "string"
+                "oparl:linksTo": "oparl:Document"
             },
             "meeting": {
                 "format": "uri",
@@ -99,8 +99,9 @@
             },
             "equivalentBody": {
                 "items": {
-                    "format": "uri",
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri"
+                  
                 },
                 "type": "array"
             },
@@ -112,8 +113,8 @@
                 "format": "date-time"
             },
             "license": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "licenseValidSinceDay": {
                 "type": "string",
@@ -166,8 +167,8 @@
                 "type": "string"
             },
             "website": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             }
         },
         "required": [
@@ -188,21 +189,21 @@
                 "type": "string"
             },
             "agendaItem": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:AgendaItem"
             },
             "authoritative": {
                 "type": "boolean"
             },
             "committee": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Organization"
             },
             "paper": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Paper"
             }
         },
@@ -217,12 +218,12 @@
     "oparl:Document": {
         "properties": {
             "@id": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "accessUrl": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "date": {
                 "type": "string",
@@ -232,19 +233,19 @@
                 "type": "string"
             },
             "downloadUrl": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "fileName": {
                 "type": "string"
             },
             "license": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "masterDocument": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Document"
             },
             "mimeType": {
@@ -258,8 +259,8 @@
                 "type": "string"
             },
             "paper": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Paper"
             },
             "sha1Checksum": {
@@ -323,12 +324,12 @@
                 "type": "array"
             },
             "created": {
-                "format": "date-time",
-                "type": "string"
+                "type": "string",
+                 "format": "date-time"
             },
             "end": {
-                "format": "date-time",
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
             },
             "invitation": {
                 "format": "uri",
@@ -347,8 +348,8 @@
                 "type": "object"
             },
             "modified": {
-                "format": "date-time",
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
             },
             "name": {
                 "type": "string"
@@ -372,8 +373,8 @@
                 "type": "string"
             },
             "start": {
-                "format": "date-time",
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
             },
             "verbatimProtocol": {
                 "format": "uri",
@@ -395,22 +396,22 @@
     "oparl:Membership": {
         "properties": {
             "endDate": {
-                "format": "date-time",
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
             },
             "onBehalfOf": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Organization"
             },
             "organization": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Organization"
             },
             "person": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Person"
             },
             "post": {
@@ -420,8 +421,8 @@
                 "type": "string"
             },
             "startDate": {
-                "format": "date-time",
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
             }
         },
         "required": [
@@ -476,8 +477,8 @@
             },
             "post": {
                 "items": {
-                    "format": "uri",
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri"
                 },
                 "type": "array"
             },
@@ -502,18 +503,20 @@
                 "type": "string"
             },
             "auxiliaryDocument": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Document"
             },
             "body": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Body"
             },
             "consultation": {
                 "type": "array",
                     "items": {
+                        "type": "string",
+                        "format": "uri",
                         "oparl:linksTo": "oparl:Consultation"
                     }
             },
@@ -524,8 +527,8 @@
                 }
             },
             "mainDocument": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Document"
             },
             "modified": {
@@ -551,9 +554,8 @@
                 }
             },
             "paperType": {
-                "format": "uri",
-                "type": "string"
-
+                "type": "string",
+                "format": "uri"
             },
             "publishedDate": {
                 "type": "string",
@@ -566,8 +568,8 @@
                 "type": "string"
             },
             "relatedPaper": {
-                "format": "uri",
                 "type": "string",
+                "format": "uri",
                 "oparl:linksTo": "oparl:Paper"
             }
         },
@@ -591,8 +593,8 @@
                 "format": "date-time"
             },
             "email": {
-                "format": "email",
                 "type": "string",
+                "format": "email",
                 "pattern": "^mailto:.+$"
             },
             "familyName": {
@@ -607,9 +609,9 @@
             },
             "hasMembership": {
                 "items": {
+                    "type": "string",
                     "format": "uri",
-                    "oparl:linksTo": "oparl:Membership",
-                    "type": "string"
+                    "oparl:linksTo": "oparl:Membership"
                 },
                 "type": "array"
             },
@@ -707,32 +709,32 @@
                 "type": "string"
             },
             "newObjects": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "oparlVersion": {
                 "type": "string",
                 "pattern": "^http://oparl\\.org/specs/1\\.0/$"
             },
             "product": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "removedObjects": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "updatedObjects": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "vendor": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "website": {
-                "format": "uri",
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             }
         },
         "required": [
