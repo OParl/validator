@@ -1,4 +1,77 @@
 {
+    "oparl:AgendaItem": {
+        "properties": {
+            "@id": {
+                "type": "string"
+            },
+            "@type": {
+                "type": "string"
+            },
+            "created": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "name": {
+                "type": "string"
+            },
+            "number": {
+                "type": "string"
+            },
+            "public": {
+                "type": "boolean"
+            },
+            "result": {
+                "type": "string"
+            },
+            "resolutionText": {
+                "type": "string"
+            },
+            "keyword": {
+                "items": {
+                    "type": "string"
+                },
+                "type": "array"
+            },
+            "modified": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "consultation": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Consultation",
+                "type": "string"
+            },
+            "paper": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Paper",
+                "type": "string"
+            },
+            "auxiliaryDocument": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Document",
+                "type": "string"
+            },
+            "meeting": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Meeting",
+                "type": "string"
+            },
+            "absentParticipant": {
+                "items": {
+                    "type": "string"
+                },
+                "type": "array"
+            }
+        },
+        "required": [
+            "@type",
+            "@id",
+            "name",
+            "meeting",
+            "consultation"
+        ],
+        "type": "object"
+    },
     "oparl:Body": {
         "properties": {
             "@id": {
