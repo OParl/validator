@@ -11,7 +11,10 @@ setup(
     author='OParl Consortium',
     include_package_data=True,
     extras_require=dict(
-        test=[],
+        test=[
+	    'pep8',
+	    'pylint'
+	],
     ),
     install_requires=[
         'requests==2.2.1',
