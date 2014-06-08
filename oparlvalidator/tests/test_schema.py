@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import json
-import re
 import unittest
 from collections import defaultdict
 from os import listdir
@@ -10,6 +8,7 @@ from os.path import join, dirname
 from ..validator import OParl
 
 DATA_DIR = join(dirname(__file__), 'testdata')
+
 
 class TestSchema(unittest.TestCase):
 
@@ -58,6 +57,7 @@ class TestSchema(unittest.TestCase):
         for structure in self.testdata['person']:
             self.assertTrue(OParl(structure).validate())
 
-    def test_system_validates(self):
-        for structure in self.testdata['system']:
-            self.assertTrue(OParl(structure).validate())
+
+def test_system_validates(self):
+    for structure in self.testdata['system']:
+        self.assertTrue(OParl(structure).validate())

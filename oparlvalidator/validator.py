@@ -11,6 +11,7 @@ class OParl(object):
     def __init__(self, string):
         self.string = string
         self.data = json.loads(string)
+        self.links = []
 
     def validate(self):
         type_check = {
