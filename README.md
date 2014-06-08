@@ -23,6 +23,9 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 ```
 
+![graph](https://chart.googleapis.com/chart?chl=digraph+G+%7B%0D%0Aconcentrate%3Dtrue%0D%0Aoverlap%3Dfalse%3B%0D%0Asplines%3Dtrue%3B%0D%0Asep%3D.18%3B%0D%0A%0D%0ADocument-%3EDocument%0D%0ADocument-%3EPaper%5Bdir%3Dboth%5D%0D%0AMeeting-%3EDocument%0D%0AMeeting-%3EPerson%0D%0AMeeting-%3EAgendaItem%5Bdir%3Dboth%5D%0D%0AMeeting-%3EOrganization%0D%0AAgendaItem-%3EDocument%0D%0AAgendaItem-%3EPaper%0D%0AAgendaItem-%3EConsultation%5Bdir%3Dboth%5D%0D%0APaper-%3EBody%5Bdir%3Dboth%5D%0D%0APaper-%3EConsultation%5Bdir%3Dboth%5D%0D%0APaper-%3ELocation%0D%0APaper-%3EPaper%0D%0ABody-%3EMeeting%0D%0ABody-%3EPerson%0D%0ABody-%3ESystem%5Bdir%3Dboth%5D%0D%0ABody-%3EOrganization%5Bdir%3Dboth%5D%0D%0APerson-%3EMembership%5Bdir%3Dboth%5D%0D%0APerson-%3EOrganization%5Bdir%3Dboth%5D%0D%0AMembership-%3EOrganization%0D%0AOrganization-%3EOrganization%0D%0AConsultation-%3EOrganization%0D%0A%0D%0A%7D%0D%0A&cht=gv%3Aneato)
+[source](https://github.com/OParl/validator/blob/master/docs/graph.dot) rendered with [erdos](http://sandbox.kidstrythisathome.com/erdos/) using neato engine, alternative: [viz.js](http://mdaines.github.io/viz.js/form.html)
+
 ## Anforderungsliste
 
 ### Servereigenschaften
