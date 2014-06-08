@@ -13,7 +13,6 @@ class OParl(object):
         self.data = json.loads(string)
 
     def validate(self):
-
         type_check = {
             'type': 'object',
             'properties': {
@@ -23,9 +22,7 @@ class OParl(object):
                 }
             }
         }
-
         Draft4Validator(type_check).validate(self.data)
-
         obj_type = self.data['@type']
         Draft4Validator(OPARL[obj_type]).validate(self.data)
         return True

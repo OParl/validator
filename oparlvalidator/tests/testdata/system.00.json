@@ -1,0 +1,15 @@
+{
+    "@type": "oparl:System",
+    "@id": "https://oparl.beispielris.de/",
+    "oparlVersion": "http://oparl.org/specs/1.0/",
+    "name": "Beispiel-System",
+    "website": "http://www.beispielris.de/",
+    "contactEmail": "mailto:info@beispielris.de",
+    "contactName": "Allgemeiner OParl Kontakt",
+    "vendor": "http://example-software.com/",
+    "product": "http://example-software.com/oparl-server/",
+    "body": "beispielris:bodies/",
+    "newObjects": "beispielris:new_objects/",
+    "updatedObjects": "beispielris:updated_objects/",
+    "removedObjects": "beispielris:removed_objects"
+}

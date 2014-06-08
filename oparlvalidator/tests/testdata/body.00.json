@@ -1,0 +1,27 @@
+{
+    "@type": "oparl:Body",
+    "@id": "https://oparl.beispielris.de/body/0",
+    "system": "https://oparl.beispielris.de/",
+    "contactEmail": "mailto:ris@beispielstadt.de",
+    "contactName": "RIS-Betreuung",
+    "rgs": "053150000000",
+    "equivalentBody": [
+        "http://d-nb.info/gnd/2015732-0",
+        "http://dbpedia.org/resource/Cologne"
+    ],
+    "name": "Stadt Köln",
+    "nameLong": {
+        "de": "Stadt Köln, kreisfreie Stadt",
+        "en": "City of Cologne"
+    },
+    "website": "http://www.beispielstadt.de/",
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "licenseValidSinceDay": "2014-01-01",
+    "organization": "https://oparl.beispielris.de/body/0/organisation/",
+    "meeting": "https://oparl.beispielris.de/body/0/meeting/",
+    "paper": "https://oparl.beispielris.de/body/0/paper/",
+    "member": "https://oparl.beispielris.de/body/0/person/",
+    "classification": "https://oparl.beispielris.de/vocab/landkreis",
+    "created": "2014-01-08T14:28:31.568+0100",
+    "modified": "2014-01-08T14:28:31.568+0100"
+}

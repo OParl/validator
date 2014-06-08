@@ -37,9 +37,13 @@
                 "format": "date-time"
             },
             "consultation": {
+                "items": {
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Consultation"
+                },
                 "format": "uri",
                 "oparl:linksTo": "oparl:Consultation",
-                "type": "string"
+                "type": ["string", "array"]
             },
             "paper": {
                 "format": "uri",
@@ -121,7 +125,7 @@
                     "oparl:linksTo": "meeting",
                     "type": "string"
                 },
-                "type": "array"
+                "type": ["array", "string"]
             },
             "member": {
                 "items": {
@@ -129,13 +133,13 @@
                     "oparl:linksTo": "person",
                     "type": "string"
                 },
-                "type": "array"
+                "type": ["array", "string"]
             },
             "name": {
                 "type": "string"
             },
             "nameLong": {
-                "type": "string"
+                "type": ["string", "object"]
             },
             "organization": {
                 "items": {
@@ -143,7 +147,7 @@
                     "oparl:linksTo": "organization",
                     "type": "string"
                 },
-                "type": "array"
+                "type": ["array", "string"]
             },
             "paper": {
                 "items": {
@@ -151,7 +155,7 @@
                     "oparl:linksTo": "paper",
                     "type": "string"
                 },
-                "type": "array"
+                "type": ["array", "string"]
             },
             "rga": {
                 "type": "string"
@@ -190,7 +194,7 @@
             "authoritative": {
                 "type": "boolean"
             },
-            "committee": {
+            "organization": {
                 "format": "URI",
                 "type": "string"
             },
@@ -203,7 +207,7 @@
             "@id",
             "paper",
             "agendaItem",
-            "committee"
+            "organization"
         ],
         "type": "object"
     },
@@ -329,7 +333,7 @@
             "location": {
                 "properties": {
                     "description": {
-                        "type": "string"
+                        "type": ["string", "object"]
                     },
                     "geometry": {
                         "type": "array"
@@ -518,7 +522,7 @@
             },
             "modified": {
                 "type": "string",
-                "pattern": "^\\d+$"
+                "format": "date-time"
             },
             "name": {
                 "type": "string"
@@ -526,7 +530,7 @@
             "originator": {
                 "type": "array",
                 "items": {
-                    "oneOf": [
+                    "oparl:oneOf": [
                         {"oparl:linksTo": "oparl:Person"},
                         {"oparl:linksTo": "oparl:Organization"}
                     ]
@@ -606,7 +610,7 @@
                 "format": "date-time"
             },
             "locality": {
-                "type": "string"
+                "type": ["string", "object"]
             },
             "name": {
                 "type": "string"
@@ -630,7 +634,7 @@
                 "items": {
                     "type": "string"
                 },
-                "type": "array"
+                "type": ["array", "string"]
             },
             "streetAddress": {
                 "type": "string"
@@ -677,7 +681,7 @@
             "@type": {
                 "type": "string"
             },
-            "bodies": {
+            "body": {
                 "oparl:linksTo": "oparl:Body",
                 "type": [
                     "string",
@@ -727,7 +731,7 @@
             "@type",
             "@id",
             "oparlVersion",
-            "bodies"
+            "body"
         ],
         "type": "object"
     }

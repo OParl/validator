@@ -1,0 +1,9 @@
+{
+    "@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/membership.jsonld",
+    "@id": "https://oparl.beispielris.de/membership/29",
+    "@type": "oparl:Membership",
+    "person": "beispielris:people/862",
+    "organization": "beispielris:organizations/5",
+    "role": "beispielris:vocab/chair",
+    "startDate": "2013-12-03T16:30:00+01:00"
+}
