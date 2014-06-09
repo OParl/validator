@@ -7,9 +7,9 @@ from os.path import dirname, join
 with open(join(dirname(__file__), 'schema.json')) as json_file:
     OPARL = json.load(json_file)
 
-# Additional validation functions here
 
-def validate_not_equal_name_shortName:
+# Additional validation functions here
+def name_not_equal_shortName(data):
     """
     Validate that two values are not equal, e. g.
     name and nameShort may not be equal (section 5.2.3).
