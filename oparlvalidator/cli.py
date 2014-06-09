@@ -45,15 +45,12 @@ def main():
             print('Valid!')
         # TODO: define proper Exceptions for the Validator
         except ValueError as e:
-            print('JSON error: ' + str(e))
+            print('JSON error: %s' % e)
         except (ValidationError, SchemaError) as e:
-            path = ''
             if(len(e.path) > 0):
-                path = '.'.join(e.path)
-                path = '"{}": '.format(path)
-
-            error_msg = path + e.message
-            print(error_msg)
+                print('"{}": {}'.format('.'.join(e.path), e.message))
+            else:
+                print(e.message)
     else:
         c = crawler.Crawler(args.url, args.types, args.whole_system)
         c.validate(args.num_docs)
