@@ -4,7 +4,7 @@ from __future__ import (unicode_literals, absolute_import,
 import argparse
 import sys
 from . import version, crawler
-from .validator import OParl
+from .validator import OParl, OParlValidationError
 from jsonschema.exceptions import ValidationError, SchemaError
 
 
@@ -46,6 +46,8 @@ def main():
         # TODO: define proper Exceptions for the Validator
         except ValueError as e:
             print('JSON error: %s' % e)
+        except OParlValidationError as e:
+            print('Validation error: %s: %s' % (e.section, e.message))
         except (ValidationError, SchemaError) as e:
             if(len(e.path) > 0):
                 print('"{}": {}'.format('.'.join(e.path), e.message))
