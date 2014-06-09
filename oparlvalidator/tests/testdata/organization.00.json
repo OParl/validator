@@ -4,7 +4,7 @@
     "@id": "beispielris:organization/34",
     "body": "0",
     "nameShort": "Finanzausschuss",
-    "nameLong": "Ausschuss für Haushalt und Finanzen",
+    "name": "Ausschuss für Haushalt und Finanzen",
     "post": [
         "beispielris:post/chairperson",
         "beispielris:post/deputyChairperson"

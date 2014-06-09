@@ -3,7 +3,9 @@
     "@id": "https://oparl.beispielris.de/document/57739",
     "name": "Anlage 1 zur Anfrage",
     "fileName": "57739.pdf",
-    "paper": "https://oparl.beispielris.de/paper/2396",
+    "paper": [
+        "https://oparl.beispielris.de/paper/2396"
+    ],
     "mimeType": "application/pdf",
     "date": "2013-01-04T07:54:13+01:00",
     "modified": "2013-01-04T07:54:13+01:00",
