@@ -2,10 +2,12 @@
     "oparl:AgendaItem": {
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "@type": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^oparl:AgendaItem$"
             },
             "created": {
                 "type": "string",
@@ -51,9 +53,14 @@
                 "oparl:linksTo": "oparl:Paper"
             },
             "auxiliaryDocument": {
-                "type": "string",
+                "type": ["string","array"],
                 "format": "uri",
-                "oparl:linksTo": "oparl:Document"
+                "oparl:linksTo": "oparl:Document",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Document"
+                }
             },
             "meeting": {
                 "format": "uri",
@@ -62,7 +69,9 @@
             },
             "absentParticipant": {
                 "items": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Person"
                 },
                 "type": "array"
             }
@@ -74,21 +83,34 @@
             "meeting",
             "consultation"
         ],
+        "oparl:recommended": [
+            "public",
+            "result",
+            "created",
+            "modified"
+        ],
         "type": "object"
     },
     "oparl:Body": {
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "@type": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^oparl:Body$"
             },
             "allConcepts": {
-                "type": "string"
+                "type": ["array", "string"],
+                "items": {
+                    "type": "string"
+                }
             },
             "contactEmail": {
-                "type": "string"
+                "type": "string",
+                "format": "email",
+                "pattern": "^mailto:.+$"
             },
             "contactName": {
                 "type": "string"
@@ -106,11 +128,10 @@
                 "type": "array"
             },
             "keyword": {
-                "type": "string"
-            },
-            "lastModified": {
-                "type": "string",
-                "format": "date-time"
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
             },
             "license": {
                 "type": "string",
@@ -136,11 +157,15 @@
                 },
                 "type": ["array", "string"]
             },
+            "modified": {
+                "type": "string",
+                "format": "date-time"
+            },
             "name": {
                 "type": "string"
             },
-            "nameLong": {
-                "type": ["string", "object"]
+            "shortName": {
+                "type": "string"
             },
             "organization": {
                 "items": {
@@ -158,7 +183,7 @@
                 },
                 "type": ["array", "string"]
             },
-            "rga": {
+            "rgs": {
                 "type": "string"
             },
             "system": {
@@ -181,12 +206,34 @@
             "meeting",
             "organization"
         ],
+        "oparl:recommended": [
+            "shortName",
+            "website",
+            "license",
+            "licenseValidSinceDay",
+            "rgs",
+            "equivalentBody",
+            "contactEmail",
+            "modified"
+        ],
+        "oparl:validate": [
+            {
+                "message": "name and shortName may not be equal",
+                "section": "5.2.3",
+                "oparlvalidator.schema.validate_not_equal_name_shortName"
+            }
+        ],
         "type": "object"
     },
     "oparl:Consultation": {
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
+            },
+            "@type": {
+                "type": "string",
+                "pattern": "^oparl:Consultation$"
             },
             "agendaItem": {
                 "type": "string",
@@ -196,19 +243,38 @@
             "authoritative": {
                 "type": "boolean"
             },
-            "committee": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Organization"
+            "keyword": {
+                "type": "string"
+            },
+            "organization": {
+                "oneOf": [
+                    {
+                        "type": "string",
+                        "format": "uri",
+                        "oparl:linksTo": "oparl:Organization"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri",
+                            "oparl:linksTo": "oparl:Organization"
+                        }
+                    }
+                ]
             },
             "paper": {
                 "type": "string",
                 "format": "uri",
                 "oparl:linksTo": "oparl:Paper"
+            },
+            "role": {
+                "type": "string"
             }
         },
         "required": [
             "@id",
+            "@type",
             "paper",
             "agendaItem",
             "organization"
@@ -221,6 +287,10 @@
                 "type": "string",
                 "format": "uri"
             },
+            "@type": {
+                "type": "string",
+                "pattern": "^oparl:Document$"
+            },
             "accessUrl": {
                 "type": "string",
                 "format": "uri"
@@ -228,6 +298,14 @@
             "date": {
                 "type": "string",
                 "format": "date-time"
+            },
+            "derivativeDocument": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Document"
+                }
             },
             "documentRole": {
                 "type": "string"
@@ -239,6 +317,12 @@
             "fileName": {
                 "type": "string"
             },
+            "keyword": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
             "license": {
                 "type": "string",
                 "format": "uri"
@@ -247,6 +331,14 @@
                 "type": "string",
                 "format": "uri",
                 "oparl:linksTo": "oparl:Document"
+            },
+            "meeting": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Meeting"
+                }
             },
             "mimeType": {
                 "type": "string"
@@ -259,9 +351,12 @@
                 "type": "string"
             },
             "paper": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Paper"
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Paper"
+                }
             },
             "sha1Checksum": {
                 "type": "string"
@@ -279,8 +374,12 @@
             "date",
             "modified",
             "size",
-            "text",
             "accessUrl"
+        ],
+        "oparl:recommended": [
+            "name",
+            "text",
+            "downloadUrl"
         ],
         "type": "object"
     },
@@ -290,22 +389,29 @@
                 "type": "string"
             },
             "geometry": {
-                "type": "array"
+                "type": "string"
+            },
+            "keyword": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
             }
         },
-        "required": [
+        "oparl:recommended": [
             "description"
         ],
         "type": "object"
     },
     "oparl:Meeting": {
         "properties": {
-            "@context": {},
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "@type": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^oparl:Meeting$"
             },
             "agendaItem": {
                 "items": {
@@ -334,6 +440,9 @@
             "invitation": {
                 "format": "uri",
                 "oparl:linksTo": "oparl:Document",
+                "type": "string"
+            },
+            "keyword": {
                 "type": "string"
             },
             "location": {
@@ -391,10 +500,27 @@
             "participant",
             "start"
         ],
+        "oparl:recommended": [
+            "end",
+            "location",
+            "invitation",
+            "resultsProtocol",
+            "verbatimProtocol",
+            "created",
+            "modified"
+        ],
         "type": "object"
     },
     "oparl:Membership": {
         "properties": {
+            "@id": {
+                "type": "string",
+                "format": "uri"
+            },
+            "@type": {
+                "type": "string",
+                "pattern": "^oparl:Membership$"
+            },
             "endDate": {
                 "type": "string",
                 "format": "date-time"
@@ -426,6 +552,8 @@
             }
         },
         "required": [
+            "@id",
+            "@type",
             "person",
             "organization"
         ],
@@ -434,10 +562,12 @@
     "oparl:Organization": {
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "@type": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^oparl:Organization$"
             },
             "body": {
                 "format": "uri",
@@ -466,10 +596,10 @@
                 "type": "string",
                 "format": "date-time"
             },
-            "nameLong": {
+            "name": {
                 "type": "string"
             },
-            "nameShort": {
+            "shortName": {
                 "type": "string"
             },
             "organiziationType": {
@@ -492,15 +622,31 @@
             "@type",
             "@id",
             "body",
-            "nameLong",
+            "name",
             "member"
+        ],
+        "oparl:recommended": [
+            "created",
+            "lastModified"
+        ],
+        "oparl:validate": [
+            {
+                "message": "name and nameShort may not be equal",
+                "section": "5.2.3",
+                "oparlvalidator.schema.validate_not_equal_name_shortName"
+            }
         ],
         "type": "object"
     },
     "oparl:Paper": {
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
+            },
+            "@type": {
+                "type": "string",
+                "pattern": "^oparl:Paper$"
             },
             "auxiliaryDocument": {
                 "type": "string",
@@ -574,19 +720,36 @@
             }
         },
         "required": [
+            "@id",
+            "@type",
             "body",
             "name",
             "mainDocument"
+        ],
+        "oparl:recommended": [
+            "publishedDate",
+            "paperType",
+            "originator"
+        ],
+        "oparl:optional": [
+            "reference",
+            "relatedPaper",
+            "auxiliaryDocument",
+            "location",
+            "consultation",
+            "keyword"
         ],
         "type": "object"
     },
     "oparl:Person": {
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "@type": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^oparl:Person$"
             },
             "created": {
                 "type": "string",
@@ -598,6 +761,9 @@
                 "pattern": "^mailto:.+$"
             },
             "familyName": {
+                "type": "string"
+            },
+            "givenName": {
                 "type": "string"
             },
             "formOfAddress": {
@@ -667,6 +833,26 @@
             "@id",
             "name"
         ],
+        "oparl:recommended": [
+            "organization",
+            "created",
+            "lastModified"
+        ],
+        "oparl:optional": [
+            "familyName",
+            "givenName",
+            "formOfAddress",
+            "title",
+            "gender",
+            "phone",
+            "email",
+            "streetAddress",
+            "postalCode",
+            "locality",
+            "status",
+            "hasMembership",
+            "keyword"
+        ],
         "type": "object"
     },
     "oparl:System": {
@@ -685,10 +871,12 @@
         ],
         "properties": {
             "@id": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
             },
             "@type": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^oparl:System$"
             },
             "body": {
                 "oparl:linksTo": "oparl:Body",

@@ -10,7 +10,7 @@ from jsonschema.exceptions import ValidationError, SchemaError
 
 def main():
     parser = argparse.ArgumentParser(description='''
-    Validates a OParl system or OParl documents. To test the
+    Validates an OParl system or OParl documents. To test the
     whole system pass the system URL without any arguments.
     ''')
     parser.add_argument(
