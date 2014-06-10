@@ -1,0 +1,19 @@
+{
+    "@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/oparl.jsonld",
+    "@id": "https://oparl.beispielris.de/agendaitem/3271",
+    "meeting": "beispielris:meeting/281",
+    "number": "10.1",
+    "name": "Satzungsänderung für Ausschreibungen",
+    "public": true,
+    "consultation": [
+        "beispielris:consultation/1034",
+        "beispielris:consultation/1235"
+    ],
+    "result": "besipielris:vocab/decided_modified",
+    "resolutionText": "Der Beschluss weicht wie folgt vom Antrag ab: ...",
+    "absentParticipant": [
+        "beispielris:person/75"
+    ],
+    "paper": "beispielris:paper/2812",
+    "modified": "2012-08-16T14:05:27+02:00"
+}
