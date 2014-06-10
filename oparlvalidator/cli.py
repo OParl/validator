@@ -41,7 +41,7 @@ def main():
     args = parser.parse_args()
     if args.url == '-':
         try:
-            OParl(sys.stdin.read()).validate()
+            OParl().validate(sys.stdin.read())
             print('Valid!')
         # TODO: define proper Exceptions for the Validator
         except ValueError as e:

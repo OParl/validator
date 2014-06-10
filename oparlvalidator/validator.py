@@ -15,9 +15,7 @@ class OParlValidationError(Exception):
 
 class OParl(object):
 
-    def __init__(self, string):
-        self.string = string
-        self.data = json.loads(string)
+    def __init__(self):
         self.links = []
 
     def _import_from_string(self, path):
@@ -28,7 +26,19 @@ class OParl(object):
         module = __import__(path_parts[0], fromlist=path_parts[1])
         return getattr(module, path_parts[1])
 
-    def validate(self):
+    def _build_object_type(self, object_type):
+        if object_type.startswith('oparl:'):
+            return object_type
+        parts = object_type.split('_')
+        return 'oparl:%s' % ''.join([part.capitalize() for part in parts])
+
+    def _get_validator(self, object_type):
+        object_type = self._build_object_type(object_type)
+        if object_type not in OPARL:
+            return None
+        return Draft4Validator(OPARL[object_type])
+
+    def _validate_type(self, data):
         type_check = {
             'type': 'object',
             'properties': {
@@ -38,15 +48,23 @@ class OParl(object):
                 }
             }
         }
-        Draft4Validator(type_check).validate(self.data)
-        obj_type = self.data['@type']
-        Draft4Validator(OPARL[obj_type]).validate(self.data)
+        Draft4Validator(type_check).validate(data)
+        return data['@type']
 
+    def _validate_schema(self, obj_type, data):
+        validator = self._get_validator(obj_type)
+        validator.validate(data)
+
+    def _validate_custom(self, obj_type, data):
         if 'oparl:validate' in OPARL[obj_type]:
             for test in OPARL[obj_type]['oparl:validate']:
                 func = self._import_from_string(test['method'])
-                if not func(self.data):
+                if not func(data):
                     raise OParlValidationError(test['section'],
                                                test['message'])
 
-        return True
+    def validate(self, string):
+        data = json.loads(string)
+        obj_type = self._validate_type(data)
+        self._validate_schema(obj_type, data)
+        self._validate_custom(obj_type, data)

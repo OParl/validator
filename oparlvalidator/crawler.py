@@ -19,7 +19,7 @@ class Crawler(object):
             if url not in self.visited:
                 self.visited.add(url)
                 content = self._load(url)
-                doc = OParl(content)
-                doc.validate()
-                self.to_visit.update(doc.links)
+                oparl = OParl()
+                oparl.validate(content)
+                self.to_visit.update(oparl.links)
         return True
