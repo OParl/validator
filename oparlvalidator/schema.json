@@ -883,7 +883,8 @@
                 "type": [
                     "string",
                     "array"
-                ]
+                ],
+                "minItems": 1
             },
             "contactEmail": {
                 "format": "email",
