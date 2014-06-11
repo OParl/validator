@@ -12,9 +12,9 @@ setup(
     include_package_data=True,
     extras_require=dict(
         test=[
-	    'pep8',
-	    'pylint'
-	],
+            'pep8',
+            'pylint'
+        ],
     ),
     install_requires=[
         'requests==2.2.1',
