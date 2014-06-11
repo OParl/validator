@@ -4,9 +4,6 @@ from __future__ import (unicode_literals, absolute_import,
 import re
 import sys
 import os
-
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-
 from oparlvalidator.schema import OPARL
 
 OUTPUT_FILE = 'graph.dot'
