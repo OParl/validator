@@ -4,3 +4,4 @@ omit =
     parts/*
     eggs/*
     */test*
+    /home/travis/virtualenv/*
