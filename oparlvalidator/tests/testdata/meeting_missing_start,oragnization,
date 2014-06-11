@@ -1,0 +1,31 @@
+{
+"@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/oparl.jsonld"
+"@type": "oparl:Meeting",
+"@id": "https://oparl.beispielris.de/meeting/281",
+"name": "4. Sitzung des Finanzausschusses",
+
+"end": "2013-01-04T12:00:00+01:00",
+"location": {
+"description": "Rathaus, Raum 136", // default-Sprache ist im Kontext als "de" angegeben
+"description": {
+"@value": "Town Hall, room 136",
+"@language": "en"
+}
+},
+"invitation": "beispielris:document/586",
+"resultsProtocol": "beispielris:document/628",
+"verbatimProtocol": "beispielris:document/691",
+"auxiliaryDocument": [
+"beispielris:document/588",
+"beispielris:document/589"
+],
+"agendaItem": [
+// Reihenfolge ist wichtig, deshalb @list im Kontext angeben
+"beispielris:agendaitem/1045",
+"beispielris:agendaitem/1046",
+"beispielris:agendaitem/1047",
+"beispielris:agendaitem/1048"
+],
+"created": "2012-01-06T12:01:00+01:00",
+"modified": "2012-01-08T14:05:27+01:00"
+}
