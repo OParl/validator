@@ -1,0 +1,15 @@
+{
+"@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/organization.jsonld",
+"@type": "oparl:Organization",
+"@id": "beispielris:organization/34",
+
+"nameShort": "Finanzausschuss",
+
+"post": [
+"beispielris:post/chairperson",
+"beispielris:post/deputyChairperson"
+],
+"organizationType": "beispielris:vocab/committee",
+"classification": "beispielris:vocab/finance",
+"modified": "2012-08-16T14:05:27+02:00"
+}
