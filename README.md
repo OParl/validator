@@ -9,8 +9,9 @@ eines OParl Servers. Es richtet sich an Server-Entwickler und -Betreiber.
 ## Running
 
 ```bash
-python2.7 -S bootstrap.py
-bin/buildout
+$ python2.7 -S bootstrap.py
+$ bin/buildout
+$ bin/oparlval --help
 ```
 
 ## Bear in Mind
