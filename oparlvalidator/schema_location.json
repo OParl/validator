@@ -1,0 +1,20 @@
+"oparl:Location": {
+        "properties": {
+            "description": {
+                "type": "string"
+            },
+            "geometry": {
+                "type": "string"
+            },
+            "keyword": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "oparl:recommended": [
+            "description"
+        ],
+        "type": "object"
+    }
