@@ -1,0 +1,134 @@
+"oparl:Body": {
+        "properties": {
+            "@id": {
+                "type": "string",
+                "format": "uri"
+            },
+            "@type": {
+                "type": "string",
+                "pattern": "^oparl:Body$"
+            },
+            "allConcepts": {
+                "type": ["array", "string"],
+                "items": {
+                    "type": "string"
+                }
+            },
+            "contactEmail": {
+                "type": "string",
+                "format": "email",
+                "pattern": "^mailto:.+$"
+            },
+            "contactName": {
+                "type": "string"
+            },
+            "created": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "equivalentBody": {
+                "items": {
+                    "type": "string",
+                    "format": "uri"
+                  
+                },
+                "type": "array"
+            },
+            "keyword": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "license": {
+                "type": "string",
+                "format": "uri"
+            },
+            "licenseValidSinceDay": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "meeting": {
+                "items": {
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Meeting",
+                    "type": "string"
+                },
+                "type": ["array", "string"]
+            },
+            "member": {
+                "items": {
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Person",
+                    "type": "string"
+                },
+                "type": ["array", "string"]
+            },
+            "modified": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "name": {
+                "type": "string"
+            },
+            "shortName": {
+                "type": "string"
+            },
+            "organization": {
+                "items": {
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Organization",
+                    "type": "string"
+                },
+                "type": ["array", "string"]
+            },
+            "paper": {
+                "items": {
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Paper",
+                    "type": "string"
+                },
+                "type": ["array", "string"]
+            },
+            "rgs": {
+                "type": "string"
+            },
+            "system": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:System",
+                "type": "string"
+            },
+            "website": {
+                "type": "string",
+                "format": "uri"
+            }
+        },
+        "required": [
+            "@type",
+            "@id",
+            "system",
+            "name",
+            "paper",
+            "member",
+            "meeting",
+            "organization"
+        ],
+        "oparl:recommended": [
+            "shortName",
+            "website",
+            "license",
+            "licenseValidSinceDay",
+            "rgs",
+            "equivalentBody",
+            "contactEmail",
+            "modified"
+        ],
+        "oparl:validate": [
+            {
+                "message": "name and shortName may not be equal",
+                "section": "5.2.3",
+                "method": "oparlvalidator.schema:name_not_equal_shortName"
+            }
+        ],
+        "type": "object"
+    }
