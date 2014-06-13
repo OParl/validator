@@ -1,0 +1,102 @@
+"oparl:Document": {
+        "properties": {
+            "@id": {
+                "type": "string",
+                "format": "uri"
+            },
+            "@type": {
+                "type": "string",
+                "pattern": "^oparl:Document$"
+            },
+            "accessUrl": {
+                "type": "string",
+                "format": "uri"
+            },
+            "date": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "derivativeDocument": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Document"
+                }
+            },
+            "documentRole": {
+                "type": "string"
+            },
+            "downloadUrl": {
+                "type": "string",
+                "format": "uri"
+            },
+            "fileName": {
+                "type": "string"
+            },
+            "keyword": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "license": {
+                "type": "string",
+                "format": "uri"
+            },
+            "masterDocument": {
+                "type": "string",
+                "format": "uri",
+                "oparl:linksTo": "oparl:Document"
+            },
+            "meeting": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Meeting"
+                }
+            },
+            "mimeType": {
+                "type": "string"
+            },
+            "modified": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "name": {
+                "type": "string"
+            },
+            "paper": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Paper"
+                }
+            },
+            "sha1Checksum": {
+                "type": "string"
+            },
+            "size": {
+                "type": "integer"
+            },
+            "text": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "fileName",
+            "mimeType",
+            "date",
+            "modified",
+            "size",
+            "accessUrl"
+        ],
+        "oparl:recommended": [
+            "name",
+            "text",
+            "downloadUrl"
+        ],
+        "type": "object"
+    }
