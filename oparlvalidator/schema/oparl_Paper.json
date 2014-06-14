@@ -1,0 +1,103 @@
+{
+    "properties": {
+        "@id": {
+            "type": "string",
+            "format": "uri"
+        },
+        "@type": {
+            "type": "string",
+            "pattern": "^oparl:Paper$"
+        },
+        "auxiliaryDocument": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Document"
+        },
+        "body": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Body"
+        },
+        "consultation": {
+            "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Consultation"
+                }
+        },
+        "location": {
+            "type": "array",
+            "items": {
+                "oparl:linksTo": "oparl:Location"
+            }
+        },
+        "mainDocument": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Document"
+        },
+        "modified": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "name": {
+            "type": "string"
+        },
+        "originator": {
+            "type": "array",
+            "items": {
+                "oparl:oneOf": [
+                    {
+                        "type": "string",
+                        "format": "uri",
+                        "oparl:linksTo": "oparl:Person"},
+                    {
+                        "type": "string",
+                        "format": "uri",
+                        "oparl:linksTo": "oparl:Organization"}
+                ]
+            }
+        },
+        "paperType": {
+            "type": "string",
+            "format": "uri"
+        },
+        "publishedDate": {
+            "type": "string",
+            "oneOf": [
+                {"format": "date-time"},
+                {"pattern": "^\\d{4}-((0[1-9])|(1[0-2]))-((0[1-9])|([1-2][0-9])|(3(0|1)))$"}
+            ]
+        },
+        "reference": {
+            "type": "string"
+        },
+        "relatedPaper": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Paper"
+        }
+    },
+    "required": [
+        "@id",
+        "@type",
+        "body",
+        "name",
+        "mainDocument"
+    ],
+    "oparl:recommended": [
+        "publishedDate",
+        "paperType",
+        "originator"
+    ],
+    "oparl:optional": [
+        "reference",
+        "relatedPaper",
+        "auxiliaryDocument",
+        "location",
+        "consultation",
+        "keyword"
+    ],
+    "type": "object"
+}

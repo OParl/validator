@@ -1,0 +1,114 @@
+{
+    "properties": {
+        "@id": {
+            "type": "string",
+            "format": "uri"
+        },
+        "@type": {
+            "type": "string",
+            "pattern": "^oparl:Person$"
+        },
+        "created": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^mailto:.+$"
+        },
+        "familyName": {
+            "type": "string"
+        },
+        "givenName": {
+            "type": "string"
+        },
+        "formOfAddress": {
+            "type": "string"
+        },
+        "gender": {
+            "type": "string",
+            "pattern": "^(vcard:Female)|(vcard:Male)|(vcard:None)|(vcard:Other)|(vcard:Unknown)$"
+        },
+        "hasMembership": {
+            "items": {
+                "type": "string",
+                "format": "uri",
+                "oparl:linksTo": "oparl:Membership"
+            },
+            "type": "array"
+        },
+        "keyword": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "lastModified": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "locality": {
+            "type": ["string", "object"]
+        },
+        "name": {
+            "type": "string"
+        },
+        "organization": {
+            "items": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Organization",
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "phone": {
+            "type": "string",
+            "pattern": "^tel:\\+?\\d+$"
+        },
+        "postalCode": {
+            "type": "string"
+        },
+        "status": {
+            "items": {
+                "type": "string"
+            },
+            "type": ["array", "string"]
+        },
+        "streetAddress": {
+            "type": "string"
+        },
+        "title": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "@type",
+        "@id",
+        "name"
+    ],
+    "oparl:recommended": [
+        "organization",
+        "created",
+        "lastModified"
+    ],
+    "oparl:optional": [
+        "familyName",
+        "givenName",
+        "formOfAddress",
+        "title",
+        "gender",
+        "phone",
+        "email",
+        "streetAddress",
+        "postalCode",
+        "locality",
+        "status",
+        "hasMembership",
+        "keyword"
+    ],
+    "type": "object"
+}
