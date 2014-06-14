@@ -21,8 +21,7 @@
     },
     "status": "beispielris:status/buergermeister",
     "hasMembership": [
-        "https://oparl.beispielris.de/membership/11",
-        "https://oparl.beispielris.de/membership/34"
+        "http://localhost:2342/membership.valid.json"
     ],
     "created": "2011-11-11T11:11:00+01:00",
     "modified": "2012-08-16T14:05:27+02:00"

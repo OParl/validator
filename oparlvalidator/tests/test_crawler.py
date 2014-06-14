@@ -1,0 +1,28 @@
+# -*- encoding: utf-8 -*-
+from __future__ import (unicode_literals, absolute_import,
+                        division, print_function)
+import threading
+import unittest
+import static
+from wsgiref.simple_server import make_server
+from os.path import join, dirname
+from ..crawler import Crawler
+
+DATA_DIR = join(dirname(__file__), 'testdata')
+
+
+class TestCrawler(unittest.TestCase):
+    # pylint: disable=protected-access
+
+    def setUp(self):
+        wsgi_app = static.Cling(DATA_DIR)
+        self.httpd = make_server('', 2342, wsgi_app)
+        httpd_thread = threading.Thread(target=self.httpd.serve_forever)
+        httpd_thread.setDaemon(True)
+        httpd_thread.start()
+
+    def test_something(self):
+        Crawler('http://localhost:2342/person.valid.json').run()
+
+    def tearDown(self):
+        self.httpd.shutdown()

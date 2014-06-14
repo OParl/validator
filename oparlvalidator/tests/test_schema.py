@@ -13,21 +13,18 @@ DATA_DIR = join(dirname(__file__), 'testdata')
 class TestSchema(unittest.TestCase):
     # pylint: disable=protected-access
 
-    def setUp(self):
-        self.oparl = OParl()
-
     def test_build_object_type(self):
-        self.assertEquals(self.oparl._build_object_type('oparl:Document'),
+        self.assertEquals(OParl._build_object_type('oparl:Document'),
                           'oparl:Document')
-        self.assertEquals(self.oparl._build_object_type('document'),
+        self.assertEquals(OParl._build_object_type('document'),
                           'oparl:Document')
-        self.assertEquals(self.oparl._build_object_type('Document'),
+        self.assertEquals(OParl._build_object_type('Document'),
                           'oparl:Document')
-        self.assertEquals(self.oparl._build_object_type('DOCUMENT'),
+        self.assertEquals(OParl._build_object_type('DOCUMENT'),
                           'oparl:Document')
-        self.assertEquals(self.oparl._build_object_type('oparl:document'),
+        self.assertEquals(OParl._build_object_type('oparl:document'),
                           'oparl:document')
-        self.assertEquals(self.oparl._build_object_type('agenda_item'),
+        self.assertEquals(OParl._build_object_type('agenda_item'),
                           'oparl:AgendaItem')
 
     def _load_test_file(self, filename):
@@ -41,7 +38,7 @@ class TestSchema(unittest.TestCase):
         data = self._load_test_file(testfile)
         self.assertIsNotNone(data, "test data '%s' not found" % testfile)
 
-        validator = self.oparl._get_validator(obj_type)
+        validator = OParl._get_validator(obj_type)
         self.assertIsNotNone(
             validator,
             'Could not get validator for object type: %s' % obj_type)

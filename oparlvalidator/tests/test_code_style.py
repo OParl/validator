@@ -22,5 +22,7 @@ class CodeStyleTest(unittest.TestCase):
         args = ['--rcfile=' + rcfile, self.top]
         reporter = TextReporter(output=sys.stdout)
         result = lint.Run(args=args, reporter=reporter, exit=False)
-        self.assertEqual(result.linter.msg_status, 0,
-                         "Pylint found code style errors.")
+        self.assertEqual(result.linter.stats['fatal'], 0,
+                         'Pylint found fatal code style errors.')
+        self.assertEqual(result.linter.stats['error'], 0,
+                         'Pylint found code style errors.')

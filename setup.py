@@ -13,7 +13,8 @@ setup(
     extras_require=dict(
         test=[
             'pep8',
-            'pylint'
+            'pylint',
+            'static',
         ],
     ),
     install_requires=[
