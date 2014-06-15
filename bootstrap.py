@@ -88,7 +88,7 @@ if not options.allow_site_packages:
         for sitepackage_path in site.getsitepackages():
             sys.path[:] = [x for x in sys.path if sitepackage_path not in x]
 
-setup_args = dict(to_dir=tmpeggs, download_delay=0)
+setup_args = dict(to_dir=tmpeggs, download_delay=0, version='5.0.1')
 ez['use_setuptools'](**setup_args)
 import setuptools
 import pkg_resources
