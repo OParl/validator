@@ -2,16 +2,16 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
+from collections import namedtuple
 from jsonschema.validators import Draft4Validator
+import jsonschema.exceptions
 from .schema import OPARL
 
 
-class OParlValidationError(Exception):
+class ValidationError(namedtuple('ValidationError', ['message', 'section'])):
 
-    def __init__(self, section, message):
-        super(OParlValidationError, self).__init__()
-        self.section = section
-        self.message = message
+    def __new__(cls, message, section=None):
+        return super(ValidationError, cls).__new__(cls, message, section)
 
 
 class OParl(object):
@@ -21,7 +21,6 @@ class OParl(object):
             raise ValueError('Specify either a JSON string or a response.')
         self.string = string
         self.response = response
-        self.data = None
 
     @staticmethod
     def _import_from_string(path):
@@ -46,7 +45,8 @@ class OParl(object):
             return None
         return Draft4Validator(OPARL[object_type])
 
-    def _validate_type(self):
+    @staticmethod
+    def _validate_type(data):
         type_check = {
             'type': 'object',
             'properties': {
@@ -57,33 +57,63 @@ class OParl(object):
             },
             'required': ['@type']
         }
-        Draft4Validator(type_check).validate(self.data)
-        return self.data['@type']
+        Draft4Validator(type_check).validate(data)
+        return data['@type']
 
-    def _validate_schema(self, obj_type, data):
-        validator = self._get_validator(obj_type)
-        validator.validate(data)
+    @classmethod
+    def _validate_schema(cls, obj_type, data):
+        validator = cls._get_validator(obj_type)
+        return validator.iter_errors(data)
 
-    def _validate_custom(self, obj_type, data):
+    @classmethod
+    def _validate_custom(cls, obj_type, data):
         if 'oparl:validate' in OPARL[obj_type]:
             for test in OPARL[obj_type]['oparl:validate']:
-                func = self._import_from_string(test['method'])
+                func = cls._import_from_string(test['method'])
                 if not func(data):
-                    raise OParlValidationError(test['section'],
-                                               test['message'])
+                    yield ValidationError(section=test['section'],
+                                          message=test['message'])
 
     def _validate_response_success(self):
-        if self.response.status_code not in range(200, 400):  # O(1) in Py 3
-            raise OParlValidationError(None, 'URL invalid')
+        return self.response.status_code in range(200, 400)  # O(1) in Py 3
 
     def validate(self):
         if self.response:
             for name in dir(self):
                 if name.startswith('_validate_response_'):
-                    getattr(self, name)()
-            self.string = self.response.text
-        self.data = json.loads(self.string)
-        obj_type = self._validate_type()
-        self._validate_schema(obj_type, self.data)
-        self._validate_custom(obj_type, self.data)
-        return True
+                    if not getattr(self, name)():
+                        yield ValidationError('URL invalid')
+                        return
+                    else:
+                        self.string = self.response.text
+
+        if not self.string:
+            yield ValidationError('No data for validation')
+            return
+
+        try:
+            data = json.loads(self.string)
+        except ValueError as excp:
+            yield ValidationError('JSON error: %s' % excp)
+            return
+
+        try:
+            obj_type = self._validate_type(data)
+
+            # simple pass all errors to the caller
+            for error in self._validate_schema(obj_type, data):
+                yield error
+            for error in self._validate_custom(obj_type, data):
+                yield error
+
+        except (jsonschema.exceptions.ValidationError,
+                jsonschema.exceptions.SchemaError) as excp:
+            # _validate_type may raise an exception, we translate it
+            # here into en apropriate ValidationError and pass it to
+            # the caller (if the type does not validate, it does not
+            # make sense to continue validation
+            if len(excp.path) > 0:
+                yield ValidationError('"{}": {}'.format(''.join(excp.path),
+                                                        excp.message))
+            else:
+                yield ValidationError(excp.message)

@@ -31,6 +31,7 @@ class Crawler(object):
         self._queue = [seed_url]
         self._valid = set()  # TODO: Persist
         self._invalid = set()
+        self._errors = defaultdict(list)
 
     def _retrieve(self, *args, **kwargs):
         kwargs.setdefault('timeout', 10)
@@ -45,7 +46,7 @@ class Crawler(object):
         while self._queue:
             url = self._queue.pop(0)
             response = self._retrieve(url)
-            is_valid = self._validate(response)
+            errors = list(self._validate(response))
             if not self.recursive:
                 break
             dictionary = response.json()
@@ -64,5 +65,8 @@ class Crawler(object):
                         self._queue.append(value)
                         for type_ in types:
                             self._counts[type_] += 1
-            {True: self._valid,
-             False: self._invalid}[is_valid].add(url)
+            if len(errors) > 0:
+                self._valid.add(url)
+            else:
+                self._invalid.add(url)
+                self._errors[url].extend(errors)
