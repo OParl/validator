@@ -1,4 +1,4 @@
-"oparl:Membership": {
+{
         "properties": {
             "@id": {
                 "type": "string",

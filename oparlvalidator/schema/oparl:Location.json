@@ -1,4 +1,4 @@
-"oparl:Location": {
+{
         "properties": {
             "description": {
                 "type": "string"

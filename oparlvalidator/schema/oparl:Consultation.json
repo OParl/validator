@@ -1,4 +1,4 @@
- "oparl:Consultation": {
+{
         "properties": {
             "@id": {
                 "type": "string",

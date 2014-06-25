@@ -1,4 +1,4 @@
- "oparl:AgendaItem": {
+{
         "properties": {
             "@id": {
                 "type": "string",

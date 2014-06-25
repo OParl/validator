@@ -1,4 +1,4 @@
-"oparl:Organization": {
+{
         "properties": {
             "@id": {
                 "type": "string",

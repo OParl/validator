@@ -1,4 +1,4 @@
-"oparl:Body": {
+{
         "properties": {
             "@id": {
                 "type": "string",
