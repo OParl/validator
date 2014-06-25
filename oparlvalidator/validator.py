@@ -66,9 +66,9 @@ class OParl(object):
         return validator.iter_errors(data)
 
     @classmethod
-    def _validate_custom(cls, obj_type, data):
-        if 'oparl:validate' in OPARL[obj_type]:
-            for test in OPARL[obj_type]['oparl:validate']:
+    def _validate_custom(cls, schema, data):
+        if 'oparl:validate' in schema:
+            for test in schema['oparl:validate']:
                 func = cls._import_from_string(test['method'])
                 if not func(data):
                     yield ValidationError(section=test['section'],
@@ -103,7 +103,7 @@ class OParl(object):
             # simple pass all errors to the caller
             for error in self._validate_schema(obj_type, data):
                 yield error
-            for error in self._validate_custom(obj_type, data):
+            for error in self._validate_custom(OPARL[obj_type], data):
                 yield error
 
         except (jsonschema.exceptions.ValidationError,
