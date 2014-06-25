@@ -4,14 +4,44 @@ from __future__ import (unicode_literals, absolute_import,
 import unittest
 import json
 import re
+import glob
 from os.path import join, dirname
+from jsonschema.validators import Draft4Validator
+import jsonschema.exceptions
+
 from ..validator import OParl
+from ..schema import SCHEMA_DIR
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
 
 class TestSchema(unittest.TestCase):
     # pylint: disable=protected-access
+
+    def _safe_load_json_file(self, filename):
+        try:
+            with open(filename) as json_file:
+                return json.load(json_file)
+        except (IOError, ValueError):
+            return None
+
+    def _load_test_file(self, filename):
+        return self._safe_load_json_file(join(DATA_DIR, filename))
+
+    def test_validate_schema(self):
+        def _validate(filename):
+            try:
+                data = self._safe_load_json_file(filename)
+                self.assertIsNotNone(data, '%s: invalid json syntax' %
+                                     filename)
+                Draft4Validator(Draft4Validator.META_SCHEMA).validate(data)
+            except (jsonschema.exceptions.ValidationError,
+                    jsonschema.exceptions.SchemaError) as excp:
+                self.assertTrue(False, '%s: oparl schema invalid: %s' %
+                                (filename, excp))
+
+        for schema_file in glob.glob(join(SCHEMA_DIR, '*.json')):
+            _validate(schema_file)
 
     def test_build_object_type(self):
         self.assertEquals(OParl._build_object_type('oparl:Document'),
@@ -26,13 +56,6 @@ class TestSchema(unittest.TestCase):
                           'oparl:document')
         self.assertEquals(OParl._build_object_type('agenda_item'),
                           'oparl:AgendaItem')
-
-    def _load_test_file(self, filename):
-        try:
-            with open(join(DATA_DIR, filename)) as json_file:
-                return json.load(json_file)
-        except (IOError, ValueError):
-            return None
 
     def _do_test_json_validation(self, obj_type, testfile):
         data = self._load_test_file(testfile)
