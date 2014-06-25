@@ -1,5 +1,5 @@
 {
-"@type": "http://oparl.org/schema/1.0/Body",
+"@type": "oparl:Body",
 "@id": "https://oparl.beispielris.de/body/0",
 
 "contactEmail": "mailto:ris@beispielstadt.de",
