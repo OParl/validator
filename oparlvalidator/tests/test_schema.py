@@ -82,5 +82,5 @@ class TestSchema(unittest.TestCase):
 
     def test_json_validation_failures(self):
         self._test_validation_fail('oparl:AgendaItem',
-                                   'agenda_item.missing_type.json',
+                                   'agenda_item.missing.type.json',
                                    'type.*is a required property')
