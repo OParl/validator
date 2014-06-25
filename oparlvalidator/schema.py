@@ -2,10 +2,16 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
-from os.path import dirname, join
+from os.path import dirname, basename, join, splitext
+import glob
 
-with open(join(dirname(__file__), 'schema.json')) as json_file:
-    OPARL = json.load(json_file)
+SCHEMA_DIR = join(dirname(__file__), 'schema')
+
+OPARL = dict()
+for schema_file in glob.glob(join(SCHEMA_DIR, '*.json')):
+    obj_type = splitext(basename(schema_file))[0]
+    with open(schema_file, 'r') as schema:
+        OPARL[obj_type] = json.load(schema)
 
 
 # Additional validation functions here
