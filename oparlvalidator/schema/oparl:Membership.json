@@ -1,48 +1,48 @@
 {
-        "properties": {
-            "@id": {
-                "type": "string",
-                "format": "uri"
-            },
-            "@type": {
-                "type": "string",
-                "pattern": "^oparl:Membership$"
-            },
-            "endDate": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "onBehalfOf": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Organization"
-            },
-            "organization": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Organization"
-            },
-            "person": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Person"
-            },
-            "post": {
-                "type": "string"
-            },
-            "role": {
-                "type": "string"
-            },
-            "startDate": {
-                "type": "string",
-                "format": "date-time"
-            }
+    "properties": {
+        "@id": {
+            "type": "string",
+            "format": "uri"
         },
-        "required": [
-            "@id",
-            "@type",
-            "person",
-            "organization"
-        ],
-        "type": "object"
-    }
+        "@type": {
+            "type": "string",
+            "pattern": "^oparl:Membership$"
+        },
+        "endDate": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "onBehalfOf": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Organization"
+        },
+        "organization": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Organization"
+        },
+        "person": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Person"
+        },
+        "post": {
+            "type": "string"
+        },
+        "role": {
+            "type": "string"
+        },
+        "startDate": {
+            "type": "string",
+            "format": "date-time"
+        }
+    },
+    "required": [
+        "@id",
+        "@type",
+        "person",
+        "organization"
+    ],
+    "type": "object"
+}

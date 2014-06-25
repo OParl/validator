@@ -1,108 +1,108 @@
 {
-        "properties": {
-            "@id": {
-                "type": "string",
-                "format": "uri"
-            },
-            "@type": {
-                "type": "string",
-                "pattern": "^oparl:Meeting$"
-            },
-            "agendaItem": {
-                "items": {
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:AgendaItem",
-                    "type": "string"
-                },
-                "type": "array"
-            },
-            "auxiliaryDocument": {
-                "items": {
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Document",
-                    "type": "string"
-                },
-                "type": "array"
-            },
-            "created": {
-                "type": "string",
-                 "format": "date-time"
-            },
-            "end": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "invitation": {
-                "format": "uri",
-                "oparl:linksTo": "oparl:Document",
-                "type": "string"
-            },
-            "keyword": {
-                "type": "string"
-            },
-            "location": {
-                "properties": {
-                    "description": {
-                        "type": ["string", "object"]
-                    },
-                    "geometry": {
-                        "type": "array"
-                    }
-                },
-                "type": "object"
-            },
-            "modified": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "name": {
-                "type": "string"
-            },
-            "organization": {
-                "format": "uri",
-                "oparl:linksTo": "oparl:Organization",
-                "type": "string"
-            },
-            "participant": {
-                "items": {
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Person",
-                    "type": "string"
-                },
-                "type": "array"
-            },
-            "resultsProtocol": {
-                "format": "uri",
-                "oparl:linksTo": "oparl:Document",
-                "type": "string"
-            },
-            "start": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "verbatimProtocol": {
-                "format": "uri",
-                "oparl:linksTo": "oparl:Document",
-                "type": "string"
-            }
+    "properties": {
+        "@id": {
+            "type": "string",
+            "format": "uri"
         },
-        "required": [
-            "@context",
-            "@id",
-            "@type",
-            "name",
-            "organization",
-            "participant",
-            "start"
-        ],
-        "oparl:recommended": [
-            "end",
-            "location",
-            "invitation",
-            "resultsProtocol",
-            "verbatimProtocol",
-            "created",
-            "modified"
-        ],
-        "type": "object"
-    }
+        "@type": {
+            "type": "string",
+            "pattern": "^oparl:Meeting$"
+        },
+        "agendaItem": {
+            "items": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:AgendaItem",
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "auxiliaryDocument": {
+            "items": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Document",
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "created": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "end": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "invitation": {
+            "format": "uri",
+            "oparl:linksTo": "oparl:Document",
+            "type": "string"
+        },
+        "keyword": {
+            "type": "string"
+        },
+        "location": {
+            "properties": {
+                "description": {
+                    "type": ["string", "object"]
+                },
+                "geometry": {
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "modified": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "name": {
+            "type": "string"
+        },
+        "organization": {
+            "format": "uri",
+            "oparl:linksTo": "oparl:Organization",
+            "type": "string"
+        },
+        "participant": {
+            "items": {
+                "format": "uri",
+                "oparl:linksTo": "oparl:Person",
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "resultsProtocol": {
+            "format": "uri",
+            "oparl:linksTo": "oparl:Document",
+            "type": "string"
+        },
+        "start": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "verbatimProtocol": {
+            "format": "uri",
+            "oparl:linksTo": "oparl:Document",
+            "type": "string"
+        }
+    },
+    "required": [
+        "@context",
+        "@id",
+        "@type",
+        "name",
+        "organization",
+        "participant",
+        "start"
+    ],
+    "oparl:recommended": [
+        "end",
+        "location",
+        "invitation",
+        "resultsProtocol",
+        "verbatimProtocol",
+        "created",
+        "modified"
+    ],
+    "type": "object"
+}

@@ -1,92 +1,92 @@
 {
-        "properties": {
-            "@id": {
-                "type": "string",
-                "format": "uri"
-            },
-            "@type": {
-                "type": "string",
-                "pattern": "^oparl:AgendaItem$"
-            },
-            "created": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "name": {
+    "properties": {
+        "@id": {
+            "type": "string",
+            "format": "uri"
+        },
+        "@type": {
+            "type": "string",
+            "pattern": "^oparl:AgendaItem$"
+        },
+        "created": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "name": {
+            "type": "string"
+        },
+        "number": {
+            "type": "string"
+        },
+        "public": {
+            "type": "boolean"
+        },
+        "result": {
+            "type": "string"
+        },
+        "resolutionText": {
+            "type": "string"
+        },
+        "keyword": {
+            "items": {
                 "type": "string"
             },
-            "number": {
-                "type": "string"
-            },
-            "public": {
-                "type": "boolean"
-            },
-            "result": {
-                "type": "string"
-            },
-            "resolutionText": {
-                "type": "string"
-            },
-            "keyword": {
-                "items": {
-                    "type": "string"
-                },
-                "type": "array"
-            },
-            "modified": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "consultation": {
-                "items": {
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Consultation"
-                },
+            "type": "array"
+        },
+        "modified": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "consultation": {
+            "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Consultation",
-                "type": ["string", "array"]
+                "oparl:linksTo": "oparl:Consultation"
             },
-            "paper": {
+            "format": "uri",
+            "oparl:linksTo": "oparl:Consultation",
+            "type": ["string", "array"]
+        },
+        "paper": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Paper"
+        },
+        "auxiliaryDocument": {
+            "type": ["string","array"],
+            "format": "uri",
+            "oparl:linksTo": "oparl:Document",
+            "items": {
                 "type": "string",
                 "format": "uri",
-                "oparl:linksTo": "oparl:Paper"
-            },
-            "auxiliaryDocument": {
-                "type": ["string","array"],
-                "format": "uri",
-                "oparl:linksTo": "oparl:Document",
-                "items": {
-                    "type": "string",
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Document"
-                }
-            },
-            "meeting": {
-                "format": "uri",
-                "oparl:linksTo": "oparl:Meeting",
-                "type": "string"
-            },
-            "absentParticipant": {
-                "items": {
-                    "type": "string",
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Person"
-                },
-                "type": "array"
+                "oparl:linksTo": "oparl:Document"
             }
         },
-        "required": [
-            "@type",
-            "@id",
-            "name",
-            "meeting",
-            "consultation"
-        ],
-        "oparl:recommended": [
-            "public",
-            "result",
-            "created",
-            "modified"
-        ],
-        "type": "object"
-    }
+        "meeting": {
+            "format": "uri",
+            "oparl:linksTo": "oparl:Meeting",
+            "type": "string"
+        },
+        "absentParticipant": {
+            "items": {
+                "type": "string",
+                "format": "uri",
+                "oparl:linksTo": "oparl:Person"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "@type",
+        "@id",
+        "name",
+        "meeting",
+        "consultation"
+    ],
+    "oparl:recommended": [
+        "public",
+        "result",
+        "created",
+        "modified"
+    ],
+    "type": "object"
+}

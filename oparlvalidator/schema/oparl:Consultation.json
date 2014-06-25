@@ -1,56 +1,56 @@
 {
-        "properties": {
-            "@id": {
-                "type": "string",
-                "format": "uri"
-            },
-            "@type": {
-                "type": "string",
-                "pattern": "^oparl:Consultation$"
-            },
-            "agendaItem": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:AgendaItem"
-            },
-            "authoritative": {
-                "type": "boolean"
-            },
-            "keyword": {
-                "type": "string"
-            },
-            "organization": {
-                "oneOf": [
-                    {
+    "properties": {
+        "@id": {
+            "type": "string",
+            "format": "uri"
+        },
+        "@type": {
+            "type": "string",
+            "pattern": "^oparl:Consultation$"
+        },
+        "agendaItem": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:AgendaItem"
+        },
+        "authoritative": {
+            "type": "boolean"
+        },
+        "keyword": {
+            "type": "string"
+        },
+        "organization": {
+            "oneOf": [
+                {
+                    "type": "string",
+                    "format": "uri",
+                    "oparl:linksTo": "oparl:Organization"
+                },
+                {
+                    "type": "array",
+                    "items": {
                         "type": "string",
                         "format": "uri",
                         "oparl:linksTo": "oparl:Organization"
-                    },
-                    {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "uri",
-                            "oparl:linksTo": "oparl:Organization"
-                        }
                     }
-                ]
-            },
-            "paper": {
-                "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Paper"
-            },
-            "role": {
-                "type": "string"
-            }
+                }
+            ]
         },
-        "required": [
-            "@id",
-            "@type",
-            "paper",
-            "agendaItem",
-            "organization"
-        ],
-        "type": "object"
-    }
+        "paper": {
+            "type": "string",
+            "format": "uri",
+            "oparl:linksTo": "oparl:Paper"
+        },
+        "role": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "@id",
+        "@type",
+        "paper",
+        "agendaItem",
+        "organization"
+    ],
+    "type": "object"
+}

@@ -20,11 +20,11 @@
         },
         "consultation": {
             "type": "array",
-                "items": {
-                    "type": "string",
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Consultation"
-                }
+            "items": {
+                "type": "string",
+                "format": "uri",
+                "oparl:linksTo": "oparl:Consultation"
+            }
         },
         "location": {
             "type": "array",
