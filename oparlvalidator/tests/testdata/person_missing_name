@@ -43,6 +43,7 @@
 "streetAddress": "Musterstraße 5",
 "postalCode": "11111",
 "locality": {
+50
 "de": "Musterort",
 "en": "Sample Town"
 },

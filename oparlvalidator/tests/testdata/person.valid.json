@@ -1,15 +1,15 @@
 {
-    "@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/person.jsonld",
+    "@context": "https://oparl.example.org/Pfad/zum/Kontext/person.jsonld",
     "@type": "oparl:Person",
-    "@id": "https://oparl.beispielris.de/person/29",
+    "@id": "https://oparl.example.org/person/29",
     "name": "Prof. Dr. Max Mustermann",
     "familyName": "Mustermann",
     "givenName": "Max",
     "title": [
-        "besipielris:vocab/prof",
-        "besipielris:vocab/dr"
+        "https://oparl.example.org/vocab/prof",
+        "https://oparl.example.org/vocab/dr"
     ],
-    "formOfAddress": "beispielris:formofaddress/ratsmitglied",
+    "formOfAddress": "https://oparl.example.org/formofaddress/ratsmitglied",
     "gender": "vcard:Male",
     "email": "mailto:max@mustermann.de",
     "phone": "tel:+493012345678",
@@ -19,9 +19,9 @@
         "de": "Musterort",
         "en": "Sample Town"
     },
-    "status": "beispielris:status/buergermeister",
+    "status": "https://oparl.example.org/status/buergermeister",
     "hasMembership": [
-        "http://localhost:2342/membership.valid.json"
+        "https://oparl.example.org/membership.valid.json"
     ],
     "created": "2011-11-11T11:11:00+01:00",
     "modified": "2012-08-16T14:05:27+02:00"

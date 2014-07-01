@@ -1,6 +1,6 @@
 {
 "@type": "oparl:System",
-"@id": "https://oparl.beispielris.de/",
+"@id": "https://oparl.example.org/",
 
 "name": "Beispiel-System",
 "website": "http://www.beispielris.de/",
@@ -9,7 +9,7 @@
 "vendor": "http://example-software.com/",
 "product": "http://example-software.com/oparl-server/",
 
-"newObjects": "beispielris:new_objects/",
-"updatedObjects": "beispielris:updated_objects/",
-"removedObjects": "beispielris:removed_objects"
+"newObjects": "https://oparl.example.org/new_objects/",
+"updatedObjects": "https://oparl.example.org/updated_objects/",
+"removedObjects": "https://oparl.example.org/removed_objects"
 }

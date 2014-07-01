@@ -1,10 +1,10 @@
 {
-    "@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/oparl.jsonld",
+    "@context": "https://oparl.example.org/Pfad/zum/Kontext/oparl.jsonld",
     "@type": "oparl:Consultation",
-    "@id": "beispielris:consultation/47594",
-    "paper": "beispielris:paper/2396",
-    "agendaItem": "beispielris:agendaitem/15569",
-    "organization": "beispielris:organization/96",
+    "@id": "https://oparl.example.org/consultation/47594",
+    "paper": "https://oparl.example.org/paper/2396",
+    "agendaItem": "https://oparl.example.org/agendaitem/15569",
+    "organization": "https://oparl.example.org/organization/96",
     "authoritative": false,
-    "role": "beispielris:role/decision"
+    "role": "https://oparl.example.org/role/decision"
 }

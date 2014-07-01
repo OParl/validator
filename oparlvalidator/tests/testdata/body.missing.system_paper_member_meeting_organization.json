@@ -1,6 +1,6 @@
 {
 "@type": "oparl:Body",
-"@id": "https://oparl.beispielris.de/body/0",
+"@id": "https://oparl.example.org/body/0",
 
 "contactEmail": "mailto:ris@beispielstadt.de",
 "contactName": "RIS-Betreuung",
@@ -19,7 +19,7 @@
 "licenseValidSinceDay": "2014-01-01",
 
 
-"classification": "https://oparl.beispielris.de/vocab/landkreis",
+"classification": "https://oparl.example.org/vocab/landkreis",
 "created": "2014-01-08T14:28:31.568+0100",
 "modified": "2014-01-08T14:28:31.568+0100"
 }

@@ -1,7 +1,7 @@
 {
-    "@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/oparl.jsonld",
+    "@context": "https://oparl.example.org/Pfad/zum/Kontext/oparl.jsonld",
     "@type": "oparl:Meeting",
-    "@id": "https://oparl.beispielris.de/meeting/281",
+    "@id": "https://oparl.example.org/meeting/281",
     "name": "4. Sitzung des Finanzausschusses",
     "start": "2013-01-04T08:00:00+01:00",
     "end": "2013-01-04T12:00:00+01:00",
@@ -12,24 +12,24 @@
             "@language": "en"
         }
     },
-    "organization": "beispielris:organization/34",
+    "organization": "https://oparl.example.org/organization/34",
     "participant": [
-        "beispielris:person/29",
-        "beispielris:person/75",
-        "beispielris:person/94"
+        "https://oparl.example.org/person/29",
+        "https://oparl.example.org/person/75",
+        "https://oparl.example.org/person/94"
     ],
-    "invitation": "beispielris:document/586",
-    "resultsProtocol": "beispielris:document/628",
-    "verbatimProtocol": "beispielris:document/691",
+    "invitation": "https://oparl.example.org/document/586",
+    "resultsProtocol": "https://oparl.example.org/document/628",
+    "verbatimProtocol": "https://oparl.example.org/document/691",
     "auxiliaryDocument": [
-        "beispielris:document/588",
-        "beispielris:document/589"
+        "https://oparl.example.org/document/588",
+        "https://oparl.example.org/document/589"
     ],
     "agendaItem": [
-        "beispielris:agendaitem/1045",
-        "beispielris:agendaitem/1046",
-        "beispielris:agendaitem/1047",
-        "beispielris:agendaitem/1048"
+        "https://oparl.example.org/agendaitem/1045",
+        "https://oparl.example.org/agendaitem/1046",
+        "https://oparl.example.org/agendaitem/1047",
+        "https://oparl.example.org/agendaitem/1048"
     ],
     "created": "2012-01-06T12:01:00+01:00",
     "modified": "2012-01-08T14:05:27+01:00"

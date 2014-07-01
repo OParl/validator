@@ -1,15 +1,15 @@
 {
-"@context": "https://oparl.beispielris.de/Pfad/zum/Kontext/organization.jsonld",
+"@context": "https://oparl.example.org/Pfad/zum/Kontext/organization.jsonld",
 "@type": "oparl:Organization",
-"@id": "beispielris:organization/34",
+"@id": "https://oparl.example.org/organization/34",
 
 "nameShort": "Finanzausschuss",
 
 "post": [
-"beispielris:post/chairperson",
-"beispielris:post/deputyChairperson"
+"https://oparl.example.org/post/chairperson",
+"https://oparl.example.org/post/deputyChairperson"
 ],
-"organizationType": "beispielris:vocab/committee",
-"classification": "beispielris:vocab/finance",
+"organizationType": "https://oparl.example.org/vocab/committee",
+"classification": "https://oparl.example.org/vocab/finance",
 "modified": "2012-08-16T14:05:27+02:00"
 }
