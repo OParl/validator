@@ -1,31 +1,4 @@
 {
-"@language": "de",
-"gender": "vcard:hasGender",
-"givenName": "foaf:firstName",
-"familyName": "foaf:lastName",
-"title": {
-"TODO": "Hier context für title einfügen."
-},
-"email": {
-"@id": "foaf:mbox",
-"@type": "@id"
-},
-"phone": "foaf:phone",
-"streetAddress": "vcard:street-address",
-"locality": {
-"@id": "vcard:locality",
-"@container": "@language"
-},
-"created": {
-"@id": "dc:created",
-"@type": "xsd:dateTime"
-},
-"modified": {
-"@id": "dc:modified",
-"@type": "xsd:dateTime"
-}
-}
-{
 "@context": "https://oparl.example.org/Pfad/zum/Kontext/person.jsonld",
 "@type": "oparl:Person",
 "@id": "https://oparl.example.org/person/29",

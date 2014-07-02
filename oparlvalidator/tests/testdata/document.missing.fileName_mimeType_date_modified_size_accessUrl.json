@@ -13,5 +13,5 @@
 "text": "Der Übersichtsplan zeigt alle Ebenen des ...",
 "masterDocument": "https://oparl.example.org/document/57738",
 "license": "http://www.opendefinition.org/licenses/cc-by",
-"documentRole": "https://oparl.example.org/document-role/evidence",
+"documentRole": "https://oparl.example.org/document-role/evidence"
 }
