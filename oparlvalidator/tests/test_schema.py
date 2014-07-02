@@ -158,7 +158,7 @@ class TestSchema(unittest.TestCase):
             'oparl:Document',
             'document.missing.fileName_mimeType_date_'
             'modified_size_accessUrl.json',
-            ['fileName', 'mimeType', 'data', 'modified',
+            ['fileName', 'mimeType', 'date', 'modified',
              'size', 'accessUrl'])
 
     def test_invalid_meeting(self):
