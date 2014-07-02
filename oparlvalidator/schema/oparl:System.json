@@ -21,7 +21,7 @@
             "type": "string",
             "pattern": "^oparl:System$"
         },
-        "body": {
+        "bodies": {
             "oparl:linksTo": "oparl:Body",
             "type": [
                 "string",
@@ -73,7 +73,7 @@
         "@type",
         "@id",
         "oparlVersion",
-        "body"
+        "bodies"
     ],
     "type": "object"
 }
