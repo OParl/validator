@@ -35,10 +35,10 @@
             "type": "string",
             "format": "date-time"
         },
-        "name": {
+        "nameLong": {
             "type": "string"
         },
-        "shortName": {
+        "nameShort": {
             "type": "string"
         },
         "organiziationType": {
@@ -61,7 +61,7 @@
         "@type",
         "@id",
         "body",
-        "name",
+        "nameLong",
         "member"
     ],
     "oparl:recommended": [
@@ -70,9 +70,9 @@
     ],
     "oparl:validate": [
         {
-            "message": "name and nameShort may not be equal",
+            "message": "nameLong and nameShort may not be equal",
             "section": "5.2.3",
-            "method": "oparlvalidator.schema:name_not_equal_shortName"
+            "method": "oparlvalidator.schema:nameLong_not_equal_nameShort"
         }
     ],
     "type": "object"

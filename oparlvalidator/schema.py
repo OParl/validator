@@ -23,11 +23,11 @@ for schema_file in glob.glob(join(SCHEMA_DIR, '*.json')):
 
 
 # Additional validation functions here
-def name_not_equal_shortName(data):
+def nameLong_not_equal_nameShort(data):
     """
     Validate that two values are not equal, e. g.
-    name and nameShort may not be equal (section 5.2.3).
+    nameLong and nameShort may not be equal (section 5.2.3).
     """
-    if 'name' not in data or 'nameShort' not in data:
+    if 'nameLong' not in data or 'nameShort' not in data:
         return True
-    return not data['name'] == data['nameShort']
+    return not data['nameLong'] == data['nameShort']

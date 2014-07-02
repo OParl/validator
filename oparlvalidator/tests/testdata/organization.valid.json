@@ -4,7 +4,7 @@
     "@id": "https://oparl.example.org/organization/34",
     "body": "https://oparl.example.org/0",
     "nameShort": "Finanzausschuss",
-    "name": "Ausschuss für Haushalt und Finanzen",
+    "nameLong": "Ausschuss für Haushalt und Finanzen",
     "post": [
         "https://oparl.example.org/post/chairperson",
         "https://oparl.example.org/post/deputyChairperson"
