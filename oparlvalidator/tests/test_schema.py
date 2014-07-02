@@ -164,8 +164,8 @@ class TestSchema(unittest.TestCase):
     def test_invalid_meeting(self):
         self._test_missing_item(
             'oparl:Meeting',
-            'meeting.missing.start_organization.json',
-            ['start', 'organization'])
+            'meeting.missing.start_organization_participant.json',
+            ['start', 'organization', 'participant'])
 
     def test_invalid_membership(self):
         self._test_missing_item(
