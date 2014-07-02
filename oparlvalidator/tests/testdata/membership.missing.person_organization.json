@@ -1,5 +1,7 @@
 {
-
-"role": "https://oparl.example.org/vocab/chair",
-"startDate": "2013-12-03T16:30:00+01:00"
+    "@context": "https://oparl.example.org/Pfad/zum/Kontext/membership.jsonld",
+    "@id": "https://oparl.example.org/membership/29",
+    "@type": "oparl:Membership",
+    "role": "https://oparl.example.org/vocab/chair",
+    "startDate": "2013-12-03T16:30:00+01:00"
 }
