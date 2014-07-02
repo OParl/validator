@@ -21,8 +21,17 @@ class TestCrawler(unittest.TestCase):
         httpd_thread.setDaemon(True)
         httpd_thread.start()
 
+    def _fix_url(self, crawler, host):
+        orig_retrieve = crawler._retrieve
+
+        def _fixUrl(self, *args, **kwargs):
+            url = args[0].replace('https://oparl.example.org/', host)
+            return orig_retrieve(self, url, **kwargs)
+        crawler._retrieve = _fixUrl
+
     def test_something(self):
-        Crawler('http://localhost:2342/person.valid.json').run()
+        self._fix_url(Crawler, 'http://localhost:2342/')
+        Crawler('https://oparl.example.org/person.valid.json').run()
 
     def tearDown(self):
         self.httpd.shutdown()
