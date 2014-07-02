@@ -150,8 +150,8 @@ class TestSchema(unittest.TestCase):
     def test_invalid_consultation(self):
         self._test_missing_item(
             'oparl:Consultation',
-            'consultation.missing.committee_agendaItem_paper.json',
-            ['committee', 'agendaItem', 'paper'])
+            'consultation.missing.paper_organization_agendaitem.json',
+            ['paper', 'organization', 'agendaItem'])
 
     def test_invalid_document(self):
         self._test_missing_item(

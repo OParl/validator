@@ -1,8 +1,0 @@
-{
-"@context": "https://oparl.example.org/Pfad/zum/Kontext/oparl.jsonld",
-"@type": "oparl:Consultation",
-"@id": "https://oparl.example.org/consultation/47594",
-
-"authoritative": false,
-"role": "https://oparl.example.org/role/decision"
-}
