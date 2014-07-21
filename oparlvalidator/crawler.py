@@ -3,7 +3,8 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import requests
 from collections import defaultdict
-from .validator import OParl
+from itertools import chain
+from .validator import OParlJson, OParlResponse
 
 EXPECTED_TYPES = {
     'hasMembership': ['oparl:Membership'],
@@ -40,7 +41,8 @@ class Crawler(object):
     def _validate(self, response):
         # TODO: It should be configurable whether to raise an exception
         # or to collect all errors.
-        return OParl(response=response).validate()
+        return chain(OParlResponse(response).validate(),
+                     OParlJson(response.text).validate())
 
     def run(self):
         while self._queue:
@@ -70,3 +72,4 @@ class Crawler(object):
             else:
                 self._invalid.add(url)
                 self._errors[url].extend(errors)
+        return self._valid

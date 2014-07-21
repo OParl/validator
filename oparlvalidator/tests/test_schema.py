@@ -9,7 +9,7 @@ from os.path import join, dirname
 from jsonschema.validators import Draft4Validator
 import jsonschema.exceptions
 
-from ..validator import OParl
+from ..validator import OParlJson
 from ..schema import SCHEMA_DIR
 
 DATA_DIR = join(dirname(__file__), 'testdata')
@@ -37,7 +37,7 @@ class TestSchema(unittest.TestCase):
         data = self._load_test_file(testfile)
         self.assertIsNotNone(data,
                              "test data '%s' not found or invalid" % testfile)
-        return OParl._validate_schema(obj_type, data)
+        return OParlJson._validate_schema(obj_type, data)
 
     def _test_validation(self, obj_type, testfile, expected_errors=None):
         """
@@ -95,17 +95,17 @@ class TestSchema(unittest.TestCase):
             _validate(schema_file)
 
     def test_build_object_type(self):
-        self.assertEquals(OParl._build_object_type('oparl:Document'),
+        self.assertEquals(OParlJson._build_object_type('oparl:Document'),
                           'oparl:Document')
-        self.assertEquals(OParl._build_object_type('document'),
+        self.assertEquals(OParlJson._build_object_type('document'),
                           'oparl:Document')
-        self.assertEquals(OParl._build_object_type('Document'),
+        self.assertEquals(OParlJson._build_object_type('Document'),
                           'oparl:Document')
-        self.assertEquals(OParl._build_object_type('DOCUMENT'),
+        self.assertEquals(OParlJson._build_object_type('DOCUMENT'),
                           'oparl:Document')
-        self.assertEquals(OParl._build_object_type('oparl:document'),
+        self.assertEquals(OParlJson._build_object_type('oparl:document'),
                           'oparl:document')
-        self.assertEquals(OParl._build_object_type('agenda_item'),
+        self.assertEquals(OParlJson._build_object_type('agenda_item'),
                           'oparl:AgendaItem')
 
     def test_valid_agenda(self):
