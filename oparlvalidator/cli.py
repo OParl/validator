@@ -4,7 +4,7 @@ from __future__ import (unicode_literals, absolute_import,
 import argparse
 import sys
 from . import version
-from .validator import OParl
+from .validator import OParlJson
 from .crawler import Crawler
 
 
@@ -37,7 +37,7 @@ def main():
         version='%(prog)s ' + version.__version__)
     args = parser.parse_args()
     if not args.url:
-        for error in OParl(sys.stdin.read()).validate():
+        for error in OParlJson(sys.stdin.read()).validate():
             print('ERROR: %s' % error.message)
     else:
         crawler = Crawler(seed_url=args.url, max_documents=args.max_documents,

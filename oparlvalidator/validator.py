@@ -38,21 +38,6 @@ def types(*args):
     return decorator
 
 
-class OParl(object):
-
-    def __init__(self, string=None, response=None):
-        if string is response is None:
-            raise ValueError('Specify either a JSON string or a response.')
-        self.string = string
-        self.response = response
-
-    def validate(self):
-        if self.response:
-            OParlResponse(self.response).validate()
-            self.string = self.response.text
-        OParlJson(self.string).validate()
-
-
 class OParlResponse(object):
 
     def __init__(self, response):
