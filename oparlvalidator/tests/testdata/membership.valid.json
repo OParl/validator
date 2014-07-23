@@ -1,7 +1,6 @@
 {
-    "@context": "https://oparl.example.org/Pfad/zum/Kontext/membership.jsonld",
-    "@id": "https://oparl.example.org/membership/29",
-    "@type": "oparl:Membership",
+    "id": "https://oparl.example.org/membership/29",
+    "type": "http://oparl.org/schema/1.0/Membership",
     "person": "https://oparl.example.org/people/862",
     "organization": "https://oparl.example.org/organizations/5",
     "role": "https://oparl.example.org/vocab/chair",

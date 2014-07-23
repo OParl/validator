@@ -1,7 +1,6 @@
 {
-"@context": "https://oparl.example.org/Pfad/zum/Kontext/person.jsonld",
-"@type": "oparl:Person",
-"@id": "https://oparl.example.org/person/29",
+"type": "http://oparl.org/schema/1.0/Person",
+"id": "https://oparl.example.org/person/29",
 
 "familyName": "Mustermann",
 "givenName": "Max",

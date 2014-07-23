@@ -1,7 +1,6 @@
 {
-"@context": "https://oparl.example.org/Pfad/zum/Kontext/organization.jsonld",
-"@type": "oparl:Organization",
-"@id": "https://oparl.example.org/organization/34",
+"type": "http://oparl.org/schema/1.0/Organization",
+"id": "https://oparl.example.org/organization/34",
 
 "nameShort": "Finanzausschuss",
 

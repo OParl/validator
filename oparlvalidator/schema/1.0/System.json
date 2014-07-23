@@ -13,13 +13,13 @@
         "removedObjects"
     ],
     "properties": {
-        "@id": {
+        "id": {
             "type": "string",
             "format": "uri"
         },
-        "@type": {
+        "type": {
             "type": "string",
-            "pattern": "^oparl:System$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/System$"
         },
         "bodies": {
             "oparl:linksTo": "oparl:Body",
@@ -70,8 +70,8 @@
         }
     },
     "required": [
-        "@type",
-        "@id",
+        "type",
+        "id",
         "oparlVersion",
         "bodies"
     ],

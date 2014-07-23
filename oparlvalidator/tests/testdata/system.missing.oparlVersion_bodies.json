@@ -1,6 +1,6 @@
 {
-"@type": "oparl:System",
-"@id": "https://oparl.example.org/",
+"type": "http://oparl.org/schema/1.0/System",
+"id": "https://oparl.example.org/",
 
 "name": "Beispiel-System",
 "website": "http://www.beispielris.de/",

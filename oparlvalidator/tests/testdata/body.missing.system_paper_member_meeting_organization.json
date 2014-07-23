@@ -1,6 +1,6 @@
 {
-"@type": "oparl:Body",
-"@id": "https://oparl.example.org/body/0",
+"type": "http://oparl.org/schema/1.0/Body",
+"id": "https://oparl.example.org/body/0",
 
 "contactEmail": "mailto:ris@beispielstadt.de",
 "contactName": "RIS-Betreuung",

@@ -1,12 +1,12 @@
 {
     "properties": {
-        "@id": {
+        "id": {
             "type": "string",
             "format": "uri"
         },
-        "@type": {
+        "type": {
             "type": "string",
-            "pattern": "^oparl:Membership$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/Membership$"
         },
         "endDate": {
             "type": "string",
@@ -39,8 +39,8 @@
         }
     },
     "required": [
-        "@id",
-        "@type",
+        "id",
+        "type",
         "person",
         "organization"
     ],

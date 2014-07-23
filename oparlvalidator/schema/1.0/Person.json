@@ -1,12 +1,12 @@
 {
     "properties": {
-        "@id": {
+        "id": {
             "type": "string",
             "format": "uri"
         },
-        "@type": {
+        "type": {
             "type": "string",
-            "pattern": "^oparl:Person$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/Person$"
         },
         "created": {
             "type": "string",
@@ -86,8 +86,8 @@
         }
     },
     "required": [
-        "@type",
-        "@id",
+        "type",
+        "id",
         "name"
     ],
     "oparl:recommended": [

@@ -1,7 +1,6 @@
 {
-    "@context": "https://oparl.example.org/Pfad/zum/Kontext/oparl.jsonld",
-    "@type": "oparl:AgendaItem",
-    "@id": "https://oparl.example.org/agendaitem/3271",
+    "type": "http://oparl.org/schema/1.0/AgendaItem",
+    "id": "https://oparl.example.org/agendaitem/3271",
     "meeting": "https://oparl.example.org/meeting/281",
     "number": "10.1",
     "name": "Satzungsänderung für Ausschreibungen",

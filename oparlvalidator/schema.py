@@ -2,13 +2,11 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
-from os.path import dirname, basename, join, splitext
+from os.path import join
 import glob
 from functools import partial
 
-from .utils import LazyDict
-
-SCHEMA_DIR = join(dirname(__file__), 'schema')
+from .utils import LazyDict, build_object_type, SCHEMA_DIR
 
 
 def _load_schema(filename):
@@ -17,8 +15,8 @@ def _load_schema(filename):
 
 
 OPARL = LazyDict()
-for schema_file in glob.glob(join(SCHEMA_DIR, '*.json')):
-    obj_type = splitext(basename(schema_file))[0]
+for schema_file in glob.glob(join(SCHEMA_DIR, '*', '*.json')):
+    obj_type = build_object_type(schema_file)
     OPARL[obj_type] = partial(_load_schema, schema_file)
 
 
