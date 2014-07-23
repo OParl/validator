@@ -87,18 +87,25 @@ class OParlJson(object):
 
     @staticmethod
     def _validate_type(data):
+        """
+        Check if the document contains a type and we have a schema for it.
+
+        :param data: dictionary with the parsed document for validation
+        :returns: internal document type, could be used to access the
+           approriate schema using the OPARL dictionary
+        """
         type_check = {
             'type': 'object',
             'properties': {
-                '@type': {
+                'type': {
                     'type': 'string',
-                    'enum': OPARL.keys()  # check if we have a schema for @type
+                    'enum': OPARL['types'].keys()
                 }
             },
-            'required': ['@type']
+            'required': ['type']
         }
         Draft4Validator(type_check).validate(data)
-        return data['@type']
+        return OPARL['types'][data['type']]
 
     @classmethod
     def _validate_schema(cls, obj_type, data):
