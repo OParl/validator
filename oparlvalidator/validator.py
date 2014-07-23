@@ -4,6 +4,7 @@ from __future__ import (unicode_literals, absolute_import,
 import json
 from collections import namedtuple
 from jsonschema.validators import Draft4Validator
+from functools import wraps
 import jsonschema.exceptions
 from .schema import OPARL
 from .utils import build_object_type
@@ -25,6 +26,7 @@ class ValidationError(namedtuple('ValidationError',
 
 def prune(*args):
     def decorator(func):
+        @wraps(func)
         def wrapper(*args_, **kwargs_):
             return (item for item in func(*args_, **kwargs_)
                     if item not in args)
