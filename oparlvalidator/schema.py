@@ -4,20 +4,21 @@ from __future__ import (unicode_literals, absolute_import,
 import json
 from os.path import join
 import glob
-from functools import partial
 
 from .utils import LazyDict, build_object_type, SCHEMA_DIR
 
 
-def _load_schema(filename):
-    with open(filename, 'r') as schema:
-        return json.load(schema)
+def _schema_loader(filename):
+    def load():
+        with open(filename, 'r') as schema:
+            return json.load(schema)
+    return load
 
 
 OPARL = LazyDict()
 for schema_file in glob.glob(join(SCHEMA_DIR, '*', '*.json')):
     obj_type = build_object_type(schema_file)
-    OPARL[obj_type] = partial(_load_schema, schema_file)
+    OPARL[obj_type] = _schema_loader(schema_file)
 
 
 # Additional validation functions here
