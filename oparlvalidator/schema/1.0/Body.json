@@ -126,7 +126,7 @@
         {
             "message": "name and shortName may not be equal",
             "section": "5.2.3",
-            "method": "oparlvalidator.schema:name_not_equal_shortName"
+            "method": "oparlvalidator.schema:nameLong_not_equal_nameShort"
         }
     ],
     "type": "object"
