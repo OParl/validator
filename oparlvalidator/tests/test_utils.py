@@ -118,3 +118,10 @@ class TestLazyDict(unittest.TestCase):
         self.assertEquals('this is a test', self.dict['a'])
         del self.dict['a']
         self.assertFalse('a' in self.dict)
+
+    def test_missing_key(self):
+        self.assertRaises(KeyError, (lambda: self.dict['a']))
+
+    def test_invalidate_missing_key(self):
+        with self.assertRaises(KeyError):
+            self.dict.invalidate('a')
