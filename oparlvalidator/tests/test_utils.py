@@ -107,7 +107,6 @@ class TestLazyDict(unittest.TestCase):
         self.assertEquals('this is a test', self.dict['b'])
         self.assertEquals([2, 1], called)
 
-
     def test_delete(self):
         self.dict['a'] = (lambda: self.assertTrue(False), 'this is a test')
         del self.dict['a']
