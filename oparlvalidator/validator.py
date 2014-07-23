@@ -41,6 +41,7 @@ def types(*args):
 class OParlResponse(object):
 
     def __init__(self, response):
+        # TODO: doc me
         self.response = response
         self.validators = [name for name in dir(self)
                            if name.startswith('_validate_')]
@@ -54,6 +55,7 @@ class OParlResponse(object):
 
     @prune(None)
     def validate(self):
+        # TODO: doc me
         if self.response:
             for name in self.validators:
                 yield getattr(self, name)()
@@ -62,6 +64,7 @@ class OParlResponse(object):
 class OParlJson(object):
 
     def __init__(self, string):
+        # TODO: doc me
         self.string = string
 
     @staticmethod
@@ -118,6 +121,7 @@ class OParlJson(object):
 
     @prune(None)
     def validate(self):
+        # TODO: doc me
         try:
             data = json.loads(self.string)
         except ValueError as excp:

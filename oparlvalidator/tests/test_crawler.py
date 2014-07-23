@@ -21,6 +21,9 @@ class TestCrawler(unittest.TestCase):
         httpd_thread.setDaemon(True)
         httpd_thread.start()
 
+    def tearDown(self):
+        self.httpd.shutdown()
+
     def _fix_url(self, crawler, host):
         orig_retrieve = crawler._retrieve
 
@@ -33,5 +36,9 @@ class TestCrawler(unittest.TestCase):
         self._fix_url(Crawler, 'http://localhost:2342/')
         Crawler('https://oparl.example.org/person.valid.json').run()
 
-    def tearDown(self):
-        self.httpd.shutdown()
+    def test_invalid_url_params(self):
+        """
+        Test for invalid URL parameters which can be found in section 4.13.
+        """
+        # TODO: implement
+        pass

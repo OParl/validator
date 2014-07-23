@@ -24,6 +24,7 @@ class Crawler(object):
 
     def __init__(self, seed_url, max_documents=None, type_whitelist=None,
                  recursive=True):
+        # TODO: doc me
         self.seed_url = seed_url
         self.max_documents = max_documents
         self.type_whitelist = type_whitelist
@@ -45,6 +46,7 @@ class Crawler(object):
                      OParlJson(response.text).validate())
 
     def run(self):
+        # TODO: doc me
         while self._queue:
             url = self._queue.pop(0)
             response = self._retrieve(url)
@@ -64,6 +66,7 @@ class Crawler(object):
                     for value in values:
                         if value in self._valid or value in self._invalid:
                             continue
+                        # check for invalid URL params
                         self._queue.append(value)
                         for type_ in types:
                             self._counts[type_] += 1
