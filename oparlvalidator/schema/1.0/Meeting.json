@@ -1,12 +1,12 @@
 {
     "properties": {
-        "@id": {
+        "id": {
             "type": "string",
             "format": "uri"
         },
-        "@type": {
+        "type": {
             "type": "string",
-            "pattern": "^oparl:Meeting$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/Meeting$"
         },
         "agendaItem": {
             "items": {
@@ -87,9 +87,8 @@
         }
     },
     "required": [
-        "@context",
-        "@id",
-        "@type",
+        "id",
+        "type",
         "name",
         "organization",
         "participant",

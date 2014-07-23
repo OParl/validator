@@ -1,12 +1,12 @@
 {
     "properties": {
-        "@id": {
+        "id": {
             "type": "string",
             "format": "uri"
         },
-        "@type": {
+        "type": {
             "type": "string",
-            "pattern": "^oparl:Body$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/Body$"
         },
         "allConcepts": {
             "type": ["array", "string"],
@@ -103,8 +103,8 @@
         }
     },
     "required": [
-        "@type",
-        "@id",
+        "type",
+        "id",
         "system",
         "name",
         "paper",

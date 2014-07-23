@@ -6,6 +6,7 @@ from collections import namedtuple
 from jsonschema.validators import Draft4Validator
 import jsonschema.exceptions
 from .schema import OPARL
+from .utils import build_object_type
 
 
 class ValidationNotice(namedtuple('ValidationNotice',
@@ -45,10 +46,9 @@ class OParlResponse(object):
         self.validators = [name for name in dir(self)
                            if name.startswith('_validate_')]
 
-    @types('oparl:AgendaItem', 'oparl:Document', 'oparl:Membership',
-           'oparl:Person', 'oparl:Body', 'oparl:Location',
-           'oparl:Organization', 'oparl:System', 'oparl:Consultation',
-           'oparl:Meeting', 'oparl:Paper')  # Or all by default?
+    @types('AgendaItem', 'Document', 'Membership', 'Person',
+           'Body', 'Location', 'Organization', 'System',
+           'Consultation', 'Meeting', 'Paper')  # Or all by default?
     def _validate_success(self):
         return self.response.status_code in range(200, 400)  # O(1) in Py 3
 
@@ -73,16 +73,9 @@ class OParlJson(object):
         module = __import__(path_parts[0], fromlist=path_parts[1])
         return getattr(module, path_parts[1])
 
-    @staticmethod
-    def _build_object_type(object_type):
-        if object_type.startswith('oparl:'):
-            return object_type
-        parts = object_type.split('_')
-        return 'oparl:%s' % ''.join([part.capitalize() for part in parts])
-
     @classmethod
     def _get_validator(cls, object_type):
-        object_type = cls._build_object_type(object_type)
+        object_type = build_object_type(object_type)
         if object_type not in OPARL:
             return None
         return Draft4Validator(OPARL[object_type])

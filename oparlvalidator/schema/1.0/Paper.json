@@ -1,12 +1,12 @@
 {
     "properties": {
-        "@id": {
+        "id": {
             "type": "string",
             "format": "uri"
         },
-        "@type": {
+        "type": {
             "type": "string",
-            "pattern": "^oparl:Paper$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/Paper$"
         },
         "auxiliaryDocument": {
             "type": "string",
@@ -80,8 +80,8 @@
         }
     },
     "required": [
-        "@id",
-        "@type",
+        "id",
+        "type",
         "body",
         "name",
         "mainDocument"

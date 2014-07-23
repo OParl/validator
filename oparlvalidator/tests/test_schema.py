@@ -94,68 +94,57 @@ class TestSchema(unittest.TestCase):
         for schema_file in glob.glob(join(SCHEMA_DIR, '*.json')):
             _validate(schema_file)
 
-    def test_build_object_type(self):
-        self.assertEquals(OParlJson._build_object_type('oparl:Document'),
-                          'oparl:Document')
-        self.assertEquals(OParlJson._build_object_type('document'),
-                          'oparl:Document')
-        self.assertEquals(OParlJson._build_object_type('Document'),
-                          'oparl:Document')
-        self.assertEquals(OParlJson._build_object_type('DOCUMENT'),
-                          'oparl:Document')
-        self.assertEquals(OParlJson._build_object_type('oparl:document'),
-                          'oparl:document')
-        self.assertEquals(OParlJson._build_object_type('agenda_item'),
-                          'oparl:AgendaItem')
-
     def test_valid_agenda(self):
-        self._test_validation('oparl:AgendaItem', 'agenda_item.valid.json')
+        self._test_validation('schema/1.0/AgendaItem',
+                              'agenda_item.valid.json')
 
     def test_valid_body(self):
-        self._test_validation('oparl:Body', 'body.valid.json')
+        self._test_validation('schema/1.0/Body', 'body.valid.json')
 
     def test_valid_consultation(self):
-        self._test_validation('oparl:Consultation', 'consultation.valid.json')
+        self._test_validation('schema/1.0/Consultation',
+                              'consultation.valid.json')
 
     def test_valid_document(self):
-        self._test_validation('oparl:Document', 'document.valid.json')
+        self._test_validation('schema/1.0/Document', 'document.valid.json')
 
     def test_valid_meeting(self):
-        self._test_validation('oparl:Meeting', 'meeting.valid.json')
+        self._test_validation('schema/1.0/Meeting', 'meeting.valid.json')
 
     def test_valid_organization(self):
-        self._test_validation('oparl:Organization', 'organization.valid.json')
+        self._test_validation('schema/1.0/Organization',
+                              'organization.valid.json')
 
     def test_valid_paper(self):
-        self._test_validation('oparl:Paper', 'paper.valid.json')
+        self._test_validation('schema/1.0/Paper', 'paper.valid.json')
 
     def test_valid_person(self):
-        self._test_validation('oparl:Person', 'person.valid.json')
+        self._test_validation('schema/1.0/Person', 'person.valid.json')
 
     def test_valid_system(self):
-        self._test_validation('oparl:System', 'system.valid.json')
+        self._test_validation('schema/1.0/System', 'system.valid.json')
 
     def test_invalid_agenda(self):
         self._test_missing_item(
-            'oparl:AgendaItem',
+            'schema/1.0/AgendaItem',
             'agenda_item.missing.type.json',
             ['type'])
 
     def test_invalid_body(self):
         self._test_missing_item(
-            'oparl:Body',
+            'schema/1.0/Body',
             'body.missing.system_paper_member_meeting_organization.json',
             ['system', 'paper', 'member', 'meeting', 'organization'])
 
     def test_invalid_consultation(self):
         self._test_missing_item(
-            'oparl:Consultation',
+            'schema/1.0/Consultation',
             'consultation.missing.paper_organization_agendaitem.json',
             ['paper', 'organization', 'agendaItem'])
 
     def test_invalid_document(self):
         self._test_missing_item(
-            'oparl:Document',
+            'schema/1.0/Document',
             'document.missing.fileName_mimeType_date_'
             'modified_size_accessUrl.json',
             ['fileName', 'mimeType', 'date', 'modified',
@@ -163,36 +152,36 @@ class TestSchema(unittest.TestCase):
 
     def test_invalid_meeting(self):
         self._test_missing_item(
-            'oparl:Meeting',
+            'schema/1.0/Meeting',
             'meeting.missing.start_organization_participant.json',
             ['start', 'organization', 'participant'])
 
     def test_invalid_membership(self):
         self._test_missing_item(
-            'oparl:Membership',
+            'schema/1.0/Membership',
             'membership.missing.person_organization.json',
             ['person', 'organization'])
 
     def test_invalid_organization(self):
         self._test_missing_item(
-            'oparl:Organization',
+            'schema/1.0/Organization',
             'organization.missing.body_nameLong_member.json',
             ['body', 'nameLong', 'member'])
 
     def test_invalid_paper(self):
         self._test_missing_item(
-            'oparl:Paper',
+            'schema/1.0/Paper',
             'paper.missing.name_body.json',
             ['name', 'body'])
 
     def test_invalid_person(self):
         self._test_missing_item(
-            'oparl:Person',
+            'schema/1.0/Person',
             'person.missing.name.json',
             ['name'])
 
     def test_invalid_system(self):
         self._test_missing_item(
-            'oparl:System',
+            'schema/1.0/System',
             'system.missing.oparlVersion_bodies.json',
             ['oparlVersion', 'bodies'])
