@@ -18,9 +18,9 @@ setup(
         ],
     ),
     install_requires=[
-        'requests==2.2.1',
-        'jsonschema==2.3.0',
-        'strict-rfc3339==0.4',  # Seems JSON Schema needs it.
+        'requests>=2.2.1',
+        'jsonschema>=2.3.0',
+        'strict-rfc3339>=0.4',
         'six>=1.7.2',
     ],
     zip_safe=False,
