@@ -1,6 +1,6 @@
 {
-    "@type": "oparl:Document",
-    "@id": "https://oparl.example.org/document/57739",
+    "type": "http://oparl.org/schema/1.0/Document",
+    "id": "https://oparl.example.org/document/57739",
     "name": "Anlage 1 zur Anfrage",
     "fileName": "57739.pdf",
     "paper": [
