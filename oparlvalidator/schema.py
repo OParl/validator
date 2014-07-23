@@ -15,10 +15,15 @@ def _schema_loader(filename):
     return load
 
 
+def _build_schema_url(objtype):
+    return 'http://oparl.org/%s' % objtype
+
+
 OPARL = LazyDict()
 for schema_file in glob.glob(join(SCHEMA_DIR, '*', '*.json')):
     obj_type = build_object_type(schema_file)
     OPARL[obj_type] = _schema_loader(schema_file)
+OPARL['types'] = {_build_schema_url(obj): obj for obj in OPARL.keys()}
 
 
 # Additional validation functions here
