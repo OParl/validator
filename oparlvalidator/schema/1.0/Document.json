@@ -18,10 +18,10 @@
         },
         "derivativeDocument": {
             "type": "array",
+            "oparl:linksTo": ["oparl:Document"],
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Document"
+                "format": "uri"
             }
         },
         "documentRole": {
@@ -47,14 +47,14 @@
         "masterDocument": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Document"
+            "oparl:linksTo": ["oparl:Document"]
         },
         "meeting": {
             "type": "array",
+            "oparl:linksTo": ["oparl:Meeting"],
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Meeting"
+                "format": "uri"
             }
         },
         "mimeType": {
@@ -69,10 +69,10 @@
         },
         "paper": {
             "type": "array",
+            "oparl:linksTo": ["oparl:Paper"],
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Paper"
+                "format": "uri"
             }
         },
         "sha1Checksum": {

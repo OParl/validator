@@ -11,17 +11,17 @@
         "agendaItem": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:AgendaItem",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:AgendaItem"],
             "type": "array"
         },
         "auxiliaryDocument": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Document",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Document"],
             "type": "array"
         },
         "created": {
@@ -34,7 +34,7 @@
         },
         "invitation": {
             "format": "uri",
-            "oparl:linksTo": "oparl:Document",
+            "oparl:linksTo": ["oparl:Document"],
             "type": "string"
         },
         "keyword": {
@@ -60,20 +60,20 @@
         },
         "organization": {
             "format": "uri",
-            "oparl:linksTo": "oparl:Organization",
+            "oparl:linksTo": ["oparl:Organization"],
             "type": "string"
         },
         "participant": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Person",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Person"],
             "type": "array"
         },
         "resultsProtocol": {
             "format": "uri",
-            "oparl:linksTo": "oparl:Document",
+            "oparl:linksTo": ["oparl:Document"],
             "type": "string"
         },
         "start": {
@@ -82,7 +82,7 @@
         },
         "verbatimProtocol": {
             "format": "uri",
-            "oparl:linksTo": "oparl:Document",
+            "oparl:linksTo": ["oparl:Document"],
             "type": "string"
         }
     },

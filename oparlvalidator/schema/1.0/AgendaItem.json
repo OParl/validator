@@ -39,39 +39,37 @@
         },
         "consultation": {
             "items": {
-                "format": "uri",
-                "oparl:linksTo": "oparl:Consultation"
+                "format": "uri"
             },
             "format": "uri",
-            "oparl:linksTo": "oparl:Consultation",
+            "oparl:linksTo": ["oparl:Consultation"],
             "type": ["string", "array"]
         },
         "paper": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Paper"
+            "oparl:linksTo": ["oparl:Paper"]
         },
         "auxiliaryDocument": {
             "type": ["string","array"],
             "format": "uri",
-            "oparl:linksTo": "oparl:Document",
+            "oparl:linksTo": ["oparl:Document"],
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Document"
+                "format": "uri"
             }
         },
         "meeting": {
             "format": "uri",
-            "oparl:linksTo": "oparl:Meeting",
+            "oparl:linksTo": ["oparl:Meeting"],
             "type": "string"
         },
         "absentParticipant": {
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Person"
+                "format": "uri"
             },
+            "oparl:linksTo": ["oparl:Person"],
             "type": "array"
         }
     },

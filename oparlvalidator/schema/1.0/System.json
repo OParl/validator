@@ -22,7 +22,7 @@
             "pattern": "^http://oparl\\.org/schema/1\\.0/System$"
         },
         "bodies": {
-            "oparl:linksTo": "oparl:Body",
+            "oparl:linksTo": ["oparl:Body"],
             "type": [
                 "string",
                 "array"

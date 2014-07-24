@@ -50,17 +50,17 @@
         "meeting": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Meeting",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Meeting"],
             "type": ["array", "string"]
         },
         "member": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Person",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Person"],
             "type": ["array", "string"]
         },
         "modified": {
@@ -76,17 +76,17 @@
         "organization": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Organization",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Organization"],
             "type": ["array", "string"]
         },
         "paper": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Paper",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Paper"],
             "type": ["array", "string"]
         },
         "rgs": {
@@ -94,7 +94,7 @@
         },
         "system": {
             "format": "uri",
-            "oparl:linksTo": "oparl:System",
+            "oparl:linksTo": ["oparl:System"],
             "type": "string"
         },
         "website": {

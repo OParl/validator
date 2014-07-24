@@ -11,7 +11,7 @@
         "agendaItem": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:AgendaItem"
+            "oparl:linksTo": ["oparl:AgendaItem"]
         },
         "authoritative": {
             "type": "boolean"
@@ -23,23 +23,22 @@
             "oneOf": [
                 {
                     "type": "string",
-                    "format": "uri",
-                    "oparl:linksTo": "oparl:Organization"
+                    "format": "uri"
                 },
                 {
                     "type": "array",
                     "items": {
                         "type": "string",
-                        "format": "uri",
-                        "oparl:linksTo": "oparl:Organization"
+                        "format": "uri"
                     }
                 }
-            ]
+            ],
+            "oparl:linksTo": ["oparl:Organization"]
         },
         "paper": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Paper"
+            "oparl:linksTo": ["oparl:Paper"]
         },
         "role": {
             "type": "string"

@@ -15,17 +15,17 @@
         "onBehalfOf": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Organization"
+            "oparl:linksTo": ["oparl:Organization"]
         },
         "organization": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Organization"
+            "oparl:linksTo": ["oparl:Organization"]
         },
         "person": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Person"
+            "oparl:linksTo": ["oparl:Person"]
         },
         "post": {
             "type": "string"

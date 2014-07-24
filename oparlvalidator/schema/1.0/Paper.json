@@ -11,31 +11,29 @@
         "auxiliaryDocument": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Document"
+            "oparl:linksTo": ["oparl:Document"]
         },
         "body": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Body"
+            "oparl:linksTo": ["oparl:Body"]
         },
         "consultation": {
             "type": "array",
+            "oparl:linksTo": ["oparl:Consultation"],
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Consultation"
+                "format": "uri"
             }
         },
         "location": {
             "type": "array",
-            "items": {
-                "oparl:linksTo": "oparl:Location"
-            }
+            "oparl:linksTo": ["oparl:Location"]
         },
         "mainDocument": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Document"
+            "oparl:linksTo": ["oparl:Document"]
         },
         "modified": {
             "type": "string",
@@ -46,18 +44,7 @@
         },
         "originator": {
             "type": "array",
-            "items": {
-                "oparl:oneOf": [
-                    {
-                        "type": "string",
-                        "format": "uri",
-                        "oparl:linksTo": "oparl:Person"},
-                    {
-                        "type": "string",
-                        "format": "uri",
-                        "oparl:linksTo": "oparl:Organization"}
-                ]
-            }
+            "oparl:linksTo": ["oparl:Person", "oparl:Organization"]
         },
         "paperType": {
             "type": "string",
@@ -76,7 +63,7 @@
         "relatedPaper": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": "oparl:Paper"
+            "oparl:linksTo": ["oparl:Paper"]
         }
     },
     "required": [

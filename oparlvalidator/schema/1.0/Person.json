@@ -33,9 +33,9 @@
         "hasMembership": {
             "items": {
                 "type": "string",
-                "format": "uri",
-                "oparl:linksTo": "oparl:Membership"
+                "format": "uri"
             },
+            "oparl:linksTo": ["oparl:Membership"],
             "type": "array"
         },
         "keyword": {
@@ -57,9 +57,9 @@
         "organization": {
             "items": {
                 "format": "uri",
-                "oparl:linksTo": "oparl:Organization",
                 "type": "string"
             },
+            "oparl:linksTo": ["oparl:Organization"],
             "type": "array"
         },
         "phone": {
