@@ -17,6 +17,15 @@ def build_object_type(object_name):
     return object_name
 
 
+def import_from_string(path):
+    path_parts = path.split(':')
+    if len(path_parts) != 2:
+        raise ImportError('path must be in the form of '
+                          'pkg.module.submodule:attribute')
+    module = __import__(path_parts[0], fromlist=path_parts[1])
+    return getattr(module, path_parts[1])
+
+
 class LazyDict(MutableMapping):
     def __init__(self, *args, **kwargs):
         self.__model = dict(*args, **kwargs)

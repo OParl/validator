@@ -7,7 +7,7 @@ from jsonschema.validators import Draft4Validator
 from functools import wraps
 import jsonschema.exceptions
 from .schema import OPARL, TYPES
-from .utils import build_object_type
+from .utils import build_object_type, import_from_string
 
 
 class ValidationNotice(namedtuple('ValidationNotice',
@@ -69,15 +69,6 @@ class OParlJson(object):
         # TODO: doc me
         self.string = string
 
-    @staticmethod
-    def _import_from_string(path):
-        path_parts = path.split(':')
-        if len(path_parts) != 2:
-            raise ImportError('path must be in the form of '
-                              'pkg.module.submodule:attribute')
-        module = __import__(path_parts[0], fromlist=path_parts[1])
-        return getattr(module, path_parts[1])
-
     @classmethod
     def _get_validator(cls, object_type):
         object_type = build_object_type(object_type)
@@ -116,7 +107,7 @@ class OParlJson(object):
     def _validate_custom(cls, schema, data):
         if 'oparl:validate' in schema:
             for test in schema['oparl:validate']:
-                func = cls._import_from_string(test['method'])
+                func = import_from_string(test['method'])
                 if not func(data):
                     yield ValidationError(section=test['section'],
                                           message=test['message'])
