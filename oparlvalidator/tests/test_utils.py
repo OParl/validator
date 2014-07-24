@@ -7,7 +7,6 @@ from .. import utils
 
 
 class TestUtils(unittest.TestCase):
-    # pylint: disable=protected-access
 
     def test_build_object_type(self):
         self.assertEquals(
@@ -31,7 +30,6 @@ class TestUtils(unittest.TestCase):
 
 
 class TestLazyDict(unittest.TestCase):
-    # pylint: disable=protected-access
 
     def setUp(self):
         self.dict = utils.LazyDict()

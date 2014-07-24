@@ -6,7 +6,6 @@ from ..statistics import with_stats
 
 
 class TestSchema(unittest.TestCase):
-    # pylint: disable=protected-access
 
     def setUp(self):
         @with_stats
