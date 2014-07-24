@@ -29,6 +29,37 @@ class TestBuildObjectType(unittest.TestCase):
             'schema/1.0/AgendaItem')
 
 
+class TestImportFromString(unittest.TestCase):
+
+    def setUp(self):
+        self.called = 0
+
+    def should_be_called(self):
+        self.called += 1
+
+    def test_import(self):
+        imported = utils.import_from_string(
+            "%s:%s" % (self.__module__, self.__class__.__name__))
+        imported.should_be_called(self)
+        self.assertEquals(1, self.called)
+
+    def test_invalid_fromat(self):
+        with self.assertRaises(ImportError):
+            utils.import_from_string("test")
+
+        with self.assertRaises(ImportError):
+            utils.import_from_string("test:test:test")
+
+    def test_missing_import(self):
+        with self.assertRaises(ImportError):
+            utils.import_from_string(
+                "a%s:%s" % (self.__module__, self.__class__.__name__))
+
+        with self.assertRaises(ImportError):
+            utils.import_from_string(
+                "%s:a%s" % (self.__module__, self.__class__.__name__))
+
+
 class TestLazyDict(unittest.TestCase):
 
     def setUp(self):
