@@ -10,7 +10,7 @@ from jsonschema.validators import Draft4Validator
 import jsonschema.exceptions
 
 from ..validator import OParlJson
-from ..schema import SCHEMA_DIR
+from ..schema import SCHEMA_DIR, nameLong_not_equal_nameShort
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
@@ -185,3 +185,28 @@ class TestSchema(unittest.TestCase):
             'schema/1.0/System',
             'system.missing.oparlVersion_bodies.json',
             ['oparlVersion', 'bodies'])
+
+
+class TestAdditionalChecks(unittest.TestCase):
+
+    def test_nameLong_not_equal_nameShort(self):
+        # missing items
+        self.assertTrue(
+            nameLong_not_equal_nameShort({}))
+        self.assertTrue(
+            nameLong_not_equal_nameShort({'nameLong': 'Test'}))
+        self.assertTrue(
+            nameLong_not_equal_nameShort({'nameShort': 'Test'}))
+
+        # different names
+        self.assertTrue(
+            nameLong_not_equal_nameShort({'nameLong': 'This is a test',
+                                          'nameShort': 'Test'}))
+        self.assertTrue(
+            nameLong_not_equal_nameShort({'nameLong': 'Test',
+                                          'nameShort': 'test'}))
+
+        # same names (this is the case the check should catch)
+        self.assertFalse(
+            nameLong_not_equal_nameShort({'nameLong': 'test',
+                                          'nameShort': 'test'}))
