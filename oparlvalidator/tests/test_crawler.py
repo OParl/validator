@@ -34,7 +34,9 @@ class TestCrawler(unittest.TestCase):
 
     def test_something(self):
         self._fix_url(Crawler, 'http://localhost:2342/')
-        Crawler('https://oparl.example.org/person.valid.json').run()
+        # TODO: Improve test data, then raise limit
+        Crawler('https://oparl.example.org/person.valid.json',
+                max_documents=0).run()
 
     def test_invalid_url_params(self):
         """
