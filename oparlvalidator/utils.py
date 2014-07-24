@@ -23,6 +23,13 @@ def import_from_string(path):
         raise ImportError('path must be in the form of '
                           'pkg.module.submodule:attribute')
     module = __import__(path_parts[0], fromlist=path_parts[1])
+
+    if not hasattr(module, path_parts[1]):
+        # the caller only needs to handle ImportError, so we prevent a
+        # AttributeError by raising a custom exception
+        raise ImportError("'%s' object has no attribute '%s'" %
+                          tuple(path_parts))
+
     return getattr(module, path_parts[1])
 
 
