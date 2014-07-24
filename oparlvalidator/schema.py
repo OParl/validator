@@ -15,15 +15,25 @@ def _schema_loader(filename):
     return load
 
 
-def _build_schema_url(objtype):
-    return 'http://oparl.org/%s' % objtype
+def _build_schema_url(objtype):  # TODO: Can we make this the default?
+    return 'http://oparl.org/' + objtype
+
+
+def _find_expected_types(schema):
+    return {_build_schema_url(parent_type): {
+                key: [_build_schema_url(type_)  # noqa
+                      for type_ in desc['oparl:linksTo']]
+                for key, desc in parent['properties'].items()
+                if 'oparl:linksTo' in desc}
+            for parent_type, parent in schema.items()}
 
 
 OPARL = LazyDict()
 for schema_file in glob.glob(join(SCHEMA_DIR, '*', '*.json')):
     obj_type = build_object_type(schema_file)
     OPARL[obj_type] = _schema_loader(schema_file)
-OPARL['types'] = {_build_schema_url(obj): obj for obj in OPARL.keys()}
+TYPES = {_build_schema_url(obj): obj for obj in OPARL.keys()}
+EXPECTED_TYPES = _find_expected_types(OPARL)
 
 
 # Additional validation functions here

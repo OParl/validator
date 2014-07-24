@@ -4,11 +4,8 @@ from __future__ import (unicode_literals, absolute_import,
 import requests
 from collections import defaultdict
 from itertools import chain
+from .schema import EXPECTED_TYPES
 from .validator import OParlJson, OParlResponse
-
-EXPECTED_TYPES = {
-    'hasMembership': ['oparl:Membership'],
-}
 
 
 def flattened(dictionary):
@@ -29,9 +26,9 @@ class Crawler(object):
         self.max_documents = max_documents
         self.type_whitelist = type_whitelist
         self.recursive = recursive
-        self._counts = defaultdict(int)  # TODO: Depends on more schema data
-        self._queue = [seed_url]
-        self._valid = set()  # TODO: Persist
+        self._counts = defaultdict(int)
+        self._queue = [(seed_url, [])]
+        self._valid = set()  # TODO: Persist?
         self._invalid = set()
         self._errors = defaultdict(list)
 
@@ -40,39 +37,46 @@ class Crawler(object):
         return requests.get(*args, **kwargs)
 
     def _validate(self, response):
-        # TODO: It should be configurable whether to raise an exception
-        # or to collect all errors.
         return chain(OParlResponse(response).validate(),
                      OParlJson(response.text).validate())
+
+    def _mine(self, dictionary):
+        for key, value in dictionary.items():
+            expected_types = EXPECTED_TYPES[dictionary['type']].get(key)
+            if expected_types:
+                if isinstance(value, str):
+                    yield (value, expected_types)
+                else:
+                    for item in value:
+                        yield (item, expected_types)
 
     def run(self):
         # TODO: doc me
         while self._queue:
-            url = self._queue.pop(0)
+            url, expected_types = self._queue.pop(0)
             response = self._retrieve(url)
             errors = list(self._validate(response))
-            if not self.recursive:
-                break
-            dictionary = response.json()
-            for key, types in EXPECTED_TYPES.items():
-                if self.max_documents:
-                    for type_ in types:
-                        if self._counts[type_] >= self.max_documents:
-                            continue
-                values = dictionary.get(key)
-                if isinstance(values, str):
-                    values = [values]
-                if values is not None:
-                    for value in values:
-                        if value in self._valid or value in self._invalid:
-                            continue
-                        # check for invalid URL params
-                        self._queue.append(value)
-                        for type_ in types:
-                            self._counts[type_] += 1
-            if len(errors) > 0:
-                self._valid.add(url)
-            else:
+            if errors:
                 self._invalid.add(url)
                 self._errors[url].extend(errors)
-        return self._valid
+            else:
+                self._valid.add(url)
+            if not self.recursive:
+                return self._errors
+            # Queuing new URLs
+            links = self._mine(response.json())
+            for url, expected_types in links:
+                # Skip because of limits per type
+                if self.max_documents is not None:
+                    if len(expected_types) == 1:
+                        if self._counts[expected_types[0]] >= \
+                                self.max_documents:
+                            continue
+                    else:  # TODO: Decide how to handle the ambiguous cases
+                        continue
+                # Skip because known
+                if url in self._valid or url in self._invalid:
+                    continue
+                self._queue.append((url, expected_types))
+                self._counts[expected_types[0]] += 1
+        return self._errors

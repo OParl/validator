@@ -6,7 +6,7 @@ from collections import namedtuple
 from jsonschema.validators import Draft4Validator
 from functools import wraps
 import jsonschema.exceptions
-from .schema import OPARL
+from .schema import OPARL, TYPES
 from .utils import build_object_type
 
 
@@ -99,13 +99,13 @@ class OParlJson(object):
             'properties': {
                 'type': {
                     'type': 'string',
-                    'enum': OPARL['types'].keys()
+                    'enum': TYPES.keys()
                 }
             },
             'required': ['type']
         }
         Draft4Validator(type_check).validate(data)
-        return OPARL['types'][data['type']]
+        return TYPES[data['type']]
 
     @classmethod
     def _validate_schema(cls, obj_type, data):
