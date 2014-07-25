@@ -52,6 +52,12 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
         return self._handler()
 
+    def _send_404(self):
+        self.send_response(404)
+        self.send_header('Content-Type', 'text/plain')
+        self.end_headers()
+        self.wfile.write('Not Found'.encode(self.ENCODING))
+
     def _handler(self):
         try:
             responseDict = self.server.data[self.path]
@@ -72,10 +78,7 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.wfile.write(response['body'].encode(self.ENCODING))
 
         except KeyError:
-            self.send_response(404)
-            self.send_header('Content-Type', 'text/plain')
-            self.end_headers()
-            self.wfile.write('not found'.encode(self.ENCODING))
+            self._send_404()
 
 
 class Server(object):
