@@ -58,27 +58,35 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write('Not Found'.encode(self.ENCODING))
 
+    def _send_501(self):
+        self.send_response(404)
+        self.send_header('Content-Type', 'text/plain')
+        self.end_headers()
+        self.wfile.write('Not Implemented'.encode(self.ENCODING))
+
     def _handler(self):
-        try:
-            responseDict = self.server.data[self.path]
-
-            if not isinstance(responseDict, dict):
-                responseDict = {'GET': {'body': responseDict}}
-
-            response = responseDict[self.command]
-            response.setdefault('body', self.DEFAULT_BODY)
-            response.setdefault('status_code', self.DEFAULT_STATUS_CODE)
-            response.setdefault('headers', self.DEFAULT_HEADERS)
-
-            self.send_response(response['status_code'])
-            for header in response['headers']:
-                self.send_header(header[0], header[1])
-            self.end_headers()
-
-            self.wfile.write(response['body'].encode(self.ENCODING))
-
-        except KeyError:
+        if self.path not in self.server.data:
             self._send_404()
+            return
+
+        responseDict = self.server.data[self.path]
+        if not isinstance(responseDict, dict):
+            responseDict = {'GET': {'body': responseDict}}
+
+        if self.command not in response:
+            self._send_501()
+            return
+
+        response = responseDict[self.command]
+        response.setdefault('body', self.DEFAULT_BODY)
+        response.setdefault('status_code', self.DEFAULT_STATUS_CODE)
+        response.setdefault('headers', self.DEFAULT_HEADERS)
+
+        self.send_response(response['status_code'])
+        for header in response['headers']:
+            self.send_header(header[0], header[1])
+        self.end_headers()
+        self.wfile.write(response['body'].encode(self.ENCODING))
 
 
 class Server(object):
