@@ -81,11 +81,10 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 class Server(object):
 
-    def __init__(self, port=0):
-        server_class = BaseHTTPServer.HTTPServer
-        self.httpd = server_class(('127.0.0.1', port), Server._HTTPHandler)
-
-        self.port = self.httpd.server_address[1]
+    def __init__(self, host='127.0.0.1', port=0):
+        self.httpd = BaseHTTPServer.HTTPServer((host, port),
+                                               _HTTPHandler)
+        self.host, self.port = self.httpd.server_address
         self.httpd.data = {}
 
         self.thread = threading.Thread(target=self.httpd.serve_forever)
