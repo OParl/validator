@@ -9,6 +9,7 @@ from os.path import join, dirname
 from ..crawler import Crawler
 from .server import Server
 from ..server_tests import check_accecpt_encoding
+from ..server_tests import check_not_contain_reserved_url_params
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
@@ -40,9 +41,9 @@ class TestCrawler(unittest.TestCase):
         Crawler('https://oparl.example.org/person.valid.json',
                 max_documents=0).run()
 
-    def test_invalid_url_params(self):
+    def test_accept_encoding(self):
         """
-        Test for invalid URL parameters which can be found in section 4.13.
+        Test for compression support (Section 4.11).
         """
         # setup server
         server = Server()
@@ -87,4 +88,49 @@ class TestCrawler(unittest.TestCase):
         self.assertEquals(False,
                           check_accecpt_encoding(
                               prefix + "/example/invalid_type_not_supported")
+                          )
+
+    def test_invalid_url_params(self):
+        """
+        Test for reserved key within queries (URLs) (Section 4.13).
+        """
+        self.assertEquals(True,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/this?is=a&sane=url"
+                          )
+                          )
+        self.assertEquals(True,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/this?is=still&ok=enddate"
+                          )
+                          )
+        self.assertEquals(False,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/file.ext?startdate=nope"
+                          )
+                          )
+        self.assertEquals(False,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/file.ext?enddate=nope"
+                          )
+                          )
+        self.assertEquals(False,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/file.ext?listformat=nope"
+                          )
+                          )
+        self.assertEquals(False,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/file.ext?subject=nope"
+                          )
+                          )
+        self.assertEquals(False,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/file.ext?predicate=nope"
+                          )
+                          )
+        self.assertEquals(False,
+                          check_not_contain_reserved_url_params(
+                              "http://example.org/file.ext?object=nope"
+                          )
                           )

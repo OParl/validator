@@ -6,12 +6,14 @@ Collection of non-typespecific tests.
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import requests
+from urlparse import urlparse, parse_qs
 
 
 def check_accecpt_encoding(url):
     """
-    Pass an url and check wether mandatory compressions are supported.
+    Pass an URL and check wether mandatory compressions are supported.
 
+    Section 4.11
     Args:
         url: URL to some json
 
@@ -31,3 +33,29 @@ def check_accecpt_encoding(url):
         if compression in response.headers["content-encoding"]:
             return True
     return False
+
+
+def check_not_contain_reserved_url_params(url):
+    """
+    Pass an URL and check if it does not contains reserved keywords.
+
+    Section 4.13
+    Args:
+        url: some URL
+    Returns:
+        True if no reserved keys found, false otherwise.
+    """
+    reserved_keys = [
+        "startdate",
+        "enddate",
+        "listformat",
+        "subject",
+        "predicate",
+        "object"
+    ]
+    parsed_url = urlparse(url)
+    query = parse_qs(parsed_url.query)
+    for key in reserved_keys:
+        if key in query:
+            return False
+    return True
