@@ -93,6 +93,7 @@ callback, startdate, enddate
 ### Dokumenteigenschaften
 
 5.2.3: Name und NameLong dürfen nicht identisch sein
+
 5.10.1. Die Felder `name` und `fileName` von `oparl:File` SOLLEN NICHT identisch sein.
 
 1. Backlinks sollten, sofern semantisch zwingened, zu dem richtigen Objekt
