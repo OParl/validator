@@ -32,27 +32,27 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     ENCODING = 'utf-8'
 
     def do_OPTIONS(self):
-        return self.all_handler()
+        return self._handler()
 
     def do_HEAD(self):
-        return self.all_handler()
+        return self._handler()
 
     def do_POST(self):
-        return self.all_handler()
+        return self._handler()
 
     def do_PUT(self):
-        return self.all_handler()
+        return self._handler()
 
     def do_DELETE(self):
-        return self.all_handler()
+        return self._handler()
 
     def do_TRACE(self):
-        return self.all_handler()
+        return self._handler()
 
     def do_GET(self):
-        return self.all_handler()
+        return self._handler()
 
-    def all_handler(self):
+    def _handler(self):
         try:
             responseDict = self.server.data[self.path]
 
