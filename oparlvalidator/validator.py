@@ -12,14 +12,14 @@ from .statistics import with_stats
 
 
 class ValidationNotice(namedtuple('ValidationNotice',
-                       ['message', 'section'])):
+                                  ['message', 'section'])):
 
     def __new__(cls, message, section=None):
         return super(ValidationNotice, cls).__new__(cls, message, section)
 
 
 class ValidationError(namedtuple('ValidationError',
-                      ['message', 'section'])):
+                                 ['message', 'section'])):
 
     def __new__(cls, message, section=None):
         return super(ValidationError, cls).__new__(cls, message, section)
