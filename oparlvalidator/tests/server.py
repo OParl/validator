@@ -26,9 +26,11 @@ from six.moves import BaseHTTPServer  # pylint: disable=import-error
 class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     # pylint: disable=no-init,no-member
 
-    DEFAULT_BODY = ''
-    DEFAULT_STATUS_CODE = 200
-    DEFAULT_HEADERS = [('Content-Type', 'application/json')]
+    DEFAULT_RESPONSE = {
+        'body': '',
+        'status_code': 200,
+        'headers': [('Content-Type', 'application/json')]
+    }
     ENCODING = 'utf-8'
 
     def do_OPTIONS(self):
@@ -64,10 +66,9 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write('Not Implemented'.encode(self.ENCODING))
 
-    def _send_response(self, response):
-        response.setdefault('body', self.DEFAULT_BODY)
-        response.setdefault('status_code', self.DEFAULT_STATUS_CODE)
-        response.setdefault('headers', self.DEFAULT_HEADERS)
+    def _send_response(self, data):
+        response = self.DEFAULT_RESPONSE
+        response.update(data)
 
         self.send_response(response['status_code'])
         for (name, value) in response['headers']:
