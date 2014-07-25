@@ -42,13 +42,16 @@ class Crawler(object):
 
     def _mine(self, dictionary):
         for key, value in dictionary.items():
-            expected_types = EXPECTED_TYPES[dictionary['type']].get(key)
-            if expected_types:
-                if isinstance(value, str):
-                    yield (value, expected_types)
-                else:
-                    for item in value:
-                        yield (item, expected_types)
+            try:
+                expected_types = EXPECTED_TYPES[dictionary['type']].get(key)
+                if expected_types:
+                    if isinstance(value, str):
+                        yield (value, expected_types)
+                    else:
+                        for item in value:
+                            yield (item, expected_types)
+            except:
+                pass
 
     def run(self):
         # TODO: doc me
