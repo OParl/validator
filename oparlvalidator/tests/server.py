@@ -88,9 +88,9 @@ class Server(object):
         self.port = self.httpd.server_address[1]
         self.httpd.data = {}
 
-        httpd_thread = threading.Thread(target=self.httpd.serve_forever)
-        httpd_thread.setDaemon(True)
-        httpd_thread.start()
+        self.thread = threading.Thread(target=self.httpd.serve_forever)
+        self.thread.setDaemon(True)
+        self.thread.start()
 
     def __del__(self):
         self.httpd.shutdown()
