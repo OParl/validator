@@ -5,9 +5,9 @@ Example:
 s = Server()
 s.port  # get the automatically picked port
 s.serve({
-"/url/path": '{"id":"http://oparl.example.org/url/path"}',
-"/another/path": {
-"GET":
+'/url/path': '{"id":"http://oparl.example.org/url/path"}',
+'/another/path': {
+'GET':
     {
         'body': '{"id":"http://oparl.example.org/another/path"}',
         'headers': [('X-customHeader', 'headerValue')],
@@ -74,11 +74,12 @@ class Server(object):
 
         def all_handler(self):
             try:
-                response = self.server.data[self.path]
+                responseDict = self.server.data[self.path]
 
-                if isinstance(response, six.string_types):
-                    response = {'GET': {'body': response}}
+                if isinstance(responseDict, six.string_types):
+                    responseDict = {'GET': {'body': responseDict}}
 
+                response = responseDict[self.command]
                 response.setdefault('body', self.DEFAULT_BODY)
                 response.setdefault('status_code', self.DEFAULT_STATUS_CODE)
                 response.setdefault('headers', self.DEFAULT_HEADERS)
