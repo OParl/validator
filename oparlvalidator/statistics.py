@@ -9,7 +9,7 @@ def with_stats(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         kwargs['stats'] = Statistics()
-        func(*args, **kwargs)
+        return func(*args, **kwargs)
     return wrapper
 
 
