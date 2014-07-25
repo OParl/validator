@@ -8,6 +8,7 @@ from functools import wraps
 import jsonschema.exceptions
 from .schema import OPARL, TYPES
 from .utils import build_object_type, import_from_string
+from .statistics import with_stats
 
 
 class ValidationNotice(namedtuple('ValidationNotice',
@@ -113,15 +114,18 @@ class OParlJson(object):
                                           message=test['message'])
 
     @prune(None)
-    def validate(self):
+    @with_stats
+    def validate(self, stats=None):
         # TODO: doc me
         try:
             data = json.loads(self.string)
+            stats.count_document()
         except ValueError as excp:
             yield ValidationError('JSON error: %s' % excp)
             return
         try:
             obj_type = self._validate_type(data)
+            stats.count_type(obj_type)
             # simple pass all errors to the caller
             for error in self._validate_schema(obj_type, data):
                 yield error
