@@ -106,7 +106,10 @@ class Server(object):
         self.thread.start()
 
     def __del__(self):
-        self.httpd.shutdown()
+        self.shutdown()
 
     def serve(self, data):
         self.httpd.data = data
+
+    def shutdown(self):
+        self.httpd.shutdown()

@@ -90,6 +90,7 @@ class TestCrawler(unittest.TestCase):
                           check_accecpt_encoding(
                               prefix + "/example/invalid_type_not_supported")
                           )
+        server.shutdown()
 
     def test_invalid_url_params(self):
         """
@@ -169,3 +170,4 @@ class TestCrawler(unittest.TestCase):
         self.assertEquals(True,
                           check_http_status_codes(prefix + "/ressource")
                           )
+        server.shutdown()
