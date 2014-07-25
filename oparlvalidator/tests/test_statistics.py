@@ -28,13 +28,6 @@ class TestSchema(unittest.TestCase):
         self.assertEquals(3, stats.num_docs)
 
     @with_stats
-    def test_reinit(self, stats=None):
-        stats.count_document()
-        self.assertEquals(1, stats.num_docs)
-        stats.initialize()
-        self.assertEquals(0, stats.num_docs)
-
-    @with_stats
     def test_count_types(self, stats=None):
         stats.count_type('a')
         stats.count_type('a')
@@ -48,3 +41,13 @@ class TestSchema(unittest.TestCase):
             self.assertEquals(1, stats.num_docs)
             return 'test'
         self.assertEquals('test', stats())
+
+    @with_stats
+    def test_reinit(self, stats=None):
+        stats.count_document()
+        stats.count_type('a')
+        self.assertEquals(1, stats.num_docs)
+        self.assertEquals({'a': 1}, dict(stats.num_docs_per_type))
+        stats.initialize()
+        self.assertEquals({}, dict(stats.num_docs_per_type))
+        self.assertEquals(0, stats.num_docs)
