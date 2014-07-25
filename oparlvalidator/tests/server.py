@@ -6,8 +6,8 @@ s = Server()
 s.port  # get the automatically picked port
 s.serve({
 "/url/path": '{"id":"http://oparl.example.org/url/path"}',
-'/another/path": {
-'GET":
+"/another/path": {
+"GET":
     {
         'body': '{"id":"http://oparl.example.org/another/path"}',
         'headers': [('X-customHeader', 'headerValue')],
