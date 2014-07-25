@@ -26,3 +26,17 @@ class TestSchema(unittest.TestCase):
         stats.count_document()
         stats.count_document()
         self.assertEquals(3, stats.num_docs)
+
+    @with_stats
+    def test_reinit(self, stats=None):
+        stats.count_document()
+        self.assertEquals(1, stats.num_docs)
+        stats.initialize()
+        self.assertEquals(0, stats.num_docs)
+
+    @with_stats
+    def test_count_types(self, stats=None):
+        stats.count_type('a')
+        stats.count_type('a')
+        stats.count_type('b')
+        self.assertEquals({'a': 2, 'b': 1}, stats.num_docs_per_type)
