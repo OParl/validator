@@ -5,7 +5,7 @@ import unittest
 from ..statistics import with_stats
 
 
-class TestSchema(unittest.TestCase):
+class TestStatistics(unittest.TestCase):
 
     def setUp(self):
         @with_stats
