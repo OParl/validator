@@ -64,29 +64,32 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write('Not Implemented'.encode(self.ENCODING))
 
-    def _handler(self):
-        if self.path not in self.server.data:
-            self._send_404()
-            return
-
-        responseDict = self.server.data[self.path]
-        if not isinstance(responseDict, dict):
-            responseDict = {'GET': {'body': responseDict}}
-
-        if self.command not in response:
-            self._send_501()
-            return
-
-        response = responseDict[self.command]
+    def _send_response(self, response):
         response.setdefault('body', self.DEFAULT_BODY)
         response.setdefault('status_code', self.DEFAULT_STATUS_CODE)
         response.setdefault('headers', self.DEFAULT_HEADERS)
 
         self.send_response(response['status_code'])
-        for header in response['headers']:
-            self.send_header(header[0], header[1])
+        for (name, value) in response['headers']:
+            self.send_header(name, value)
         self.end_headers()
+
         self.wfile.write(response['body'].encode(self.ENCODING))
+
+    def _handler(self):
+        if self.path not in self.server.data:
+            self._send_404()
+            return
+
+        response = self.server.data[self.path]
+        if not isinstance(response, dict):
+            response = {'GET': {'body': response}}
+
+        if self.command not in response:
+            self._send_501()
+            return
+
+        self._send_response(response[self.command])
 
 
 class Server(object):
