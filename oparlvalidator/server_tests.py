@@ -6,7 +6,9 @@ Collection of non-typespecific tests.
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import requests
-from six.moves.urllib import parse  # pylint: disable=import-error
+# pylint: disable=import-error,no-name-in-module
+from six.moves.urllib import parse
+# pylint: enable=import-error,no-name-in-module
 
 
 def check_accecpt_encoding(url):
@@ -61,9 +63,27 @@ def check_not_contain_reserved_url_params(url):
     return True
 
 
-def check_http_status_above_200(existend_get_ressource_url):
+def check_http_status_codes(url_to_existing_get_ressource):
     """
     Pass an URL to some valid GET ressource and check if http status codes
     are good.
     """
-    pass
+    response = requests.get(url_to_existing_get_ressource)
+    # 200
+    if "status" not in response.headers:
+        return False
+    if "200 OK" not in response.headers["status"]:
+        return False
+
+    # 404
+    bad_ressource = url_to_existing_get_ressource + \
+        "/does/not/exist/unless/you/cheated"
+    response = requests.get(bad_ressource)
+    if "status" not in response.headers:
+        return False
+    if "404 Not Found" not in response.headers["status"]:
+        return False
+
+    # other codes testable?
+
+    return True

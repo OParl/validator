@@ -10,6 +10,7 @@ from ..crawler import Crawler
 from .server import Server
 from ..server_tests import check_accecpt_encoding
 from ..server_tests import check_not_contain_reserved_url_params
+from ..server_tests import check_http_status_codes
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
@@ -133,4 +134,38 @@ class TestCrawler(unittest.TestCase):
                           check_not_contain_reserved_url_params(
                               "http://example.org/file.ext?object=nope"
                           )
+                          )
+
+    def test_check_http_status_codes(self):
+        """
+        Test for upper http status codes (Section 4.12).
+        """
+        # setup server
+        server = Server()
+        server.serve({
+            "/ressource/exists": {
+                "GET": {
+                    "headers": [("status", "200 OK")]
+                }
+            }
+        })
+        prefix = "http://localhost:%s" % server.port
+        self.assertEquals(False,
+                          check_http_status_codes(prefix + "/ressource/exists")
+                          )
+
+        server.serve({
+            "/ressource": {
+                "GET": {
+                    "headers": [("status", "200 OK")]
+                }
+            },
+            "/ressource/does/not/exist/unless/you/cheated": {
+                "GET": {
+                    "headers": [("status", "404 Not Found")]
+                }
+            }
+        })
+        self.assertEquals(True,
+                          check_http_status_codes(prefix + "/ressource")
                           )
