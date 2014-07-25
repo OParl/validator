@@ -6,7 +6,7 @@ Collection of non-typespecific tests.
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import requests
-from urlparse import urlparse, parse_qs
+from six.moves.urllib import parse
 
 
 def check_accecpt_encoding(url):
@@ -53,8 +53,8 @@ def check_not_contain_reserved_url_params(url):
         "predicate",
         "object"
     ]
-    parsed_url = urlparse(url)
-    query = parse_qs(parsed_url.query)
+    parsed_url = parse.urlparse(url)
+    query = parse.parse_qs(parsed_url.query)
     for key in reserved_keys:
         if key in query:
             return False
