@@ -21,7 +21,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import threading
 import six
-from six.moves import BaseHTTPServer
+from six.moves import BaseHTTPServer  # pylint: disable=import-error
 
 
 class Server(object):
@@ -44,6 +44,8 @@ class Server(object):
         self.httpd.data = data
 
     class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+        # pylint: disable=no-init,no-member
+
         DEFAULT_BODY = ''
         DEFAULT_STATUS_CODE = 200
         DEFAULT_HEADERS = [('Content-Type', 'application/json')]
