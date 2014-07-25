@@ -7,6 +7,8 @@ import static
 from wsgiref.simple_server import make_server
 from os.path import join, dirname
 from ..crawler import Crawler
+from .server import Server
+from ..server_tests import check_accecpt_encoding
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
@@ -42,5 +44,47 @@ class TestCrawler(unittest.TestCase):
         """
         Test for invalid URL parameters which can be found in section 4.13.
         """
-        # TODO: implement
-        pass
+        # setup server
+        server = Server()
+        test_cases = {
+            "/example/valid": {
+                "GET":
+                {
+                    'headers': [('content-encoding', 'gzip')],
+                }
+            },
+            "/example/invalid_empty": {
+                "GET":
+                {
+                    'headers': [('content-encoding', '')],
+                }
+            },
+            "/example/invalid_not_set": {
+                "GET":
+                {
+                    'headers': [],
+                }
+            },
+            "/example/invalid_type_not_supported": {
+                "GET":
+                {
+                    'headers': [('content-encoding', 'esoteric')],
+                }
+            },
+        }
+        server.serve(test_cases)
+
+        # run assertions
+        prefix = "http://localhost:%s" % server.port
+        self.assertEquals(True,
+                          check_accecpt_encoding(prefix + "/example/valid"))
+        self.assertEquals(False,
+                          check_accecpt_encoding(
+                              prefix + "/example/invalid_empty"))
+        self.assertEquals(False,
+                          check_accecpt_encoding(
+                              prefix + "/example/invalid_not_set"))
+        self.assertEquals(False,
+                          check_accecpt_encoding(
+                              prefix + "/example/invalid_type_not_supported")
+                          )

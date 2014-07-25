@@ -20,11 +20,14 @@ def check_accecpt_encoding(url):
     """
     compressions = ["gzip", "compress", "deflate"]
     header = {"Accept-Encoding": ", ".join(compressions)}
-    response = requests.get(url, header=header)
+    response = requests.get(url, headers=header)
 
     # response shall contain header w/ "Content-Encoding" wich must be
     # any of the above
+    if "content-encoding" not in response.headers:
+        return False
+
     for compression in compressions:
-        if compression in response.header["Content-Encoding"]:
+        if compression in response.headers["content-encoding"]:
             return True
     return False
