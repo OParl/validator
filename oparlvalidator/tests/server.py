@@ -20,7 +20,6 @@ s.serve({
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import threading
-import six
 from six.moves import BaseHTTPServer  # pylint: disable=import-error
 
 
@@ -57,7 +56,7 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             responseDict = self.server.data[self.path]
 
-            if isinstance(responseDict, six.string_types):
+            if not isinstance(responseDict, dict):
                 responseDict = {'GET': {'body': responseDict}}
 
             response = responseDict[self.command]
