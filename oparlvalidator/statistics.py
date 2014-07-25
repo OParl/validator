@@ -27,6 +27,7 @@ class Statistics(object):
 
     def initialize(self):
         self.num_docs = 0
+        self.num_docs_per_type = defaultdict(int)
 
     def count_document(self):
         self.num_docs += 1
