@@ -39,7 +39,7 @@ class TestSchema(unittest.TestCase):
         stats.count_type('a')
         stats.count_type('a')
         stats.count_type('b')
-        self.assertEquals({'a': 2, 'b': 1}, stats.num_docs_per_type)
+        self.assertEquals({'a': 2, 'b': 1}, dict(stats.num_docs_per_type))
 
     def test_return(self):
         @with_stats
