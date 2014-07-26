@@ -123,13 +123,19 @@ class OParlJson(object):
         validator = cls._get_validator(obj_type)
         return validator.iter_errors(data)
 
+    @staticmethod
+    @with_stats
+    def _load_document(content, stats=None):
+        data = json.loads(content)
+        stats.count_document()
+        return data
+
     @prune(None)
     @with_stats
     def validate(self, stats=None):
         # TODO: doc me
         try:
-            data = json.loads(self.string)
-            stats.count_document()
+            document = self._load_document(self.string)
         except ValueError as excp:
             yield ValidationError('JSON error: %s' % excp)
             return
