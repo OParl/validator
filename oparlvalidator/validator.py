@@ -63,7 +63,6 @@ class OParlResponse(object):
     @types('AgendaItem', 'Document', 'Membership', 'Person',
            'Body', 'Location', 'Organization', 'System',
            'Consultation', 'Meeting', 'Paper')  # Or all by default?
-    
     @errormsg("Invalid Status Code")
     def _validate_success(self):
         return self.response.status_code in range(200, 400)  # O(1) in Py 3
