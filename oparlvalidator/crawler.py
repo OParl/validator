@@ -28,8 +28,7 @@ class Crawler(object):
         self.recursive = recursive
         self._counts = defaultdict(int)
         self._queue = [(seed_url, [])]
-        self._valid = set()  # TODO: Persist?
-        self._invalid = set()
+        self._visited = set()  # TODO: Persist?
         self._errors = defaultdict(list)
 
     def _retrieve(self, *args, **kwargs):
@@ -62,10 +61,10 @@ class Crawler(object):
             response = self._retrieve(url)
             errors = list(self._validate(response))
             if errors:
-                self._invalid.add(url)
                 self._errors[url].extend(errors)
             else:
-                self._valid.add(url)
+            self._visited.add(url)
+
             if not self.recursive:
                 return self._errors
             # Queuing new URLs
@@ -80,7 +79,7 @@ class Crawler(object):
                     else:  # TODO: Decide how to handle the ambiguous cases
                         continue
                 # Skip because known
-                if url in self._valid or url in self._invalid:
+                if url in self._visited:
                     continue
                 self._queue.append((url, expected_types))
                 self._counts[expected_types[0]] += 1
