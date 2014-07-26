@@ -136,10 +136,6 @@ class OParlJson(object):
         # TODO: doc me
         try:
             document = self._load_document(self.string)
-        except ValueError as excp:
-            yield ValidationError('JSON error: %s' % excp)
-            return
-        try:
             obj_type = self._validate_type(data)
             stats.count_type(obj_type)
             # simple pass all errors to the caller
@@ -148,13 +144,14 @@ class OParlJson(object):
             for error in self._validate_custom(OPARL[obj_type], data):
                 yield error
         except (jsonschema.exceptions.ValidationError,
-                jsonschema.exceptions.SchemaError) as excp:
-            # _validate_type may raise an exception, we translate it
-            # here into en apropriate ValidationError and pass it to
-            # the caller (if the type does not validate, it does not
-            # make sense to continue validation
-            if len(excp.path) > 0:
+                jsonschema.exceptions.SchemaError,
+                ValueError) as excp:
+            # _load_document or _validate_all may raise an exception,
+            # we translate it here into en apropriate ValidationError
+            # and pass it to the caller (if the type does not validate,
+            # it does not make sense to continue validation
+            if hasattr(excp, 'path') and len(excp.path) > 0:
                 yield ValidationError('"{}": {}'.format(''.join(excp.path),
-                                                        excp.message))
+                                                        excp))
             else:
-                yield ValidationError(excp.message)
+                yield ValidationError(excp)
