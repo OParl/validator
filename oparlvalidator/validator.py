@@ -130,18 +130,21 @@ class OParlJson(object):
         stats.count_document()
         return data
 
+    @classmethod
     @prune(None)
     @with_stats
-    def validate(self, stats=None):
+    def _validate_all(cls, data, stats=None):
+        obj_type = cls._validate_type(data)
+        stats.count_type(obj_type)
+
+        return chain(cls._validate_schema(obj_type, data),
+                     cls._validate_custom(OPARL[obj_type], data))
+
+    def validate(self):
         # TODO: doc me
         try:
             document = self._load_document(self.string)
-            obj_type = self._validate_type(data)
-            stats.count_type(obj_type)
-            # simple pass all errors to the caller
-            for error in self._validate_schema(obj_type, data):
-                yield error
-            for error in self._validate_custom(OPARL[obj_type], data):
+            for error in self._validate_all(document):
                 yield error
         except (jsonschema.exceptions.ValidationError,
                 jsonschema.exceptions.SchemaError,
