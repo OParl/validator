@@ -40,18 +40,20 @@ class Crawler(object):
         return chain(OParlResponse(response).validate(),
                      OParlJson(response.text).validate())
 
-    def _mine(self, dictionary):
-        for key, value in dictionary.items():
-            try:
-                expected_types = EXPECTED_TYPES[dictionary['type']].get(key)
-                if expected_types:
-                    if isinstance(value, str):
-                        yield (value, expected_types)
-                    else:
-                        for item in value:
-                            yield (item, expected_types)
-            except:
-                pass
+    def _mine(self, document):
+        if 'type' not in document:
+            # this document is not valid, we cannot detect its type, so we
+            # do not know what items should contain links to other documents
+            return
+
+        for key, value in document.items():
+            expected_types = EXPECTED_TYPES[document['type']].get(key)
+            if expected_types:
+                if isinstance(value, str):
+                    yield (value, expected_types)
+                else:
+                    for item in value:
+                        yield (item, expected_types)
 
     def run(self):
         # TODO: doc me
