@@ -5,6 +5,7 @@ import json
 from collections import namedtuple
 from jsonschema.validators import Draft4Validator
 from functools import wraps
+from itertools import chain
 import jsonschema.exceptions
 from .schema import OPARL, TYPES
 from .utils import build_object_type, import_from_string
@@ -42,12 +43,12 @@ def types(*args):
     return decorator
 
 
-def errormsg(msg):
+def validation_error(*args, **kwargs):
     def decorator(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            if func(*args, **kwargs) is False:
-                raise Exception(msg)
+        def wrapper(*args_, **kwargs_):
+            if func(*args_, **kwargs_) is False:
+                yield ValidationError(*args, **kwargs)
         return wrapper
     return decorator
 
@@ -57,25 +58,20 @@ class OParlResponse(object):
     def __init__(self, response):
         # TODO: doc me
         self.response = response
-        self.validators = [name for name in dir(self)
+        self.validators = [method
+                           for name, method
+                           in sorted(self.__class__.__dict__.items())
                            if name.startswith('_validate_')]
 
     @types('AgendaItem', 'Document', 'Membership', 'Person',
            'Body', 'Location', 'Organization', 'System',
            'Consultation', 'Meeting', 'Paper')  # Or all by default?
-    @errormsg("Invalid Status Code")
+    @validation_error("Invalid Status Code")
     def _validate_success(self):
         return self.response.status_code in range(200, 400)  # O(1) in Py 3
 
-    @prune(None)
     def validate(self):
-        # TODO: doc me
-        if self.response:
-            for name in self.validators:
-                try:
-                    getattr(self, name)()
-                except Exception as error:
-                    yield error
+        return chain.from_iterable([val(self) for val in self.validators])
 
 
 class OParlJson(object):
