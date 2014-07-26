@@ -80,8 +80,8 @@ class OParlJson(object):
         # TODO: doc me
         self.string = string
 
-    @classmethod
-    def _get_validator(cls, object_type):
+    @staticmethod
+    def _get_validator(object_type):
         object_type = build_object_type(object_type)
         if object_type not in OPARL:
             return None
@@ -109,19 +109,19 @@ class OParlJson(object):
         Draft4Validator(type_check).validate(data)
         return TYPES[data['type']]
 
-    @classmethod
-    def _validate_schema(cls, obj_type, data):
-        validator = cls._get_validator(obj_type)
-        return validator.iter_errors(data)
-
-    @classmethod
-    def _validate_custom(cls, schema, data):
+    @staticmethod
+    def _validate_custom(schema, data):
         if 'oparl:validate' in schema:
             for test in schema['oparl:validate']:
                 func = import_from_string(test['method'])
                 if not func(data):
                     yield ValidationError(section=test['section'],
                                           message=test['message'])
+
+    @classmethod
+    def _validate_schema(cls, obj_type, data):
+        validator = cls._get_validator(obj_type)
+        return validator.iter_errors(data)
 
     @prune(None)
     @with_stats
