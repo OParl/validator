@@ -42,4 +42,5 @@ def main():
     else:
         crawler = Crawler(seed_url=args.url, max_documents=args.max_documents,
                           type_whitelist=args.types, recursive=args.recursive)
-        crawler.run()
+        for url, error in crawler.run():
+            print('ERROR in %s: %s' % (url, error.message))
