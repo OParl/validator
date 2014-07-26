@@ -59,14 +59,15 @@ class Crawler(object):
         while self._queue:
             url, expected_types = self._queue.pop(0)
             response = self._retrieve(url)
-            errors = list(self._validate(response))
-            if errors:
-                self._errors[url].extend(errors)
-            else:
             self._visited.add(url)
 
+            for error in self._validate(response):
+                self._errors[url].append(error)
+                yield (url, error)
+
             if not self.recursive:
-                return self._errors
+                return
+
             # Queuing new URLs
             links = self._mine(response.json())
             for url, expected_types in links:
@@ -78,9 +79,9 @@ class Crawler(object):
                             continue
                     else:  # TODO: Decide how to handle the ambiguous cases
                         continue
+
                 # Skip because known
                 if url in self._visited:
                     continue
                 self._queue.append((url, expected_types))
                 self._counts[expected_types[0]] += 1
-        return self._errors
