@@ -11,7 +11,7 @@
         "agendaItem": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:AgendaItem"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/AgendaItem"]
         },
         "authoritative": {
             "type": "boolean"
@@ -33,12 +33,12 @@
                     }
                 }
             ],
-            "oparl:linksTo": ["oparl:Organization"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Organization"]
         },
         "paper": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Paper"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Paper"]
         },
         "role": {
             "type": "string"

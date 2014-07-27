@@ -11,16 +11,16 @@
         "auxiliaryDocument": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"]
         },
         "body": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Body"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Body"]
         },
         "consultation": {
             "type": "array",
-            "oparl:linksTo": ["oparl:Consultation"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Consultation"],
             "items": {
                 "type": "string",
                 "format": "uri"
@@ -28,12 +28,12 @@
         },
         "location": {
             "type": "array",
-            "oparl:linksTo": ["oparl:Location"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Location"]
         },
         "mainDocument": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"]
         },
         "modified": {
             "type": "string",
@@ -44,7 +44,7 @@
         },
         "originator": {
             "type": "array",
-            "oparl:linksTo": ["oparl:Person", "oparl:Organization"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Person", "http://oparl.org/schema/1.0/Organization"]
         },
         "paperType": {
             "type": "string",
@@ -63,7 +63,7 @@
         "relatedPaper": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Paper"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Paper"]
         }
     },
     "required": [

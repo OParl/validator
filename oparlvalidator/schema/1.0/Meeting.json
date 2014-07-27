@@ -13,7 +13,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:AgendaItem"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/AgendaItem"],
             "type": "array"
         },
         "auxiliaryDocument": {
@@ -21,7 +21,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
             "type": "array"
         },
         "created": {
@@ -34,7 +34,7 @@
         },
         "invitation": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
             "type": "string"
         },
         "keyword": {
@@ -60,7 +60,7 @@
         },
         "organization": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Organization"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Organization"],
             "type": "string"
         },
         "participant": {
@@ -68,12 +68,12 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Person"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Person"],
             "type": "array"
         },
         "resultsProtocol": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
             "type": "string"
         },
         "start": {
@@ -82,7 +82,7 @@
         },
         "verbatimProtocol": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
             "type": "string"
         }
     },

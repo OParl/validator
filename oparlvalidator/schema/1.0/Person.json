@@ -35,7 +35,7 @@
                 "type": "string",
                 "format": "uri"
             },
-            "oparl:linksTo": ["oparl:Membership"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Membership"],
             "type": "array"
         },
         "keyword": {
@@ -59,7 +59,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Organization"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Organization"],
             "type": "array"
         },
         "phone": {

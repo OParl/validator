@@ -10,7 +10,7 @@
         },
         "body": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Body"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Body"],
             "type": "string"
         },
         "created": {
@@ -28,7 +28,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Person"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Person"],
             "type": "array"
         },
         "modified": {
@@ -53,7 +53,7 @@
         },
         "subOrganizationOf": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Organization"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Organization"],
             "type": "string"
         }
     },

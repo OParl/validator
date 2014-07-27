@@ -18,7 +18,7 @@
         },
         "derivativeDocument": {
             "type": "array",
-            "oparl:linksTo": ["oparl:Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
             "items": {
                 "type": "string",
                 "format": "uri"
@@ -47,11 +47,11 @@
         "masterDocument": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"]
         },
         "meeting": {
             "type": "array",
-            "oparl:linksTo": ["oparl:Meeting"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Meeting"],
             "items": {
                 "type": "string",
                 "format": "uri"
@@ -69,7 +69,7 @@
         },
         "paper": {
             "type": "array",
-            "oparl:linksTo": ["oparl:Paper"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Paper"],
             "items": {
                 "type": "string",
                 "format": "uri"

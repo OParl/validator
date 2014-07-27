@@ -52,7 +52,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Meeting"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Meeting"],
             "type": ["array", "string"]
         },
         "member": {
@@ -60,7 +60,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Person"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Person"],
             "type": ["array", "string"]
         },
         "modified": {
@@ -78,7 +78,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Organization"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Organization"],
             "type": ["array", "string"]
         },
         "paper": {
@@ -86,7 +86,7 @@
                 "format": "uri",
                 "type": "string"
             },
-            "oparl:linksTo": ["oparl:Paper"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Paper"],
             "type": ["array", "string"]
         },
         "rgs": {
@@ -94,7 +94,7 @@
         },
         "system": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:System"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/System"],
             "type": "string"
         },
         "website": {

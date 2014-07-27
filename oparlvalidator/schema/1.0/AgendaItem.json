@@ -42,18 +42,18 @@
                 "format": "uri"
             },
             "format": "uri",
-            "oparl:linksTo": ["oparl:Consultation"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Consultation"],
             "type": ["string", "array"]
         },
         "paper": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["oparl:Paper"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Paper"]
         },
         "auxiliaryDocument": {
             "type": ["string","array"],
             "format": "uri",
-            "oparl:linksTo": ["oparl:Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
             "items": {
                 "type": "string",
                 "format": "uri"
@@ -61,7 +61,7 @@
         },
         "meeting": {
             "format": "uri",
-            "oparl:linksTo": ["oparl:Meeting"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Meeting"],
             "type": "string"
         },
         "absentParticipant": {
@@ -69,7 +69,7 @@
                 "type": "string",
                 "format": "uri"
             },
-            "oparl:linksTo": ["oparl:Person"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/Person"],
             "type": "array"
         }
     },
