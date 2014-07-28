@@ -12,21 +12,17 @@ from .utils import build_object_type, import_from_string
 from .statistics import with_stats
 
 
-class ValidationNotice(namedtuple('ValidationNotice',
-                                  ['message', 'section'])):
-
-    def __new__(cls, message, section=None):
-        return super(ValidationNotice, cls).__new__(cls, message, section)
-
-
 class ValidationError(namedtuple('ValidationError',
                                  ['message', 'section'])):
+    """Class to capture validation errors."""
 
     def __new__(cls, message, section=None):
         return super(ValidationError, cls).__new__(cls, message, section)
 
 
 def prune(*args):
+    """Removes values equivalent to the passed parameters from the result of
+    a function that returns an iterable."""
     def decorator(func):
         @wraps(func)
         def wrapper(*args_, **kwargs_):
@@ -37,6 +33,9 @@ def prune(*args):
 
 
 def types(*args):
+    """Annotates a function with the types it is meant to validate. The
+    implicity can easily be thwarted in a containing class, and the
+    alternative would not be as DRY."""
     def decorator(func):
         func.types = args
         return func
@@ -44,6 +43,7 @@ def types(*args):
 
 
 def validation_error(*args, **kwargs):
+    """Converts a boolean return value to a custom ValidationError."""
     def decorator(func):
         @wraps(func)
         def wrapper(*args_, **kwargs_):
@@ -54,9 +54,10 @@ def validation_error(*args, **kwargs):
 
 
 class OParlResponse(object):
+    """Validator for server responses."""
 
     def __init__(self, response):
-        # TODO: doc me
+        """Initializes the validator with the candidate response."""
         self.response = response
         self.validators = [method
                            for name, method
@@ -68,16 +69,20 @@ class OParlResponse(object):
            'Consultation', 'Meeting', 'Paper')  # Or all by default?
     @validation_error("Invalid Status Code")
     def _validate_success(self):
+        """Validates the HTTP status code."""
         return self.response.status_code in range(200, 400)  # O(1) in Py 3
 
     def validate(self):
+        """Executes all applicable response validators."""
         return chain.from_iterable([val(self) for val in self.validators])
 
 
 class OParlJson(object):
+    """Validator for OParl objects."""
 
     def __init__(self, string):
-        # TODO: doc me
+        """Initializes the validator with a string that consists of the
+        JSON object."""
         self.string = string
 
     @staticmethod
@@ -111,6 +116,7 @@ class OParlJson(object):
 
     @staticmethod
     def _validate_custom(schema, data):
+        """Executes all custom validators for the object."""
         if 'oparl:validate' in schema:
             for test in schema['oparl:validate']:
                 func = import_from_string(test['method'])
@@ -120,6 +126,7 @@ class OParlJson(object):
 
     @classmethod
     def _validate_schema(cls, obj_type, data):
+        """Runs the JSON Schema validation."""
         validator = cls._get_validator(obj_type)
         return validator.iter_errors(data)
 
@@ -141,7 +148,7 @@ class OParlJson(object):
                      cls._validate_custom(OPARL[obj_type], data))
 
     def validate(self):
-        # TODO: doc me
+        """Runs the validation and yields any validation errors."""
         try:
             document = self._load_document(self.string)
             for error in self._validate_all(document):
