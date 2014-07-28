@@ -40,7 +40,7 @@ class Crawler(object):
                      OParlJson(response.text).validate())
 
     def _mine(self, document):
-        if 'type' not in document:
+        if not ('type' in document and document['type'] in EXPECTED_TYPES):
             # this document is not valid, we cannot detect its type, so we
             # do not know what items should contain links to other documents
             return
