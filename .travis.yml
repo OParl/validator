@@ -17,3 +17,4 @@ notifications:
     skip_join: true
 after_success:
   - coveralls
+sudo: false
