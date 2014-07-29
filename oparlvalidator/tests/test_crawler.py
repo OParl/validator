@@ -8,9 +8,9 @@ from wsgiref.simple_server import make_server
 from os.path import join, dirname
 from ..crawler import Crawler
 from .server import Server
-from ..server_tests import check_accecpt_encoding
-from ..server_tests import check_not_contain_reserved_url_params
-from ..server_tests import check_http_status_codes
+from ..server_tests import (
+    check_accept_encoding, check_not_contain_reserved_url_params,
+    check_http_status_codes)
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
@@ -79,15 +79,15 @@ class TestCrawler(unittest.TestCase):
         # run assertions
         prefix = "http://localhost:%s" % server.port
         self.assertEquals(True,
-                          check_accecpt_encoding(prefix + "/example/valid"))
+                          check_accept_encoding(prefix + "/example/valid"))
         self.assertEquals(False,
-                          check_accecpt_encoding(
+                          check_accept_encoding(
                               prefix + "/example/invalid_empty"))
         self.assertEquals(False,
-                          check_accecpt_encoding(
+                          check_accept_encoding(
                               prefix + "/example/invalid_not_set"))
         self.assertEquals(False,
-                          check_accecpt_encoding(
+                          check_accept_encoding(
                               prefix + "/example/invalid_type_not_supported")
                           )
         server.shutdown()

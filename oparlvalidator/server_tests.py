@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Collection of non-typespecific tests.
+Collection of non-type-specific tests.
 """
 
 from __future__ import (unicode_literals, absolute_import,
@@ -11,7 +11,9 @@ from six.moves.urllib import parse
 # pylint: enable=import-error,no-name-in-module
 
 
-def check_accecpt_encoding(url):
+# TODO: Let’s not do this in the suite but on every request
+# (without sending new requests).
+def check_accept_encoding(url):
     """
     Pass an URL and check wether mandatory compressions are supported.
 
@@ -63,6 +65,8 @@ def check_not_contain_reserved_url_params(url):
     return True
 
 
+# TODO: Seems straightforward but if it is meant to test 4.12, then note that
+# it’s not a requirement.
 def check_http_status_codes(url_to_existing_get_ressource):
     """
     Pass an URL to some valid GET ressource and check if http status codes

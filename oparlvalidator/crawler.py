@@ -5,7 +5,7 @@ import requests
 from collections import defaultdict
 from itertools import chain
 from .schema import EXPECTED_TYPES
-from .validator import OParlJson, OParlResponse
+from .validator import OParlJson, OParlResponse, ServerSuite
 
 
 class Crawler(object):
@@ -24,7 +24,8 @@ class Crawler(object):
         self.recursive = recursive
         self._counts = defaultdict(int)
         self._queue = [(seed_url, [])]
-        self._visited = set()  # TODO: Persist?
+        self._visited = set()
+        self._valid = set()  # TODO: Persist?
         self._errors = defaultdict(list)
 
     def _retrieve(self, *args, **kwargs):
@@ -41,10 +42,9 @@ class Crawler(object):
     def _mine(self, document):
         """Mines the response for URLs that can be followed."""
         if not ('type' in document and document['type'] in EXPECTED_TYPES):
-            # this document is not valid, we cannot detect its type, so we
-            # do not know what items should contain links to other documents
+            # We cannot detect the type of this document, so we do not know
+            # what parameters should contain links to other documents.
             return
-
         for key, value in document.items():
             expected_types = EXPECTED_TYPES[document['type']].get(key)
             if expected_types:
@@ -56,21 +56,23 @@ class Crawler(object):
 
     def run(self):
         """Starts the crawling process."""
+        # TODO: List handling
         while self._queue:
             url, expected_types = self._queue.pop(0)
             response = self._retrieve(url)
             self._visited.add(url)
-
+            error = None
             for error in self._validate(response):
                 self._errors[url].append(error)
                 yield (url, error)
-
+            object_ = response.json()
+            if not error:
+                self._valid.add((url, object_['type']))
             if not self.recursive:
                 return
 
             # Queuing new URLs
-            links = self._mine(response.json())
-            for url, expected_types in links:
+            for url, expected_types in self._mine(object_):
                 # Skip because of limits per type
                 if self.max_documents is not None:
                     if len(expected_types) == 1:
@@ -79,9 +81,9 @@ class Crawler(object):
                             continue
                     else:  # TODO: Decide how to handle the ambiguous cases
                         continue
-
                 # Skip because known
                 if url in self._visited:
                     continue
                 self._queue.append((url, expected_types))
                 self._counts[expected_types[0]] += 1
+        ServerSuite(self._valid).validate()

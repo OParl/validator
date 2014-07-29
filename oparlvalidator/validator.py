@@ -2,10 +2,12 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
+import requests
 from collections import namedtuple
 from jsonschema.validators import Draft4Validator
 from functools import wraps
-from itertools import chain
+from itertools import chain, groupby
+from operator import itemgetter
 import jsonschema.exceptions
 from .schema import OPARL, TYPES
 from .utils import build_object_type, import_from_string
@@ -33,9 +35,14 @@ def prune(*args):
 
 
 def types(*args):
-    """Annotates a function with the types it is meant to validate. The
-    implicity can easily be thwarted in a containing class, and the
-    alternative would not be as DRY."""
+    """Annotates a function with the types it is meant to validate. We
+    can use the empty case as a wildcard.
+
+    The implicity can easily be thwarted in a containing class, and the
+    alternative would not be as DRY since our function names are more
+    likely to change than OParl’s object names once the standard has been
+    released. But I don’t have a strong preference either way.
+    """
     def decorator(func):
         func.types = args
         return func
@@ -64,10 +71,8 @@ class OParlResponse(object):
                            in sorted(self.__class__.__dict__.items())
                            if name.startswith('_validate_')]
 
-    @types('AgendaItem', 'Document', 'Membership', 'Person',
-           'Body', 'Location', 'Organization', 'System',
-           'Consultation', 'Meeting', 'Paper')  # Or all by default?
-    @validation_error("Invalid Status Code")
+    @types()
+    @validation_error('Invalid Status Code')
     def _validate_success(self):
         """Validates the HTTP status code."""
         return self.response.status_code in range(200, 400)  # O(1) in Py 3
@@ -165,3 +170,57 @@ class OParlJson(object):
                                                         excp))
             else:
                 yield ValidationError(excp)
+
+
+class ServerSuite(object):
+
+    def __init__(self, links, limit=3):
+        """Initializes the suite with a corpus of valid URLs."""
+        self.links = {type_: list(next(zip(*links_)))[:limit]
+                      for type_, links_
+                      in groupby(sorted(links, key=itemgetter(1)),
+                                 key=itemgetter(1))}
+        self.validators = [method for name, method
+                           in sorted(self.__class__.__dict__.items())
+                           if name.startswith('_validate_')]
+
+    def validate(self):
+        for valitator in self.validators:
+            yield valitator()
+
+    @types('http://oparl.org/schema/1.0/File')
+    @validation_error('HEAD response invalid (4.8.1)')
+    def _validate_head_for_file_urls(self, url):
+        """Section 4.8.1 requires that file URLs have to allow for HEAD
+        requests.
+        """
+        object_ = requests.get(url, timeout=10).json()
+        response = requests.head(
+            object_.get('downloadUrl', object_['accessUrl']), timeout=10)
+        return response.status_code in range(200, 400)
+
+    @types('http://oparl.org/schema/1.0/File')
+    @validation_error('Content-Disposition missing or incomplete (4.8.2)')
+    def _validate_filename_for_file_urls(self, url):
+        """Section 4.8.2 requires that the server specify the name of a file
+        in a Content-Disposition header if it has a download URL.
+        """
+        object_ = requests.get(url, timeout=10).json()
+        if 'downloadUrl' in object_:
+            response = requests.head(object_['downloadUrl'], timeout=10)
+            cd_header = response.headers.get('Content-Disposition', ''),
+            return 'attachment' in cd_header and 'filename' in cd_header
+
+    @types('http://oparl.org/schema/1.0/File')
+    @validation_error('Last-Modified header missing (4.8.3)')
+    def _validate_last_modified_for_file_urls(self, url):
+        """Section 4.8.3 requires that access and download URLs have to
+        provide Last-Modified headers.
+        """
+        object_ = requests.get(url, timeout=10).json()
+        if 'downloadUrl' in object_:
+            response = requests.head(object_['downloadUrl'], timeout=10)
+            if 'Last-Modified' not in response.headers:
+                return False
+        response = requests.head(object_['accessUrl'], timeout=10)
+        return 'Last-Modified' in response.headers
