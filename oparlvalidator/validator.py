@@ -189,7 +189,7 @@ class ServerSuite(object):
             yield valitator()
 
     @types('http://oparl.org/schema/1.0/File')
-    @validation_error('HEAD response invalid (4.8.1)')
+    @validation_error('HEAD response invalid', section='4.8.1')
     def _validate_head_for_file_urls(self, url):
         """Section 4.8.1 requires that file URLs have to allow for HEAD
         requests.
@@ -200,7 +200,8 @@ class ServerSuite(object):
         return response.status_code in range(200, 400)
 
     @types('http://oparl.org/schema/1.0/File')
-    @validation_error('Content-Disposition missing or incomplete (4.8.2)')
+    @validation_error('Content-Disposition missing or incomplete',
+                      section='4.8.2')
     def _validate_filename_for_file_urls(self, url):
         """Section 4.8.2 requires that the server specify the name of a file
         in a Content-Disposition header if it has a download URL.
@@ -212,7 +213,7 @@ class ServerSuite(object):
             return 'attachment' in cd_header and 'filename' in cd_header
 
     @types('http://oparl.org/schema/1.0/File')
-    @validation_error('Last-Modified header missing (4.8.3)')
+    @validation_error('Last-Modified header missing', section='4.8.3')
     def _validate_last_modified_for_file_urls(self, url):
         """Section 4.8.3 requires that access and download URLs have to
         provide Last-Modified headers.
