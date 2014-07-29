@@ -3,12 +3,13 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
 import requests
+import jsonschema.exceptions
 from collections import namedtuple
 from jsonschema.validators import Draft4Validator
 from functools import wraps
 from itertools import chain, groupby
 from operator import itemgetter
-import jsonschema.exceptions
+from six.moves import zip  # pylint: disable=redefined-builtin,import-error
 from .schema import OPARL, TYPES
 from .utils import build_object_type, import_from_string
 from .statistics import with_stats
