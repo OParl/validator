@@ -24,17 +24,17 @@ def check_accept_encoding(url):
     Returns:
         True on success, false otherwise.
     """
-    compressions = ["gzip", "compress", "deflate"]
-    header = {"Accept-Encoding": ", ".join(compressions)}
+    compressions = ['gzip', 'compress', 'deflate']
+    header = {'Accept-Encoding': ', '.join(compressions)}
     response = requests.get(url, headers=header)
 
-    # response shall contain header w/ "Content-Encoding" wich must be
+    # response shall contain header w/ 'Content-Encoding' wich must be
     # any of the above
-    if "content-encoding" not in response.headers:
+    if 'content-encoding' not in response.headers:
         return False
 
     for compression in compressions:
-        if compression in response.headers["content-encoding"]:
+        if compression in response.headers['content-encoding']:
             return True
     return False
 
@@ -50,12 +50,12 @@ def check_not_contain_reserved_url_params(url):
         True if no reserved keys found, false otherwise.
     """
     reserved_keys = [
-        "startdate",
-        "enddate",
-        "listformat",
-        "subject",
-        "predicate",
-        "object"
+        'startdate',
+        'enddate',
+        'listformat',
+        'subject',
+        'predicate',
+        'object'
     ]
     parsed_url = parse.urlparse(url)
     query = parse.parse_qs(parsed_url.query)
@@ -74,18 +74,18 @@ def check_http_status_codes(url_to_existing_get_ressource):
     """
     response = requests.get(url_to_existing_get_ressource)
     # 200
-    if "status" not in response.headers:
+    if 'status' not in response.headers:
         return False
-    if "200 OK" not in response.headers["status"]:
+    if '200 OK' not in response.headers['status']:
         return False
 
     # 404
     bad_ressource = url_to_existing_get_ressource + \
-        "/does/not/exist/unless/you/cheated"
+        '/does/not/exist/unless/you/cheated'
     response = requests.get(bad_ressource)
-    if "status" not in response.headers:
+    if 'status' not in response.headers:
         return False
-    if "404 Not Found" not in response.headers["status"]:
+    if '404 Not Found' not in response.headers['status']:
         return False
 
     # other codes testable?

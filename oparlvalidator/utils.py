@@ -54,7 +54,7 @@ class LazyDict(MutableMapping):
             return default
 
     def __str__(self):
-        return "<LazyDict - Keys: %s>" % str([x for x in self])
+        return '<LazyDict - Keys: %s>' % str([x for x in self])
 
     def __repr__(self):
         return str(self)

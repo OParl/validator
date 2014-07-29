@@ -49,26 +49,26 @@ class TestCrawler(unittest.TestCase):
         # setup server
         server = Server()
         test_cases = {
-            "/example/valid": {
-                "GET":
+            '/example/valid': {
+                'GET':
                 {
                     'headers': [('content-encoding', 'gzip')],
                 }
             },
-            "/example/invalid_empty": {
-                "GET":
+            '/example/invalid_empty': {
+                'GET':
                 {
                     'headers': [('content-encoding', '')],
                 }
             },
-            "/example/invalid_not_set": {
-                "GET":
+            '/example/invalid_not_set': {
+                'GET':
                 {
                     'headers': [],
                 }
             },
-            "/example/invalid_type_not_supported": {
-                "GET":
+            '/example/invalid_type_not_supported': {
+                'GET':
                 {
                     'headers': [('content-encoding', 'esoteric')],
                 }
@@ -77,18 +77,18 @@ class TestCrawler(unittest.TestCase):
         server.serve(test_cases)
 
         # run assertions
-        prefix = "http://localhost:%s" % server.port
+        prefix = 'http://localhost:%s' % server.port
         self.assertEquals(True,
-                          check_accept_encoding(prefix + "/example/valid"))
+                          check_accept_encoding(prefix + '/example/valid'))
         self.assertEquals(False,
                           check_accept_encoding(
-                              prefix + "/example/invalid_empty"))
+                              prefix + '/example/invalid_empty'))
         self.assertEquals(False,
                           check_accept_encoding(
-                              prefix + "/example/invalid_not_set"))
+                              prefix + '/example/invalid_not_set'))
         self.assertEquals(False,
                           check_accept_encoding(
-                              prefix + "/example/invalid_type_not_supported")
+                              prefix + '/example/invalid_type_not_supported')
                           )
         server.shutdown()
 
@@ -98,42 +98,42 @@ class TestCrawler(unittest.TestCase):
         """
         self.assertEquals(True,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/this?is=a&sane=url"
+                              'http://example.org/this?is=a&sane=url'
                           )
                           )
         self.assertEquals(True,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/this?is=still&ok=enddate"
+                              'http://example.org/this?is=still&ok=enddate'
                           )
                           )
         self.assertEquals(False,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/file.ext?startdate=nope"
+                              'http://example.org/file.ext?startdate=nope'
                           )
                           )
         self.assertEquals(False,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/file.ext?enddate=nope"
+                              'http://example.org/file.ext?enddate=nope'
                           )
                           )
         self.assertEquals(False,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/file.ext?listformat=nope"
+                              'http://example.org/file.ext?listformat=nope'
                           )
                           )
         self.assertEquals(False,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/file.ext?subject=nope"
+                              'http://example.org/file.ext?subject=nope'
                           )
                           )
         self.assertEquals(False,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/file.ext?predicate=nope"
+                              'http://example.org/file.ext?predicate=nope'
                           )
                           )
         self.assertEquals(False,
                           check_not_contain_reserved_url_params(
-                              "http://example.org/file.ext?object=nope"
+                              'http://example.org/file.ext?object=nope'
                           )
                           )
 
@@ -144,30 +144,30 @@ class TestCrawler(unittest.TestCase):
         # setup server
         server = Server()
         server.serve({
-            "/ressource/exists": {
-                "GET": {
-                    "headers": [("status", "200 OK")]
+            '/ressource/exists': {
+                'GET': {
+                    'headers': [('status', '200 OK')]
                 }
             }
         })
-        prefix = "http://localhost:%s" % server.port
+        prefix = 'http://localhost:%s' % server.port
         self.assertEquals(False,
-                          check_http_status_codes(prefix + "/ressource/exists")
+                          check_http_status_codes(prefix + '/ressource/exists')
                           )
 
         server.serve({
-            "/ressource": {
-                "GET": {
-                    "headers": [("status", "200 OK")]
+            '/ressource': {
+                'GET': {
+                    'headers': [('status', '200 OK')]
                 }
             },
-            "/ressource/does/not/exist/unless/you/cheated": {
-                "GET": {
-                    "headers": [("status", "404 Not Found")]
+            '/ressource/does/not/exist/unless/you/cheated': {
+                'GET': {
+                    'headers': [('status', '404 Not Found')]
                 }
             }
         })
         self.assertEquals(True,
-                          check_http_status_codes(prefix + "/ressource")
+                          check_http_status_codes(prefix + '/ressource')
                           )
         server.shutdown()
