@@ -5,6 +5,13 @@ import unittest
 from ..statistics import with_stats
 
 
+TEST_SCHEMA = {
+    'properties': {'a': None, 'b': None, 'c': None},
+    'required': ['a'],
+    'oparl:recommended': ['b']
+}
+
+
 class TestStatistics(unittest.TestCase):
 
     def setUp(self):
@@ -51,3 +58,13 @@ class TestStatistics(unittest.TestCase):
         stats.initialize()
         self.assertEquals({}, dict(stats.num_docs_per_type))
         self.assertEquals(0, stats.num_docs)
+
+    @with_stats
+    def test_count_properties(self, stats=None):
+        stats.count_properties('test', ['a', 'b', 'c', 'd'], TEST_SCHEMA)
+        self.assertEquals(dict(stats.properties['recommended']),
+                          {'test': {'b': 1}})
+        self.assertEquals(dict(stats.properties['optional']),
+                          {'test': {'c': 1}})
+        self.assertEquals(dict(stats.properties['custom']),
+                          {'test': {'d': 1}})
