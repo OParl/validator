@@ -1,11 +1,8 @@
 # -*- encoding: utf-8 -*-
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import threading
 import unittest
 import json
-import static
-from wsgiref.simple_server import make_server
 from os.path import join, dirname
 from os import walk
 from ..crawler import Crawler
@@ -27,11 +24,10 @@ class TestCrawler(unittest.TestCase):
             .format(self.server.host, self.server.port))
 
         self.testdata = {}
-        import os
         for root, _, files in walk(DATA_DIR):
             for filename in files:
                 if filename.endswith(".valid.json"):
-                    filepath = os.path.join(root, filename)
+                    filepath = join(root, filename)
                     with open(filepath) as json_file:
                         self.testdata[filename] = json.load(json_file)
 
