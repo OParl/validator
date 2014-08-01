@@ -92,11 +92,15 @@ class OParlJson(object):
         self.string = string
 
     @staticmethod
-    def _validate_type(data):
+    def _validate_type(data, spec=None):
         """
         Check if the document contains a type and we have a schema for it.
+        Also checks if the document matches on of the expected types found
+        by the crawler.
 
         :param data: dictionary with the parsed document for validation
+        :param spec: optional arguement with a DocumentSpec for validation
+           of the expected_types
         :returns: internal document type, could be used to access the
            approriate schema using the OPARL dictionary
         """
@@ -111,7 +115,17 @@ class OParlJson(object):
             'required': ['type']
         }
         Draft4Validator(type_check).validate(data)
-        return TYPES[data['type']]
+        obj_type = TYPES[data['type']]
+
+        if spec and spec.expected_types:
+            if obj_type not in spec.expected_types:
+                raise ValueError("Invalid link detected: '%s:%s' links to "
+                                 "'%s' of type: '%s' but one of '%s' "
+                                 "expected." %
+                                 (spec.parent.url, spec.parent.key, spec.url,
+                                  obj_type, spec.expected_types))
+
+        return obj_type
 
     @staticmethod
     def _validate_schema(schema, data):
@@ -144,19 +158,19 @@ class OParlJson(object):
 
     @classmethod
     @prune(None)
-    def _validate_all(cls, data):
-        obj_type = cls._validate_type(data)
+    def _validate_all(cls, data, spec):
+        obj_type = cls._validate_type(data, spec)
         schema = OPARL[obj_type]
 
         return chain(cls._validate_schema(schema, data),
                      cls._validate_custom(schema, data),
                      cls._statistics(obj_type, schema, data))
 
-    def validate(self):
+    def validate(self, spec=None):
         """Runs the validation and yields any validation errors."""
         try:
             document = self._load_document(self.string)
-            for error in self._validate_all(document):
+            for error in self._validate_all(document, spec):
                 yield error
         except (jsonschema.exceptions.ValidationError,
                 jsonschema.exceptions.SchemaError,

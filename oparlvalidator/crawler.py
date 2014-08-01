@@ -2,10 +2,20 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import requests
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from itertools import chain
 from .schema import EXPECTED_TYPES
 from .validator import OParlJson, OParlResponse, ServerSuite
+
+
+class DocumentSpec(namedtuple('DocumentSpec',
+                              ['url', 'expected_types', 'parent'])):
+    def __new__(cls, url, expected_types=None, parent=None):
+        return super(DocumentSpec, cls).__new__(cls, url, expected_types,
+                                                parent)
+
+
+LinkSource = namedtuple('LinkSource', ['url', 'key'])
 
 
 class Crawler(object):
@@ -23,7 +33,7 @@ class Crawler(object):
         self.type_whitelist = type_whitelist
         self.recursive = recursive
         self._counts = defaultdict(int)
-        self._queue = [(seed_url, [])]
+        self._queue = [DocumentSpec(url=seed_url)]
         self._visited = set()
         self._valid = set()  # TODO: Persist?
         self._errors = defaultdict(list)
@@ -34,12 +44,12 @@ class Crawler(object):
         kwargs.setdefault('timeout', 10)
         return requests.get(*args, **kwargs)
 
-    def _validate(self, response):
+    def _validate(self, response, doc):
         """Calls the validators."""
         return chain(OParlResponse(response).validate(),
-                     OParlJson(response.text).validate())
+                     OParlJson(response.text).validate(doc))
 
-    def _mine(self, document):
+    def _mine(self, document, parent):
         """Mines the response for URLs that can be followed."""
         if not ('type' in document and document['type'] in EXPECTED_TYPES):
             # We cannot detect the type of this document, so we do not know
@@ -49,41 +59,43 @@ class Crawler(object):
             expected_types = EXPECTED_TYPES[document['type']].get(key)
             if expected_types:
                 if isinstance(value, str):
-                    yield (value, expected_types)
+                    yield DocumentSpec(value, expected_types=expected_types,
+                                       parent=LinkSource(parent.url, key))
                 else:
                     for item in value:
-                        yield (item, expected_types)
+                        yield DocumentSpec(item, expected_types=expected_types,
+                                           parent=LinkSource(parent.url, key))
 
     def run(self):
         """Starts the crawling process."""
         # TODO: List handling
         while self._queue:
-            url, expected_types = self._queue.pop(0)
-            response = self._retrieve(url)
-            self._visited.add(url)
+            doc = self._queue.pop(0)
+            response = self._retrieve(doc.url)
+            self._visited.add(doc.url)
             error = None
-            for error in self._validate(response):
-                self._errors[url].append(error)
-                yield (url, error)
+            for error in self._validate(response, doc):
+                self._errors[doc.url].append(error)
+                yield (doc.url, error)
             object_ = response.json()
             if not error:
-                self._valid.add((url, object_['type']))
+                self._valid.add((doc.url, object_['type']))
             if not self.recursive:
                 return
 
             # Queuing new URLs
-            for url, expected_types in self._mine(object_):
+            for new_doc in self._mine(object_, doc):
                 # Skip because of limits per type
                 if self.max_documents is not None:
-                    if len(expected_types) == 1:
-                        if self._counts[expected_types[0]] >= \
+                    if len(new_doc.expected_types) == 1:
+                        if self._counts[new_doc.expected_types[0]] >= \
                                 self.max_documents:
                             continue
+                        self._counts[new_doc.expected_types[0]] += 1
                     else:  # TODO: Decide how to handle the ambiguous cases
                         continue
                 # Skip because known
-                if url in self._visited:
+                if new_doc.url in self._visited:
                     continue
-                self._queue.append((url, expected_types))
-                self._counts[expected_types[0]] += 1
+                self._queue.append(new_doc)
         ServerSuite(self._valid).validate()
