@@ -47,7 +47,6 @@ class TestCrawler(unittest.TestCase):
         Test for compression support (Section 4.11).
         """
         # setup server
-        server = Server()
         test_cases = {
             '/example/valid': {
                 'GET':
@@ -74,7 +73,7 @@ class TestCrawler(unittest.TestCase):
                 }
             },
         }
-        server.serve(test_cases)
+        self.server.serve(test_cases)
 
         # run assertions
         prefix = 'http://localhost:%s' % self.server.port
