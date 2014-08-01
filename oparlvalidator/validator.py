@@ -131,6 +131,12 @@ class OParlJson(object):
 
     @staticmethod
     @with_stats
+    def _statistics(obj_type, schema, data, stats=None):
+        stats.count_type(obj_type)
+        stats.count_properties(obj_type, data.keys(), schema)
+
+    @staticmethod
+    @with_stats
     def _load_document(content, stats=None):
         data = json.loads(content)
         stats.count_document()
@@ -138,14 +144,13 @@ class OParlJson(object):
 
     @classmethod
     @prune(None)
-    @with_stats
-    def _validate_all(cls, data, stats=None):
+    def _validate_all(cls, data):
         obj_type = cls._validate_type(data)
-        stats.count_type(obj_type)
         schema = OPARL[obj_type]
 
         return chain(cls._validate_schema(schema, data),
-                     cls._validate_custom(schema, data))
+                     cls._validate_custom(schema, data),
+                     cls._statistics(obj_type, schema, data))
 
     def validate(self):
         """Runs the validation and yields any validation errors."""
