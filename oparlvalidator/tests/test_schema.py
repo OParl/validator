@@ -10,7 +10,7 @@ from jsonschema.validators import Draft4Validator
 import jsonschema.exceptions
 
 from ..validator import OParlJson
-from ..schema import SCHEMA_DIR, nameLong_not_equal_nameShort
+from ..schema import OPARL, TYPES, SCHEMA_DIR, nameLong_not_equal_nameShort
 
 DATA_DIR = join(dirname(__file__), 'testdata')
 
@@ -37,7 +37,9 @@ class TestSchema(unittest.TestCase):
         data = self._load_test_file(testfile)
         self.assertIsNotNone(
             data, 'Test data "%s" not found or invalid' % testfile)
-        return OParlJson._validate_schema(obj_type, data)
+        self.assertIn(obj_type, TYPES, 'Invalid document type')
+        self.assertIn(TYPES[obj_type], OPARL, 'Missing schema')
+        return OParlJson._validate_schema(OPARL[TYPES[obj_type]], data)
 
     def _test_validation(self, obj_type, testfile, expected_errors=None):
         """

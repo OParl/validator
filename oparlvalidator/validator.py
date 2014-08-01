@@ -11,7 +11,7 @@ from itertools import chain, groupby
 from operator import itemgetter
 from six.moves import zip  # pylint: disable=redefined-builtin,import-error
 from .schema import OPARL, TYPES
-from .utils import build_object_type, import_from_string
+from .utils import import_from_string
 from .statistics import with_stats
 
 
@@ -92,13 +92,6 @@ class OParlJson(object):
         self.string = string
 
     @staticmethod
-    def _get_validator(object_type):
-        object_type = build_object_type(object_type)
-        if object_type not in OPARL:
-            return None
-        return Draft4Validator(OPARL[object_type])
-
-    @staticmethod
     def _validate_type(data):
         """
         Check if the document contains a type and we have a schema for it.
@@ -121,6 +114,12 @@ class OParlJson(object):
         return TYPES[data['type']]
 
     @staticmethod
+    def _validate_schema(schema, data):
+        """Runs the JSON Schema validation."""
+        validator = Draft4Validator(schema)
+        return validator.iter_errors(data)
+
+    @staticmethod
     def _validate_custom(schema, data):
         """Executes all custom validators for the object."""
         if 'oparl:validate' in schema:
@@ -129,12 +128,6 @@ class OParlJson(object):
                 if not func(data):
                     yield ValidationError(section=test['section'],
                                           message=test['message'])
-
-    @classmethod
-    def _validate_schema(cls, obj_type, data):
-        """Runs the JSON Schema validation."""
-        validator = cls._get_validator(obj_type)
-        return validator.iter_errors(data)
 
     @staticmethod
     @with_stats
@@ -149,9 +142,10 @@ class OParlJson(object):
     def _validate_all(cls, data, stats=None):
         obj_type = cls._validate_type(data)
         stats.count_type(obj_type)
+        schema = OPARL[obj_type]
 
-        return chain(cls._validate_schema(obj_type, data),
-                     cls._validate_custom(OPARL[obj_type], data))
+        return chain(cls._validate_schema(schema, data),
+                     cls._validate_custom(schema, data))
 
     def validate(self):
         """Runs the validation and yields any validation errors."""
