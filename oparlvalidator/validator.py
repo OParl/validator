@@ -161,10 +161,8 @@ class OParlJson(object):
     def _validate_all(cls, data, spec):
         obj_type = cls._validate_type(data, spec)
         schema = OPARL[obj_type]
-
         return chain(cls._validate_schema(schema, data),
-                     cls._validate_custom(schema, data),
-                     cls._statistics(obj_type, schema, data))
+                     cls._validate_custom(schema, data))
 
     def validate(self, spec=None):
         """Runs the validation and yields any validation errors."""
