@@ -1,5 +1,5 @@
 {
-    "id": "https://oparl.example.org/membership/29",
+    "id": "https://oparl.example.org/membership.valid.json",
     "type": "http://oparl.org/schema/1.0/Membership",
     "person": "https://oparl.example.org/person.valid.json",
     "organization": "https://oparl.example.org/organization.valid.json",

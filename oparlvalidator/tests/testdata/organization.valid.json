@@ -1,17 +1,16 @@
 {
     "type": "http://oparl.org/schema/1.0/Organization",
-    "id": "https://oparl.example.org/organization/34",
-    "body": "https://oparl.example.org/0",
+    "id": "https://oparl.example.org/organization.valid.json",
+    "body": "https://oparl.example.org/body.valid.json",
     "nameShort": "Finanzausschuss",
     "nameLong": "Ausschuss für Haushalt und Finanzen",
     "post": [
-        "https://oparl.example.org/post/chairperson",
-        "https://oparl.example.org/post/deputyChairperson"
+        "Vorsitzender | Vorsitzende",
+        "1. Stellvertreter | 1. Stellvertreterin",
+        "Mitglied"
     ],
-    "member": [
-        "https://oparl.example.org/27",
-        "https://oparl.example.org/48",
-        "https://oparl.example.org/57"
+    "membership": [
+        "https://oparl.example.org/membership.valid.json"
     ],
     "organizationType": "https://oparl.example.org/vocab/committee",
     "classification": "https://oparl.example.org/vocab/finance",

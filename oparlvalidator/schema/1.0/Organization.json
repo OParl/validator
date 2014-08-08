@@ -23,7 +23,7 @@
             },
             "type": "array"
         },
-        "member": {
+        "membership": {
             "items": {
                 "format": "uri",
                 "type": "string"
@@ -62,7 +62,7 @@
         "id",
         "body",
         "nameLong",
-        "member"
+        "membership"
     ],
     "oparl:recommended": [
         "created",

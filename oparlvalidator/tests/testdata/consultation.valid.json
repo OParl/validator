@@ -1,9 +1,9 @@
 {
     "type": "http://oparl.org/schema/1.0/Consultation",
-    "id": "https://oparl.example.org/consultation/47594",
-    "paper": "https://oparl.example.org/paper/2396",
-    "agendaItem": "https://oparl.example.org/agendaitem/15569",
-    "organization": "https://oparl.example.org/organization/96",
+    "id": "https://oparl.example.org/consultation.valid.json",
+    "paper": "https://oparl.example.org/paper.valid.json",
+    "agendaItem": "https://oparl.example.org/agenda_item.valid.json",
+    "organization": "https://oparl.example.org/organization.valid.json",
     "authoritative": false,
     "role": "https://oparl.example.org/role/decision"
 }
