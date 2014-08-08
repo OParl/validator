@@ -30,7 +30,7 @@ class Crawler(object):
         """
         self.seed_url = seed_url
         self.max_documents = max_documents
-        self.type_whitelist = type_whitelist
+        self.type_whitelist = set(type_whitelist)
         self.recursive = recursive
         self._counts = defaultdict(int)
         self._queue = [DocumentSpec(url=seed_url)]
@@ -85,6 +85,9 @@ class Crawler(object):
 
             # Queuing new URLs
             for new_doc in self._mine(object_, doc):
+                if self.type_whitelist is not None:
+                    if not set(new_doc.expected_types) & self.type_whitelist:
+                        continue
                 # Skip because of limits per type
                 if self.max_documents is not None:
                     if len(new_doc.expected_types) == 1:
