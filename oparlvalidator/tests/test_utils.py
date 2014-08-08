@@ -11,22 +11,22 @@ class TestBuildObjectType(unittest.TestCase):
     def test_build_object_type(self):
         self.assertEquals(
             utils.build_object_type('http://oparl.org/schema/1.0/Document'),
-            'schema/1.0/Document')
+            'http://oparl.org/schema/1.0/Document')
         self.assertEquals(
             utils.build_object_type('schema/1.0/Document'),
-            'schema/1.0/Document')
+            'http://oparl.org/schema/1.0/Document')
         self.assertEquals(
             utils.build_object_type(
                 join(utils.SCHEMA_DIR, '1.0', 'Document')),
-            'schema/1.0/Document')
+            'http://oparl.org/schema/1.0/Document')
         self.assertEquals(
             utils.build_object_type(
                 join(utils.SCHEMA_DIR, '1.0', 'Document.json')),
-            'schema/1.0/Document')
+            'http://oparl.org/schema/1.0/Document')
         self.assertEquals(
             utils.build_object_type(
                 join(utils.SCHEMA_DIR, '1.0', 'AgendaItem.json')),
-            'schema/1.0/AgendaItem')
+            'http://oparl.org/schema/1.0/AgendaItem')
 
 
 class TestImportFromString(unittest.TestCase):

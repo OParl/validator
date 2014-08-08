@@ -5,15 +5,13 @@ from os.path import join, dirname, splitext
 SCHEMA_DIR = join(dirname(__file__), 'schema')
 
 
-def build_object_type(object_name):
-    basedomain = 'http://oparl.org/schema/'
-    if object_name.startswith(basedomain):
-        return 'schema/%s' % object_name[len(basedomain):]
-
+def build_object_type(object_name):  # FIXME: This is rather implicit.
+    basedomain = 'http://oparl.org/schema'
+    if object_name.startswith('schema/'):
+        return 'http://oparl.org/' + object_name
     if object_name.startswith(SCHEMA_DIR):
         filename = splitext(object_name)[0]
-        return 'schema%s' % filename[len(SCHEMA_DIR):]
-
+        return basedomain + filename[len(SCHEMA_DIR):]
     return object_name
 
 

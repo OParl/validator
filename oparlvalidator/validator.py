@@ -10,7 +10,7 @@ from functools import wraps
 from itertools import chain, groupby
 from operator import itemgetter
 from six.moves import zip  # pylint: disable=redefined-builtin,import-error
-from .schema import OPARL, TYPES
+from .schema import OPARL
 from .utils import import_from_string
 from .statistics import with_stats
 
@@ -109,13 +109,13 @@ class OParlJson(object):
             'properties': {
                 'type': {
                     'type': 'string',
-                    'enum': TYPES.keys()
+                    'enum': OPARL.keys()
                 }
             },
             'required': ['type']
         }
         Draft4Validator(type_check).validate(data)
-        obj_type = TYPES[data['type']]
+        obj_type = data['type']
 
         if spec and spec.expected_types:
             if obj_type not in spec.expected_types:
