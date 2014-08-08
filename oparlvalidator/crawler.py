@@ -21,7 +21,7 @@ LinkSource = namedtuple('LinkSource', ['url', 'key'])
 class Crawler(object):
     """A tool for crawling an OParl server."""
 
-    def __init__(self, seed_url, max_documents=None, type_whitelist=None,
+    def __init__(self, seed_url, max_documents=None, type_whitelist=(),
                  recursive=True):
         """Initilizes the crawler with a seed URL that serves as entry point
         for the crawling process, an optional limit on the number of documents
@@ -85,7 +85,7 @@ class Crawler(object):
 
             # Queuing new URLs
             for new_doc in self._mine(object_, doc):
-                if self.type_whitelist is not None:
+                if self.type_whitelist:
                     if not set(new_doc.expected_types) & self.type_whitelist:
                         continue
                 # Skip because of limits per type
