@@ -40,16 +40,14 @@
         "keyword": {
             "type": "string"
         },
-        "location": {
-            "properties": {
-                "description": {
-                    "type": ["string", "object"]
-                },
-                "geometry": {
-                    "type": "array"
-                }
-            },
-            "type": "object"
+        "streetAddress": {
+            "type": "string"
+        },
+        "postalCode": {
+            "type": "string"
+        },
+        "locality": {
+            "type": "string"
         },
         "modified": {
             "type": "string",
@@ -96,7 +94,6 @@
     ],
     "oparl:recommended": [
         "end",
-        "location",
         "invitation",
         "resultsProtocol",
         "verbatimProtocol",

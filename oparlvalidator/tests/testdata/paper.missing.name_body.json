@@ -8,10 +8,7 @@
 "mainDocument": "https://oparl.example.org/document/925",
 "auxiliaryDocument": "https://oparl.example.org/document/926",
 "location": [
-{
-"description": "Theodor-Heuss-Ring 1",
-"geometry": "POINT(7.148 50.023)"
-}
+	"https://oparl.example.org/location.valid.json" 
 ],
 "originator": [
 "https://oparl.example.org/organization/2000",

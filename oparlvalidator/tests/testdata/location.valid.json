@@ -1,0 +1,6 @@
+{
+    "id": "https://oparl.example.org/location.valid.json",
+    "type": "http://oparl.org/schema/1.0/Location",
+    "description": "Honschaftsstraße 312, Köln",
+    "geometry": "POINT (7.03291 50.98249)"
+}
