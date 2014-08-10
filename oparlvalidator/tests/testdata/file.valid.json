@@ -6,6 +6,7 @@
     "paper": [
         "https://oparl.example.org/paper.valid.json"
     ],
+    "meeting": ["https://oparl.example.org/meeting.valid.json"],
     "mimeType": "application/pdf",
     "date": "2013-01-04T07:54:13+01:00",
     "modified": "2013-01-04T07:54:13+01:00",
@@ -17,4 +18,5 @@
     "masterFile": "https://oparl.example.org/document.valid.json",
     "license": "http://www.opendefinition.org/licenses/cc-by",
     "fileRole": "https://oparl.example.org/document-role/evidence",
+    "keyword": ["Bebauungsplan"]
 }

@@ -4,7 +4,7 @@
 "name": "Anlage 1 zur Anfrage",
 
 "paper": ["https://oparl.example.org/paper/2396"],
-
+"meeting": ["https://oparl.example.org/meeting.valid.json"],
 
 "sha1Checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
 
@@ -14,4 +14,5 @@
 "masterFile": "https://oparl.example.org/document/57738",
 "license": "http://www.opendefinition.org/licenses/cc-by",
 "fileRole": "https://oparl.example.org/document-role/evidence",
+"keyword": ["Bebauungsplan"]
 }
