@@ -6,7 +6,7 @@
         },
         "type": {
             "type": "string",
-            "pattern": "^http://oparl\\.org/schema/1\\.0/Document$"
+            "pattern": "^http://oparl\\.org/schema/1\\.0/File$"
         },
         "accessUrl": {
             "type": "string",
@@ -16,15 +16,15 @@
             "type": "string",
             "format": "date-time"
         },
-        "derivativeDocument": {
+        "derivativeFile": {
             "type": "array",
-            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"],
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/File"],
             "items": {
                 "type": "string",
                 "format": "uri"
             }
         },
-        "documentRole": {
+        "FileRole": {
             "type": "string"
         },
         "downloadUrl": {
@@ -44,10 +44,10 @@
             "type": "string",
             "format": "uri"
         },
-        "masterDocument": {
+        "masterFile": {
             "type": "string",
             "format": "uri",
-            "oparl:linksTo": ["http://oparl.org/schema/1.0/Document"]
+            "oparl:linksTo": ["http://oparl.org/schema/1.0/File"]
         },
         "meeting": {
             "type": "array",

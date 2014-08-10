@@ -108,9 +108,9 @@ class TestSchema(unittest.TestCase):
         self._test_validation('http://oparl.org/schema/1.0/Consultation',
                               'consultation.valid.json')
 
-    def test_valid_document(self):
-        self._test_validation('http://oparl.org/schema/1.0/Document',
-                              'document.valid.json')
+    def test_valid_file(self):
+        self._test_validation('http://oparl.org/schema/1.0/File',
+                              'file.valid.json')
 
     def test_valid_meeting(self):
         self._test_validation('http://oparl.org/schema/1.0/Meeting',
@@ -150,10 +150,10 @@ class TestSchema(unittest.TestCase):
             'consultation.missing.paper_organization_agendaitem.json',
             ['paper', 'organization', 'agendaItem'])
 
-    def test_invalid_document(self):
+    def test_invalid_file(self):
         self._test_missing_item(
-            'http://oparl.org/schema/1.0/Document',
-            'document.missing.fileName_mimeType_date_'
+            'http://oparl.org/schema/1.0/File',
+            'file.missing.fileName_mimeType_date_'
             'modified_size_accessUrl.json',
             ['fileName', 'mimeType', 'date', 'modified',
              'size', 'accessUrl'])

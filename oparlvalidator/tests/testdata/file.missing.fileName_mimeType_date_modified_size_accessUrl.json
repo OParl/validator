@@ -1,6 +1,6 @@
 {
-"type": "http://oparl.org/schema/1.0/Document",
-"id": "https://oparl.example.org/document/57739",
+"id": "https://oparl.example.org/file.missing.fileName_mimeType_date_modified_size_accessUrl.json",
+"type": "http://oparl.org/schema/1.0/File",
 "name": "Anlage 1 zur Anfrage",
 
 "paper": ["https://oparl.example.org/paper/2396"],
@@ -11,7 +11,7 @@
 
 "downloadUrl": "https://oparl.example.org/document/download/57739.pdf",
 "text": "Der Übersichtsplan zeigt alle Ebenen des ...",
-"masterDocument": "https://oparl.example.org/document/57738",
+"masterFile": "https://oparl.example.org/document/57738",
 "license": "http://www.opendefinition.org/licenses/cc-by",
-"documentRole": "https://oparl.example.org/document-role/evidence"
+"fileRole": "https://oparl.example.org/document-role/evidence",
 }
