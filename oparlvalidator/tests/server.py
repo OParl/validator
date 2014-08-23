@@ -77,6 +77,11 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         self.wfile.write(response['body'].encode(self.ENCODING))
 
+    def log_message(self, *_):
+        entry = vars(self)
+        entry['url'] = self.server.url + self.path
+        self.server.log.append(entry)
+
     def _handler(self):
         if self.path not in self.server.data:
             self._send_404()
@@ -99,7 +104,9 @@ class Server(object):
         self.httpd = BaseHTTPServer.HTTPServer((host, port),
                                                _HTTPHandler)
         self.host, self.port = self.httpd.server_address
+        self.httpd.url = 'http://{}:{}'.format(self.host, self.port)
         self.httpd.data = {}
+        self.httpd.log = []
 
         self.thread = threading.Thread(target=self.httpd.serve_forever)
         self.thread.setDaemon(True)
@@ -113,3 +120,11 @@ class Server(object):
 
     def shutdown(self):
         self.httpd.shutdown()
+
+    @property
+    def url(self):
+        return self.httpd.url
+
+    @property
+    def log(self):
+        return self.httpd.log
