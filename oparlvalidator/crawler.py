@@ -6,6 +6,7 @@ from collections import defaultdict, namedtuple
 from itertools import chain
 from .schema import EXPECTED_TYPES
 from .validator import OParlJson, OParlResponse, ServerSuite
+import six
 
 
 class DocumentSpec(namedtuple('DocumentSpec',
@@ -58,7 +59,7 @@ class Crawler(object):
         for key, value in document.items():
             expected_types = EXPECTED_TYPES[document['type']].get(key)
             if expected_types:
-                if isinstance(value, str):
+                if isinstance(value, six.string_types):
                     yield DocumentSpec(value, expected_types=expected_types,
                                        parent=LinkSource(parent.url, key))
                 else:
