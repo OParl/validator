@@ -33,6 +33,29 @@ class TestCrawler(unittest.TestCase):
     def tearDown(self):
         self.server.shutdown()
 
+    def _serve_objs_by_id(self, objs):
+        objs_to_serve = {}
+        for obj in objs:
+            url = obj['id'].replace(self.server.url, '')
+            objs_to_serve[url] = json.dumps(obj)
+
+        self.server.serve(objs_to_serve)
+
+    def test_whitelist(self):
+        system = self.testdata['system.valid.json']
+        body = self.testdata['body.valid.json']
+        system['bodies'] = [body['id']]
+        body['system'] = system['id']
+
+        self._serve_objs_by_id([body, system])
+
+        errors = Crawler(
+            system['id'], type_whitelist=(system['type'], body['type'])).run()
+        self.assertEqual(len(list(errors)), 0)
+        self.assertEqual(len(self.server.log), 2)
+        self.assertEqual(self.server.log[0]['url'], system['id'])
+        self.assertEqual(self.server.log[1]['url'], body['id'])
+
     def test_accept_encoding(self):
         """
         Test for compression support (Section 4.11).
