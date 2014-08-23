@@ -19,28 +19,19 @@ class TestCrawler(unittest.TestCase):
 
     def setUp(self):
         self.server = Server()
-        self._fix_url(
-            Crawler, 'http://{}:{}/'
-            .format(self.server.host, self.server.port))
-
         self.testdata = {}
         for root, _, files in walk(DATA_DIR):
             for filename in files:
                 if filename.endswith(".valid.json"):
                     filepath = join(root, filename)
                     with open(filepath) as json_file:
-                        self.testdata[filename] = json.load(json_file)
+                        data = json_file.read().decode('utf-8')
+                        data = data.replace(
+                            'https://oparl.example.org', self.server.url)
+                        self.testdata[filename] = json.loads(data)
 
     def tearDown(self):
         self.server.shutdown()
-
-    def _fix_url(self, crawler, host):
-        orig_retrieve = crawler._retrieve
-
-        def _fixUrl(self, *args, **kwargs):
-            url = args[0].replace('https://oparl.example.org/', host)
-            return orig_retrieve(self, url, **kwargs)
-        crawler._retrieve = _fixUrl
 
     def test_accept_encoding(self):
         """
