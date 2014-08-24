@@ -5,6 +5,7 @@ import unittest
 import json
 from os.path import join, dirname
 from os import walk
+import io
 from ..crawler import Crawler
 from .server import Server
 from ..server_tests import (
@@ -22,10 +23,10 @@ class TestCrawler(unittest.TestCase):
         self.testdata = {}
         for root, _, files in walk(DATA_DIR):
             for filename in files:
-                if filename.endswith(".valid.json"):
+                if filename.endswith('.valid.json'):
                     filepath = join(root, filename)
-                    with open(filepath) as json_file:
-                        data = json_file.read().decode('utf-8')
+                    with io.open(filepath, encoding='utf-8') as json_file:
+                        data = json_file.read()
                         data = data.replace(
                             'https://oparl.example.org', self.server.url)
                         self.testdata[filename] = json.loads(data)
