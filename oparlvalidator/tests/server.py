@@ -22,7 +22,8 @@ from __future__ import (unicode_literals, absolute_import,
 import os
 import argparse
 import threading
-from six.moves import BaseHTTPServer  # pylint: disable=import-error
+# pylint: disable=import-error,redefined-builtin
+from six.moves import BaseHTTPServer, input
 
 
 class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -141,8 +142,9 @@ def run():
     args = parser.parse_args()
 
     class Handler(_HTTPHandler):
+        # pylint: disable=no-init
         def log_message(self, *args):
-            entry = super(Handler, self).log_message(*args)
+            entry = _HTTPHandler.log_message(self, *args)
             print(entry)
 
     server = Server(host=args.host, port=args.port, handler=Handler)
