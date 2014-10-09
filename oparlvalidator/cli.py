@@ -16,7 +16,7 @@ def main():
         help='URL of the system to test; omit to read JSON from stdin')
     parser.add_argument(
         '-t', '--type', metavar='type', dest='types',
-        default=None, action='append',
+        default=[], action='append',
         help='Set the document types to be checked '
              '(can be used multiple times)')
     parser.add_argument(

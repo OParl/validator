@@ -78,6 +78,9 @@ class Crawler(object):
             for error in self._validate(response, doc):
                 self._errors[doc.url].append(error)
                 yield (doc.url, error)
+            if error and isinstance(error.message, ValueError):
+                # ValueError: No JSON object could be decoded
+                continue
             object_ = response.json()
             if not error:
                 self._valid.add((doc.url, object_['type']))

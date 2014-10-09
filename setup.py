@@ -26,7 +26,8 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'oparlval = oparlvalidator.cli:main'
+            'oparlval = oparlvalidator.cli:main',
+            'testserver = oparlvalidator.tests.server:run',
         ]
     }
 )

@@ -2,9 +2,9 @@
 
 """
 Example:
-s = Server()
-s.port  # get the automatically picked port
-s.serve({
+server = Server()
+server.port  # get the automatically picked port
+server.serve({
 '/url/path': '{"id": "http://oparl.example.org/url/path"}',
 '/another/path': {
 'GET':
@@ -19,6 +19,8 @@ s.serve({
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
+import os
+import argparse
 import threading
 from six.moves import BaseHTTPServer  # pylint: disable=import-error
 
@@ -81,6 +83,7 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         entry = vars(self)
         entry['url'] = self.server.url + self.path
         self.server.log.append(entry)
+        return entry
 
     def _handler(self):
         if self.path not in self.server.data:
@@ -100,9 +103,8 @@ class _HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 class Server(object):
 
-    def __init__(self, host='127.0.0.1', port=0):
-        self.httpd = BaseHTTPServer.HTTPServer((host, port),
-                                               _HTTPHandler)
+    def __init__(self, host='127.0.0.1', port=0, handler=_HTTPHandler):
+        self.httpd = BaseHTTPServer.HTTPServer((host, port), handler)
         self.host, self.port = self.httpd.server_address
         self.httpd.url = 'http://{}:{}'.format(self.host, self.port)
         self.httpd.data = {}
@@ -128,3 +130,29 @@ class Server(object):
     @property
     def log(self):
         return self.httpd.log
+
+
+def run():
+    parser = argparse.ArgumentParser(description='Starts a test server.')
+    parser.add_argument('--host', default='127.0.0.1',
+                        help='The host name or IP address')
+    parser.add_argument('--port', default=0,
+                        help='The port number')
+    args = parser.parse_args()
+
+    class Handler(_HTTPHandler):
+        def log_message(self, *args):
+            entry = super(Handler, self).log_message(*args)
+            print(entry)
+
+    server = Server(host=args.host, port=args.port, handler=Handler)
+    paths = {}
+    root = 'oparlvalidator/tests/testdata/'
+    for filename in os.listdir(root):
+        with open(os.path.join(root, filename)) as filehandle:
+            body = filehandle.read().replace(
+                'https://oparl.example.org', server.url)
+            paths['/' + filename] = {'GET': {'body': body}}
+    print('Server started at', server.url)
+    server.serve(paths)
+    input('Hit return to quit.\n')
