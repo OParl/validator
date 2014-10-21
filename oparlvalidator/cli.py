@@ -6,6 +6,7 @@ import sys
 from . import version
 from .validator import OParlJson
 from .crawler import Crawler
+from . import statistics
 
 
 def main():
@@ -38,9 +39,10 @@ def main():
     args = parser.parse_args()
     if not args.url:
         for error in OParlJson(sys.stdin.read()).validate():
-            print('ERROR: %s' % error.message)
+            print(error.message)
     else:
         crawler = Crawler(seed_url=args.url, max_documents=args.max_documents,
                           type_whitelist=args.types, recursive=args.recursive)
         for url, error in crawler.run():
-            print('ERROR in %s: %s' % (url, error.message))
+            print('%s: %s' % (url, error.message))
+    print(statistics.message())

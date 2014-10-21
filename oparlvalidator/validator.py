@@ -12,7 +12,7 @@ from operator import itemgetter
 from six.moves import zip  # pylint: disable=redefined-builtin,import-error
 from .schema import OPARL
 from .utils import import_from_string
-from .statistics import with_stats
+from . import statistics
 
 
 class ValidationError(namedtuple('ValidationError',
@@ -144,16 +144,14 @@ class OParlJson(object):
                                           message=test['message'])
 
     @staticmethod
-    @with_stats
-    def _statistics(obj_type, schema, data, stats=None):
-        stats.count_type(obj_type)
-        stats.count_properties(obj_type, data.keys(), schema)
+    def _statistics(obj_type, schema, data):
+        statistics.count_type(obj_type)
+        statistics.count_properties(obj_type, data.keys(), schema)
 
     @staticmethod
-    @with_stats
-    def _load_document(content, stats=None):
+    def _load_document(content):
         data = json.loads(content)
-        stats.count_document()
+        statistics.count_document()
         return data
 
     @classmethod
@@ -161,6 +159,7 @@ class OParlJson(object):
     def _validate_all(cls, data, spec):
         obj_type = cls._validate_type(data, spec)
         schema = OPARL[obj_type]
+        cls._statistics(obj_type, schema, data)
         return chain(cls._validate_schema(schema, data),
                      cls._validate_custom(schema, data))
 
@@ -177,9 +176,9 @@ class OParlJson(object):
             # we translate it here into en apropriate ValidationError
             # and pass it to the caller (if the type does not validate,
             # it does not make sense to continue validation
-            if hasattr(excp, 'path') and len(excp.path) > 0:
-                yield ValidationError('"{}": {}'.format(''.join(excp.path),
-                                                        excp))
+            if getattr(excp, 'path', None):
+                yield ValidationError('"{}": {}'.format(
+                    ''.join(excp.path), excp))
             else:
                 yield ValidationError(excp)
 

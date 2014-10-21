@@ -34,7 +34,9 @@ load-plugins=
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once).
 
-disable= C,R,I,
+disable=C,R,I,
+# disable visual indent
+  E128,
 # disable FIXME
   W0511,
 # disable use * or ** magic
