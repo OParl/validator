@@ -1,8 +1,0 @@
-{
-    "id": "https://oparl.example.org/membership.valid.json",
-    "type": "http://oparl.org/schema/1.0/Membership",
-    "person": "https://oparl.example.org/person.valid.json",
-    "organization": "https://oparl.example.org/organization.valid.json",
-    "role": "https://oparl.example.org/vocab/chair",
-    "startDate": "2013-12-03T16:30:00+01:00"
-}

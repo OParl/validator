@@ -1,7 +1,0 @@
-{
-"type": "http://oparl.org/schema/1.0/Consultation",
-"id": "beispielris:consultation/47594",
-
-"authoritative": false,
-"role": "beispielris:role/decision"
-}
