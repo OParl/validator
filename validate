@@ -28,7 +28,7 @@ from optparse import OptionParser
 
 if __name__ == "__main__":
     # TODO: switch over to argparse as optparse is deprecated
-    parser = OptionParser()
+    parser = OptionParser("Usage: validate [options] oparl_endpoint")
 
     parser.add_option("-r", "--redis", help="Disable redis based caching", default=True, action="store_false")
     parser.add_option("-p", "--porcelain", help="Disable colored output", default=False, action="store_true")
