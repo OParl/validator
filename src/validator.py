@@ -24,6 +24,8 @@ import requests
 import json
 import redis
 
+from colorama import Fore, Style
+
 import gi
 gi.require_version('OParl', '0.2')
 
@@ -31,21 +33,24 @@ from gi.repository import OParl
 
 from src.cache import Cache;
 
+VALID_OPARL_VERSIONS = [
+    "https://schema.oparl.org/1.0"
+]
+
 class Validator:
     url = ""
-    system = None
+    client = None
     cache = None
 
     def __init__(self, url, redis=True):
         self.url = url
 
-        client = OParl.Client()
-        client.connect("resolve_url", Validator.resolve_url)
+        self.client = OParl.Client()
+        self.client.connect("resolve_url", Validator.resolve_url)
 
         if redis:
             self.cache = Cache(url)
 
-        self.system = client.open(url)
         self.validate()
 
     def resolve_url(_, url):
@@ -57,5 +62,27 @@ class Validator:
         except Exception as e:
             return None
 
+    def info(self, message, *args):
+        # TODO: make this output controllable
+        print(message.format(*args))
+
+    def ok(self, message, *args):
+        # TODO: make this output controllable
+        message = message.format(*args)
+        print("{}[OK] {}{}".format(Fore.GREEN, message, Style.RESET_ALL))
+
+    def error(self, message, *args):
+        # TODO: make this output controllable
+        message = message.format(*args)
+        print("{}[ERR] {}{}".format(Fore.RED, message, Style.RESET_ALL))
+
     def validate(self):
-        pass
+        self.info("Validating \"{}\"", self.url)
+        system = self.client.open(self.url)
+        version = system.get_oparl_version()
+
+        msg = "Detected OParl Version {}"
+        if (version in VALID_OPARL_VERSIONS):
+            self.ok(msg, version)
+        else:
+            self.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
