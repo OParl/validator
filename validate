@@ -23,10 +23,12 @@
 
 import sys
 from src.validator import Validator
+from colorama import init
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage:\n\tvalidate OParl_Endpoint")
         exit()
 
+    init()
     validator = Validator(sys.argv[1])
