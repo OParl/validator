@@ -22,21 +22,28 @@
 
 import requests
 import json
+import redis
 
 import gi
 gi.require_version('OParl', '0.2')
 
 from gi.repository import OParl
 
+from src.cache import Cache;
+
 class Validator:
     url = ""
     system = None
+    cache = None
 
-    def __init__(self, url):
+    def __init__(self, url, redis=True):
         self.url = url
 
         client = OParl.Client()
         client.connect("resolve_url", Validator.resolve_url)
+
+        if redis:
+            self.cache = Cache(url)
 
         self.system = client.open(url)
 

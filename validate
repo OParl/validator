@@ -22,7 +22,7 @@
 # SOFTWARE.
 
 import sys
-from src.Validator import Validator
+from src.validator import Validator
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
