@@ -34,7 +34,7 @@ from gi.repository import OParl
 from src.cache import Cache;
 
 VALID_OPARL_VERSIONS = [
-    "https://schema.oparl.org/1.0"
+    "https://schema.oparl.org/1.0/"
 ]
 
 class Validator:
