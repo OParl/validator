@@ -52,7 +52,7 @@ class Result:
         if type == "err":
             color = Fore.RED
 
-        print("{}[{}] {}".format(color, type, message))
+        print("{}[{}] {}".format(color, type.center(4).upper(), message))
 
     def info(self, message, *args):
         self.process_message("info", message, *args)
