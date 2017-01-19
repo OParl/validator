@@ -46,6 +46,7 @@ class Validator:
             self.cache = Cache(url)
 
         self.system = client.open(url)
+        self.validate()
 
     def resolve_url(_, url):
         try:
@@ -55,3 +56,6 @@ class Validator:
             return r.text
         except Exception as e:
             return None
+
+    def validate(self):
+        pass
