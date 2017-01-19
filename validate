@@ -24,13 +24,21 @@
 import sys
 from src.validator import Validator
 from colorama import init
+from optparse import OptionParser
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage:\n\tvalidate OParl_Endpoint")
+    parser = OptionParser("usage:\n\t%prog [-rp] endpoint")
+
+    parser.add_option("-r", "--redis", help="Disable redis based caching", default=True, action="store_false")
+    parser.add_option("-p", "--porcelain", help="Disable colored output", default=False, action="store_true")
+
+    (options, args) = parser.parse_args()
+
+    if len(args) != 1:
+        parser.print_help()
         exit()
 
-    init(strip=False, autoreset=True)
+    init(strip=options.porcelain, autoreset=True)
 
-    validator = Validator(sys.argv[1])
+    validator = Validator(url=args[0], options=options)
     validator.validate()

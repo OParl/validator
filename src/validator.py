@@ -41,14 +41,16 @@ class Validator:
     url = ""
     client = None
     cache = None
+    options = None
 
-    def __init__(self, url, redis=True):
+    def __init__(self, url, options):
         self.url = url
+        self.options = options
 
         self.client = OParl.Client()
         self.client.connect("resolve_url", Validator.resolve_url)
 
-        if redis:
+        if options.redis:
             self.cache = Cache(url)
 
     def resolve_url(_, url):
