@@ -10,4 +10,3 @@ class Cache:
         self.basekey = hashlib.sha1(url.encode('ascii'))
         self.ttl = ttl
         self.rclient = redis.ConnectionPool(host=redis_server, port=redis_port, db=0)
-        print(self.rclient)
