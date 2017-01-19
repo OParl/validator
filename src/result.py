@@ -35,6 +35,13 @@ class Result:
         self.mode = mode
 
     def process_message(self, type, message, *args):
+        message = message.format(*args)
+
+        self.messages.append({
+            "type": type,
+            "message": message
+        })
+
         if self.mode != Result.Mode.Human:
             # TODO: Implement Json output
             pass
@@ -45,7 +52,6 @@ class Result:
         if type == "err":
             color = Fore.RED
 
-        message = message.format(*args)
         print("{}[{}] {}".format(color, type, message))
 
     def info(self, message, *args):

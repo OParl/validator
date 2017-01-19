@@ -27,10 +27,12 @@ from colorama import init
 from optparse import OptionParser
 
 if __name__ == "__main__":
-    parser = OptionParser("usage:\n\t%prog [-rp] endpoint")
+    # TODO: switch over to argparse as optparse is deprecated
+    parser = OptionParser()
 
     parser.add_option("-r", "--redis", help="Disable redis based caching", default=True, action="store_false")
     parser.add_option("-p", "--porcelain", help="Disable colored output", default=False, action="store_true")
+    parser.add_option("-l", "--log-output", help="Store the validation output in a log file", default=False, action="store_true", dest="save_results")
 
     (options, args) = parser.parse_args()
 

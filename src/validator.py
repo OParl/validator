@@ -25,6 +25,7 @@ from pathlib import Path
 import requests
 import redis
 import hashlib
+import datetime
 
 import gi
 gi.require_version('OParl', '0.2')
@@ -81,6 +82,10 @@ class Validator:
         else:
             result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
+        if self.options.save_results:
+            with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
+                f.write(json.dumps(result.messages))
+
     def check_schema_cache(self, schema_version):
         schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
@@ -88,6 +93,7 @@ class Validator:
         schema_cache = {}
 
         schema_listing = requests.get(schema_version).json()
+
         for schema in schema_listing:
             entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
             if entity_path.exists():
