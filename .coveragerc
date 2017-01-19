@@ -1,7 +1,0 @@
-[report]
-omit =
-    buildout-cache/eggs/*
-    parts/*
-    eggs/*
-    */test*
-    /home/travis/virtualenv/*

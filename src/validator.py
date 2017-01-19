@@ -70,6 +70,9 @@ class Validator:
         result.info("Validating \"{}\"", self.url)
 
         system = self.client.open(self.url)
+
+        result.ok("[Syntax] System")
+
         version = system.get_oparl_version()
 
         # map<EntityName,JSONSchema>
@@ -98,13 +101,11 @@ class Validator:
             entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
-                    loaded_json = json.loads(f.read())
-                    schema_cache[schema] = loaded_json
+                    schema_cache[schema] = json.loads(f.read())
 
             else:
-                schema_json = requests.get(schema).json()
-                schema_cache[schema] = schema_json
+                schema_cache[schema] = requests.get(schema).json()
                 with open(entity_path, 'w') as f:
-                    f.write(json.dumps(schema_json))
+                    f.write(json.dumps(schema_cache[schema]))
 
         return schema_cache
