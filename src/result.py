@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # The MIT License (MIT)
 #
 # Copyright (c) 2017 Stefan Graupner
@@ -21,16 +20,39 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
-from src.validator import Validator
-from colorama import init
+from colorama import Fore, Style
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage:\n\tvalidate OParl_Endpoint")
-        exit()
+class Result:
+    class Mode:
+        Human = 0
+        Json = 1
 
-    init(strip=False, autoreset=True)
+    mode = Mode.Human
 
-    validator = Validator(sys.argv[1])
-    validator.validate()
+    messages = []
+
+    def __init__(self, mode=Mode.Human):
+        self.mode = mode
+
+    def process_message(self, type, message, *args):
+        if self.mode != Result.Mode.Human:
+            # TODO: Implement Json output
+            pass
+
+        color = Fore.WHITE
+        if type == "ok":
+            color = Fore.GREEN
+        if type == "err":
+            color = Fore.RED
+
+        message = message.format(*args)
+        print("{}[{}] {}".format(color, type, message))
+
+    def info(self, message, *args):
+        self.process_message("info", message, *args)
+
+    def ok(self, message, *args):
+        self.process_message("ok", message, *args)
+
+    def error(self, message, *args):
+        self.process_message("err", message, *args)
