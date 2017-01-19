@@ -21,9 +21,10 @@
 # SOFTWARE.
 
 import json
-from os import path
+from pathlib import Path
 import requests
 import redis
+import hashlib
 
 import gi
 gi.require_version('OParl', '0.2')
@@ -70,13 +71,34 @@ class Validator:
         system = self.client.open(self.url)
         version = system.get_oparl_version()
 
+        # map<EntityName,JSONSchema>
+        schema = None
+
         msg = "Detected OParl Version {}"
         if (version in VALID_OPARL_VERSIONS):
             result.ok(msg, version)
-            self.check_schema_cache(version)
+            schema = self.check_schema_cache(version)
         else:
             result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
     def check_schema_cache(self, schema_version):
+        schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
+        schema_path.mkdir(parents=True, exist_ok=True)
 
-        pass
+        schema_cache = {}
+
+        schema_listing = requests.get(schema_version).json()
+        for schema in schema_listing:
+            entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
+            if entity_path.exists():
+                with open(entity_path, 'r') as f:
+                    loaded_json = json.loads(f.read())
+                    schema_cache[schema] = loaded_json
+
+            else:
+                schema_json = requests.get(schema).json()
+                schema_cache[schema] = schema_json
+                with open(entity_path, 'w') as f:
+                    f.write(json.dumps(schema_json))
+
+        return schema_cache

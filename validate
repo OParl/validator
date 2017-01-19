@@ -38,6 +38,7 @@ if __name__ == "__main__":
         parser.print_help()
         exit()
 
+    # init colorama
     init(strip=options.porcelain, autoreset=True)
 
     validator = Validator(url=args[0], options=options)
