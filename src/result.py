@@ -49,16 +49,21 @@ class Result:
         color = Fore.WHITE
         if type == "ok":
             color = Fore.GREEN
+        if type == "warn":
+            color = Fore.YELLOW
         if type == "err":
             color = Fore.RED
 
-        print("{}[{}] {}".format(color, type.center(4).upper(), message))
+        print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
 
     def info(self, message, *args):
         self.process_message("info", message, *args)
 
     def ok(self, message, *args):
         self.process_message("ok", message, *args)
+
+    def warn(self, message, *args):
+        self.process_message("warn", message, *args)
 
     def error(self, message, *args):
         self.process_message("err", message, *args)
