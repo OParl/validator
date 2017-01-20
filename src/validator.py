@@ -78,9 +78,9 @@ class Validator:
             if severity == OParl.ErrorSeverity.INFO:
                 self.result.info(validation_result.get_description())
             if severity == OParl.ErrorSeverity.WARNING:
-                self.result.warn(validation_result.get_description())
+                self.result.warning(validation_result.get_description())
             if severity == OParl.ErrorSeverity.INFO:
-                self.result.err(validation_result.get_description())
+                self.result.error(validation_result.get_description())
 
         if self.options.validate_schema:
             version = system.get_oparl_version()

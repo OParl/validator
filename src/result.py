@@ -62,7 +62,7 @@ class Result:
     def ok(self, message, *args):
         self.process_message("ok", message, *args)
 
-    def warn(self, message, *args):
+    def warning(self, message, *args):
         self.process_message("warn", message, *args)
 
     def error(self, message, *args):
