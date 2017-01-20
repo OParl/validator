@@ -81,21 +81,23 @@ class Validator:
             if severity == OParl.ErrorSeverity.INFO:
                 result.err(validation_result.get_description())
 
-        version = system.get_oparl_version()
+        if self.options.validate_schema:
+            version = system.get_oparl_version()
 
-        # TODO: schema based validation
-        schema = None
+            msg = "Detected OParl Version {}"
+            if version in VALID_OPARL_VERSIONS:
+                result.ok(msg, version)
+                self.check_schema_cache(version)
+            else:
+                result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
-        msg = "Detected OParl Version {}"
-        if (version in VALID_OPARL_VERSIONS):
-            result.ok(msg, version)
-            self.check_schema_cache(version)
-        else:
-            result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
+            if self.options.save_results:
+                with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
+                    f.write(json.dumps(result.messages))
 
-        if self.options.save_results:
-            with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
-                f.write(json.dumps(result.messages))
+            # TODO: schema based validation
+
+        # TODO: descend into the abyss
 
     def get_schema_for_type(self, type):
         print(type)
