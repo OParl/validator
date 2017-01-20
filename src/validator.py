@@ -41,6 +41,7 @@ VALID_OPARL_VERSIONS = [
 
 class Validator:
     url = ""
+    schema_cache = {}
     client = None
     cache = None
     options = None
@@ -71,7 +72,8 @@ class Validator:
 
         system = self.client.open(self.url)
 
-        result.ok("[Syntax] System")
+        for validation_result in system.validate():
+            message = "{} {}".format(validation_result.get_severity(), validation_result.get_description())
 
         version = system.get_oparl_version()
 
@@ -81,7 +83,7 @@ class Validator:
         msg = "Detected OParl Version {}"
         if (version in VALID_OPARL_VERSIONS):
             result.ok(msg, version)
-            schema = self.check_schema_cache(version)
+            self.check_schema_cache(version)
         else:
             result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
@@ -89,11 +91,12 @@ class Validator:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
                 f.write(json.dumps(result.messages))
 
+    def get_schema_for_type(self, type):
+        print(type)
+
     def check_schema_cache(self, schema_version):
         schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
-
-        schema_cache = {}
 
         schema_listing = requests.get(schema_version).json()
 
@@ -101,11 +104,9 @@ class Validator:
             entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
-                    schema_cache[schema] = json.loads(f.read())
+                    self.schema_cache[schema] = json.loads(f.read())
 
             else:
-                schema_cache[schema] = requests.get(schema).json()
+                self.schema_cache[schema] = requests.get(schema).json()
                 with open(entity_path, 'w') as f:
-                    f.write(json.dumps(schema_cache[schema]))
-
-        return schema_cache
+                    f.write(json.dumps(self.schema_cache[schema]))
