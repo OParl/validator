@@ -36,85 +36,99 @@ from src.cache import Cache
 from src.result import Result
 
 VALID_OPARL_VERSIONS = [
-    "https://schema.oparl.org/1.0/"
+	"https://schema.oparl.org/1.0/"
 ]
 
 def resolve_url(_, url):
-    try:
-        r = requests.get(url)
-        r.raise_for_status()
+	try:
+		r = requests.get(url)
+		r.raise_for_status()
 
-        return r.text
-    except Exception as e:
-        return None
+		return r.text
+	except Exception as e:
+		return None
 
 class Validator:
-    url = ""
-    schema_cache = {}
-    client = None
-    cache = None
-    options = None
-    result = None
+	url = ""
+	schema_cache = {}
+	client = None
+	cache = None
+	options = None
+	result = None
 
-    def __init__(self, url, options):
-        self.url = url
-        self.options = options
+	def __init__(self, url, options):
+		self.url = url
+		self.options = options
 
-        self.client = OParl.Client()
-        self.client.connect("resolve_url", resolve_url)
+		self.client = OParl.Client()
+		self.client.connect("resolve_url", resolve_url)
 
-        self.result = Result()
+		self.result = Result()
 
-        if options.redis:
-            self.cache = Cache(url)
+		if options.redis:
+			self.cache = Cache(url)
 
-    def validate(self):
-        self.result.info("Validating \"{}\"", self.url)
+	def validate(self):
+		self.result.info("Validating \"{}\"", self.url)
 
-        system = self.client.open(self.url)
+		system = self.client.open(self.url)
+		self.validate_object(system)
 
-        for validation_result in system.validate():
-            severity = validation_result.get_severity()
-            if severity == OParl.ErrorSeverity.INFO:
-                self.result.info(validation_result.get_description())
-            if severity == OParl.ErrorSeverity.WARNING:
-                self.result.warning(validation_result.get_description())
-            if severity == OParl.ErrorSeverity.INFO:
-                self.result.error(validation_result.get_description())
+		if self.options.validate_schema:
+			version = system.get_oparl_version()
 
-        if self.options.validate_schema:
-            version = system.get_oparl_version()
+			msg = "Detected OParl Version {}"
+			if version in VALID_OPARL_VERSIONS:
+				self.result.ok(msg, version)
+				self.check_schema_cache(version)
+			else:
+				self.result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
-            msg = "Detected OParl Version {}"
-            if version in VALID_OPARL_VERSIONS:
-                self.result.ok(msg, version)
-                self.check_schema_cache(version)
-            else:
-                self.result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
+		body_list = []
+		try:
+			body_list = system.get_body()
+		except Exception as e:
+			self.result.error("Failed to fetch oparl bodies")
 
-            # TODO: schema based validation
+		for body in body_list:
+			# TODO: Validate body
+			pass
 
-        if self.options.save_results:
-            with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
-                f.write(json.dumps(self.result.messages))
+		if self.options.save_results:
+			with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
+				f.write(json.dumps(self.result.messages))
 
-    def get_schema_for_type(self, type):
-        print(type)
+	def validate_object(self, object):
+		for validation_result in object.validate():
+			severity = validation_result.get_severity()
+			if severity == OParl.ErrorSeverity.INFO:
+				self.result.info(validation_result.get_description())
+			if severity == OParl.ErrorSeverity.WARNING:
+				self.result.warning(validation_result.get_description())
+			if severity == OParl.ErrorSeverity.INFO:
+				self.result.error(validation_result.get_description())
 
-    def check_schema_cache(self, schema_version):
-        self.result.info("Building schema cache")
-        schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
-        schema_path.mkdir(parents=True, exist_ok=True)
+		if self.options.validate_schema:
+			# TODO: schema based validation
+			pass
 
-        schema_listing = requests.get(schema_version).json()
+	def get_schema_for_type(self, type):
+		print(type)
 
-        for schema in schema_listing:
-            entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
-            if entity_path.exists():
-                with open(entity_path, 'r') as f:
-                    self.schema_cache[schema] = json.loads(f.read())
+	def check_schema_cache(self, schema_version):
+		self.result.info("Building schema cache")
+		schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
+		schema_path.mkdir(parents=True, exist_ok=True)
 
-            else:
-                self.schema_cache[schema] = requests.get(schema).json()
-                with open(entity_path, 'w') as f:
-                    f.write(json.dumps(self.schema_cache[schema]))
+		schema_listing = requests.get(schema_version).json()
+
+		for schema in schema_listing:
+			entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
+			if entity_path.exists():
+				with open(entity_path, 'r') as f:
+					self.schema_cache[schema] = json.loads(f.read())
+
+			else:
+				self.schema_cache[schema] = requests.get(schema).json()
+				with open(entity_path, 'w') as f:
+					f.write(json.dumps(self.schema_cache[schema]))
