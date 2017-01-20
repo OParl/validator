@@ -39,6 +39,15 @@ VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
 ]
 
+def resolve_url(_, url):
+    try:
+        r = requests.get(url)
+        r.raise_for_status()
+
+        return r.text
+    except Exception as e:
+        return None
+
 class Validator:
     url = ""
     schema_cache = {}
@@ -51,19 +60,10 @@ class Validator:
         self.options = options
 
         self.client = OParl.Client()
-        self.client.connect("resolve_url", Validator.resolve_url)
+        self.client.connect("resolve_url", resolve_url)
 
         if options.redis:
             self.cache = Cache(url)
-
-    def resolve_url(_, url):
-        try:
-            r = requests.get(url)
-            r.raise_for_status()
-
-            return r.text
-        except Exception as e:
-            return None
 
     def validate(self):
         result = Result()
@@ -73,11 +73,17 @@ class Validator:
         system = self.client.open(self.url)
 
         for validation_result in system.validate():
-            message = "{} {}".format(validation_result.get_severity(), validation_result.get_description())
+            severity = validation_result.get_severity()
+            if severity == OParl.ErrorSeverity.INFO:
+                result.info(validation_result.get_description())
+            if severity == OParl.ErrorSeverity.WARNING:
+                result.warn(validation_result.get_description())
+            if severity == OParl.ErrorSeverity.INFO:
+                result.err(validation_result.get_description())
 
         version = system.get_oparl_version()
 
-        # map<EntityName,JSONSchema>
+        # TODO: schema based validation
         schema = None
 
         msg = "Detected OParl Version {}"
