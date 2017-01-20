@@ -26,7 +26,7 @@ from src.validator import Validator
 from colorama import init
 from optparse import OptionParser
 
-if __name__ == "__main__":
+def main():
     # TODO: switch over to argparse as optparse is deprecated
     parser = OptionParser("Usage: validate [options] oparl_endpoint")
 
@@ -45,3 +45,6 @@ if __name__ == "__main__":
 
     validator = Validator(url=args[0], options=options)
     validator.validate()
+
+if __name__ == "__main__":
+    main()
