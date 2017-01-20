@@ -91,13 +91,15 @@ class Validator:
             else:
                 result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
-            if self.options.save_results:
-                with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
-                    f.write(json.dumps(result.messages))
+
 
             # TODO: schema based validation
 
         # TODO: descend into the abyss
+        
+        if self.options.save_results:
+            with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
+                f.write(json.dumps(result.messages))
 
     def get_schema_for_type(self, type):
         print(type)
