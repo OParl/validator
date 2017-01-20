@@ -54,6 +54,7 @@ class Validator:
     client = None
     cache = None
     options = None
+    result = None
 
     def __init__(self, url, options):
         self.url = url
@@ -62,49 +63,46 @@ class Validator:
         self.client = OParl.Client()
         self.client.connect("resolve_url", resolve_url)
 
+        self.result = Result()
+
         if options.redis:
             self.cache = Cache(url)
 
     def validate(self):
-        result = Result()
-
-        result.info("Validating \"{}\"", self.url)
+        self.result.info("Validating \"{}\"", self.url)
 
         system = self.client.open(self.url)
 
         for validation_result in system.validate():
             severity = validation_result.get_severity()
             if severity == OParl.ErrorSeverity.INFO:
-                result.info(validation_result.get_description())
+                self.result.info(validation_result.get_description())
             if severity == OParl.ErrorSeverity.WARNING:
-                result.warn(validation_result.get_description())
+                self.result.warn(validation_result.get_description())
             if severity == OParl.ErrorSeverity.INFO:
-                result.err(validation_result.get_description())
+                self.result.err(validation_result.get_description())
 
         if self.options.validate_schema:
             version = system.get_oparl_version()
 
             msg = "Detected OParl Version {}"
             if version in VALID_OPARL_VERSIONS:
-                result.ok(msg, version)
+                self.result.ok(msg, version)
                 self.check_schema_cache(version)
             else:
-                result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
-
-
+                self.result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
             # TODO: schema based validation
 
-        # TODO: descend into the abyss
-        
         if self.options.save_results:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
-                f.write(json.dumps(result.messages))
+                f.write(json.dumps(self.result.messages))
 
     def get_schema_for_type(self, type):
         print(type)
 
     def check_schema_cache(self, schema_version):
+        self.result.info("Building schema cache")
         schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
 
