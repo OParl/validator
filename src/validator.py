@@ -66,7 +66,7 @@ the OParl Team
     """.strip()
 
     print(error_fatal_crash)
-    exit()
+    raise OSError()
 
 
 class Validator:
@@ -113,9 +113,9 @@ class Validator:
         except Exception as e:
             self.result.error("Failed to fetch oparl bodies")
 
+        self.result.info("Validating Bodies")
         for body in body_list:
-            # TODO: Validate body
-            pass
+            self.validate_object(body)
 
         if self.options.save_results:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
