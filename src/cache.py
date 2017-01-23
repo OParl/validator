@@ -32,3 +32,4 @@ class Cache:
         self.basekey = hashlib.sha1(url.encode('ascii')).hexdigest()
         self.ttl = ttl
         self.rclient = redis.ConnectionPool(host=redis_server, port=redis_port, db=0)
+

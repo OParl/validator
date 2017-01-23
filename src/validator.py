@@ -23,7 +23,6 @@
 import json
 from pathlib import Path
 import requests
-import redis
 import hashlib
 import datetime
 import signal
