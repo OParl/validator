@@ -31,6 +31,7 @@ import gi
 gi.require_version('OParl', '0.2')
 
 from gi.repository import OParl
+from gi.repository import GLib
 
 from src.cache import Cache
 from src.result import Result
@@ -75,6 +76,7 @@ class Validator:
     cache = None
     options = None
     result = None
+    seen = []
 
     def __init__(self, url, options):
         signal.signal(signal.SIGSEGV, catch_segfault)
@@ -91,8 +93,6 @@ class Validator:
             self.cache = Cache(url)
 
     def validate(self):
-        self.result.info("Validating \"{}\"", self.url)
-
         system = self.client.open(self.url)
         self.validate_object(system)
 
@@ -106,21 +106,34 @@ class Validator:
             else:
                 self.result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
-        body_list = []
-        try:
-            body_list = system.get_body()
-        except Exception as e:
-            self.result.error("Failed to fetch oparl bodies")
-
-        self.result.info("Validating Bodies")
-        for body in body_list:
-            self.validate_object(body)
+        self.validate_neighbors(system.get_neighbors())
 
         if self.options.save_results:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
                 f.write(json.dumps(self.result.messages))
 
+    def validate_neighbors(self, neighbors):
+        for neighbor in neighbors:
+            try:
+                self.validate_object(neighbor)
+                sub_neighbors = neighbor.get_neighbors()
+            except GLib.Error as e:
+                self.result.error("Failed to traverse object {}, error was: {}", type(neighbor), e)
+                continue
+
+            if len(sub_neighbors) > 0:
+                self.validate_neighbors(neighbor)
+
+    def get_object_hash(self, object):
+        return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
+
     def validate_object(self, object):
+        if self.get_object_hash(object) in self.seen:
+            return
+        self.seen.append(self.get_object_hash(object))
+
+        self.result.info("Validating {}", object.get_id())
+
         for validation_result in object.validate():
             severity = validation_result.get_severity()
             description = validation_result.get_description()
