@@ -118,7 +118,7 @@ class Validator:
         for neighbor in neighbors:
             try:
                 self.validate_object(neighbor)
-                sub_neighbors.append(neighbor.get_neighbors())
+                sub_neighbors.extend(neighbor.get_neighbors())
             except GLib.Error as e:
                 self.result.error("Failed to traverse object {}, error was: {}", type(neighbor), e)
                 continue
