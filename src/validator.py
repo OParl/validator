@@ -113,23 +113,27 @@ class Validator:
                 f.write(json.dumps(self.result.messages))
 
     def validate_neighbors(self, neighbors):
+        sub_neighbors = []
+
         for neighbor in neighbors:
             try:
                 self.validate_object(neighbor)
-                sub_neighbors = neighbor.get_neighbors()
+                sub_neighbors.append(neighbor.get_neighbors())
             except GLib.Error as e:
                 self.result.error("Failed to traverse object {}, error was: {}", type(neighbor), e)
                 continue
 
-            if len(sub_neighbors) > 0:
-                self.validate_neighbors(neighbor)
+        if len(sub_neighbors) > 0:
+            self.validate_neighbors(sub_neighbors)
 
     def get_object_hash(self, object):
         return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
 
     def validate_object(self, object):
         if self.get_object_hash(object) in self.seen:
+            self.result.info("Revisiting {}".format(object.get_id()))
             return
+
         self.seen.append(self.get_object_hash(object))
 
         self.result.info("Validating {}", object.get_id())
@@ -150,6 +154,7 @@ class Validator:
             pass
 
     def get_schema_for_type(self, type):
+        # TODO: implement this once liboparl objects support get_type
         print(type)
 
     def check_schema_cache(self, schema_version):
