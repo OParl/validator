@@ -40,7 +40,6 @@ VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
 ]
 
-
 def resolve_url(_, url):
     try:
         r = requests.get(url)
@@ -93,6 +92,8 @@ class Validator:
             self.cache = Cache(url)
 
     def validate(self):
+        self.log("-- validation started --")
+
         system = self.client.open(self.url)
         self.validate_object(system)
 
@@ -106,11 +107,11 @@ class Validator:
             else:
                 self.result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
 
-        self.validate_neighbors(system.get_neighbors())
-
         if self.options.save_results:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
                 f.write(json.dumps(self.result.messages))
+
+        self.log("-- validation completed --")
 
     def validate_neighbors(self, neighbors):
         sub_neighbors = []
@@ -127,16 +128,36 @@ class Validator:
             self.validate_neighbors(sub_neighbors)
 
     def get_object_hash(self, object):
-        return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
+        #return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
+        return object.get_id().encode('ascii')
+
+    def log(self, message):
+        with open('validation-error.log', 'a') as error_log:
+            error_log.write("%s\n" % (message))
 
     def validate_object(self, object):
+        try:
+            object_id = object.get_id()
+        except GLibError as e:
+            self.result.error("Malformed object")
+            return
+
+        self.log(object_id)
+        self.log("{}".format(self.seen))
+
         if self.get_object_hash(object) in self.seen:
-            self.result.info("Revisiting {}".format(object.get_id()))
+            self.result.info("Revisiting {}".format(object_id))
             return
 
         self.seen.append(self.get_object_hash(object))
 
-        self.result.info("Validating {}", object.get_id())
+        self.result.info("Validating {}", object_id)
+
+        validation_result = []
+        try:
+            validation_result = object.validate()
+        except GLib.Error as e:
+            self.result.error("Object validation for '{}' failed".format(object_id))
 
         for validation_result in object.validate():
             severity = validation_result.get_severity()
@@ -149,9 +170,11 @@ class Validator:
             if severity == OParl.ErrorSeverity.INFO:
                 self.result.error(description)
 
-        if self.options.validate_schema:
-            # TODO: schema based validation
-            pass
+#        if self.options.validate_schema:
+#            # TODO: schema based validation
+#            pass
+
+        self.validate_neighbors(object.get_neighbors())
 
     def get_schema_for_type(self, type):
         # TODO: implement this once liboparl objects support get_type
