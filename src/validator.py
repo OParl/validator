@@ -79,9 +79,9 @@ class Validator:
         self.result = Result()
 
         if options.redis:
-            self.cache = RedisCache(url)
+            self.cache = RedisCache()
         else:
-            self.cache = Cache(url)
+            self.cache = Cache()
 
     def resolve_url(self, client, url):
         try:

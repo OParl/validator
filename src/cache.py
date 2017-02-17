@@ -27,8 +27,8 @@ class Cache:
     basekey = ""
     ttl = 300
 
-    def __init__(self, url, ttl=300):
-        self.basekey = hashlib.sha1(url.encode('ascii')).hexdigest()
+    def __init__(self, basekey="", ttl=300):
+        self.basekey = basekey
         self.ttl = ttl
 
     def has(self, key):
@@ -41,13 +41,16 @@ class Cache:
         pass
 
     def fullkey(self, key):
-        return "{}.{}".format(self.basekey, key)
+        if len(self.basekey) > 0:
+            return "{}:{}".format(self.basekey, key)
+        else:
+            return key
 
 class RedisCache(Cache):
-    redis = None
+#    redis = None
 
-    def __init__(self, url, ttl=300, redis_server='localhost', redis_port=6379):
-        self = Cache(url, ttl)
+    def __init__(self, basekey="", ttl=300, redis_server='localhost', redis_port=6379):
+        Cache.__init__(self, basekey, ttl)
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
 
     def has(self, key):
