@@ -33,7 +33,7 @@ gi.require_version('OParl', '0.2')
 from gi.repository import OParl
 from gi.repository import GLib
 
-from src.cache import Cache
+from src.cache import Cache, RedisCache
 from src.result import Result
 
 VALID_OPARL_VERSIONS = [
@@ -87,11 +87,11 @@ class Validator:
         try:
             if not self.cache.has(url):
                 self.result.debug("Requesting {}".format(url))
-                
+
                 r = requests.get(url)
                 r.raise_for_status()
 
-                self.cache.put(r.text)
+                self.cache.set(url, r.text)
 
                 return r.text
             else:
