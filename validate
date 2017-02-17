@@ -36,8 +36,8 @@ def main():
         "-R",
         "--no-redis",
         help="disable redis based caching",
-        default=False,
-        action="store_true",
+        default=True,
+        action="store_false",
         dest="redis"
     )
 
