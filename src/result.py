@@ -23,6 +23,8 @@
 from colorama import Fore, Style
 
 class Result:
+    silent = False
+
     class Mode:
         Human = 0
         Json = 1
@@ -31,8 +33,9 @@ class Result:
 
     messages = []
 
-    def __init__(self, mode=Mode.Human):
+    def __init__(self, mode=Mode.Human, silent=False):
         self.mode = mode
+        self.silent = silent
 
     def process_message(self, type, message, *args):
         message = message.format(*args)
@@ -54,7 +57,8 @@ class Result:
         if type == "err":
             color = Fore.RED
 
-        print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
+        if not self.silent:
+            print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
 
     def debug(self, message, *args):
         self.process_message("debug", message, *args)

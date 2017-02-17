@@ -75,7 +75,7 @@ class Validator:
         self.client = OParl.Client()
         self.client.connect("resolve_url", self.resolve_url)
 
-        self.result = Result()
+        self.result = Result(silent=options.silent)
 
         if options.redis:
             self.cache = RedisCache()

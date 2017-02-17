@@ -48,6 +48,13 @@ def main():
     )
 
     parser.add_option(
+        "--silent",
+        help="disable CLI output",
+        default=False,
+        action="store_true"
+    )
+
+    parser.add_option(
         "-l",
         "--log-output",
         help="store the validation output in a log file",
