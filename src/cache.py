@@ -37,12 +37,24 @@ class Cache:
     def get(self, key):
         return ""
 
-    def put(self, key, ttl=300):
+    def set(self, key, value, ttl=300):
         pass
 
+    def fullkey(self, key):
+        return "{}.{}".format(self.basekey, key)
+
 class RedisCache(Cache):
-    rclient = None
+    redis = None
 
     def __init__(self, url, ttl=300, redis_server='localhost', redis_port=6379):
         self = Cache(url, ttl)
-        self.rclient = redis.ConnectionPool(host=redis_server, port=redis_port, db=0)
+        self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
+
+    def has(self, key):
+        return self.redis.exists(self.fullkey(key))
+
+    def get(self, key):
+        return self.redis.get(self.fullkey(key))
+
+    def set(self, key, value, ttl=300):
+        return self.redis.set(self.fullkey(key), value, ttl)
