@@ -79,16 +79,24 @@ class Validator:
         self.result = Result()
 
         if options.redis:
+            self.cache = RedisCache(url)
+        else:
             self.cache = Cache(url)
 
     def resolve_url(self, client, url):
         try:
-            self.result.debug("Requesting {}".format(url))
+            if not self.cache.has(url):
+                self.result.debug("Requesting {}".format(url))
+                
+                r = requests.get(url)
+                r.raise_for_status()
 
-            r = requests.get(url)
-            r.raise_for_status()
+                self.cache.put(r.text)
 
-            return r.text
+                return r.text
+            else:
+                self.result.debug("Cache hit: {}".format(url))
+                return self.cache.get(url)
         except Exception as e:
             self.result.error("Failed fetching {}, error was\n{}".format(url, e))
             return None
