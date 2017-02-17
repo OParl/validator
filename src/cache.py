@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import hashlib
 import redis
 
 class Cache:
@@ -47,7 +46,7 @@ class Cache:
             return key
 
 class RedisCache(Cache):
-#    redis = None
+    redis = None
 
     def __init__(self, basekey="", ttl=300, redis_server='localhost', redis_port=6379):
         Cache.__init__(self, basekey, ttl)

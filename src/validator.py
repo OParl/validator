@@ -57,7 +57,6 @@ the OParl Team
     print(error_fatal_crash)
     raise OSError()
 
-
 class Validator:
     url = ""
     schema_cache = {}

@@ -27,7 +27,6 @@ from src.validator import Validator
 from colorama import init
 from optparse import OptionParser
 
-
 def main():
     # TODO: switch over to argparse as optparse is deprecated
     parser = OptionParser("Usage: validate [options] oparl_endpoint")
