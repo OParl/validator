@@ -40,18 +40,6 @@ VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
 ]
 
-def resolve_url(_, url):
-    try:
-        # TODO: get output of this into result log
-
-        r = requests.get(url)
-        r.raise_for_status()
-
-        return r.text
-    except Exception as e:
-        return None
-
-
 def catch_segfault(signum, frame):
     error_fatal_crash = """
 Something went terribly wrong here. Please report this issue
@@ -86,12 +74,24 @@ class Validator:
         self.options = options
 
         self.client = OParl.Client()
-        self.client.connect("resolve_url", resolve_url)
+        self.client.connect("resolve_url", self.resolve_url)
 
         self.result = Result()
 
         if options.redis:
             self.cache = Cache(url)
+
+    def resolve_url(self, client, url):
+        try:
+            self.result.debug("Requesting {}".format(url))
+
+            r = requests.get(url)
+            r.raise_for_status()
+
+            return r.text
+        except Exception as e:
+            self.result.error("Failed fetching {}, error was\n{}".format(url, e))
+            return None
 
     def validate(self):
         self.result.debug("-- validation started --")
