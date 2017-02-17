@@ -33,15 +33,15 @@ def main():
     parser = OptionParser("Usage: validate [options] oparl_endpoint")
 
     parser.add_option(
-        "-r",
-        "--redis",
+        "-R",
+        "--no-redis",
         help="disable redis based caching",
-        default=True,
-        action="store_false"
+        default=False,
+        action="store_true",
+        dest="redis"
     )
 
     parser.add_option(
-        "-p",
         "--porcelain",
         help="disable colored output",
         default=False,
@@ -65,6 +65,8 @@ def main():
         action="store_true",
         dest="validate_schema"
     )
+
+    # TODO: verbosity options
 
     (options, args) = parser.parse_args()
 
