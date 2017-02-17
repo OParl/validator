@@ -56,6 +56,9 @@ class Result:
 
         print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
 
+    def debug(self, message, *args):
+        self.process_message("debug", message, *args)
+
     def info(self, message, *args):
         self.process_message("info", message, *args)
 
