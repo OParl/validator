@@ -42,6 +42,8 @@ VALID_OPARL_VERSIONS = [
 
 def resolve_url(_, url):
     try:
+        # TODO: get output of this into result log
+
         r = requests.get(url)
         r.raise_for_status()
 
@@ -92,7 +94,7 @@ class Validator:
             self.cache = Cache(url)
 
     def validate(self):
-        self.log("-- validation started --")
+        self.result.debug("-- validation started --")
 
         system = self.client.open(self.url)
         self.validate_object(system)
@@ -111,7 +113,7 @@ class Validator:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
                 f.write(json.dumps(self.result.messages))
 
-        self.log("-- validation completed --")
+        self.result.debug("-- validation completed --")
 
     def validate_neighbors(self, neighbors):
         sub_neighbors = []
@@ -128,12 +130,7 @@ class Validator:
             self.validate_neighbors(sub_neighbors)
 
     def get_object_hash(self, object):
-        #return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
-        return object.get_id().encode('ascii')
-
-    def log(self, message):
-        with open('validation-error.log', 'a') as error_log:
-            error_log.write("%s\n" % (message))
+        return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
 
     def validate_object(self, object):
         try:
@@ -142,13 +139,13 @@ class Validator:
             self.result.error("Malformed object")
             return
 
-        self.log(object_id)
-        self.log("{}".format(self.seen))
+        self.result.debug("In {}".format(object_id))
 
         if self.get_object_hash(object) in self.seen:
-            self.result.info("Revisiting {}".format(object_id))
+            self.result.debug("Revisiting {}".format(object_id))
             return
 
+        self.result.debug("Appending to seen list")
         self.seen.append(self.get_object_hash(object))
 
         self.result.info("Validating {}", object_id)
