@@ -171,7 +171,7 @@ class Validator:
                 self.result.info(description)
             if severity == OParl.ErrorSeverity.WARNING:
                 self.result.warning(description)
-            if severity == OParl.ErrorSeverity.INFO:
+            if severity == OParl.ErrorSeverity.ERROR:
                 self.result.error(description)
 
 #        if self.options.validate_schema:
