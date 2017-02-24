@@ -40,23 +40,6 @@ VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
 ]
 
-def catch_segfault(signum, frame):
-    error_fatal_crash = """
-Something went terribly wrong here. Please report this issue
-at https://github.com/OParl/validator/issues/new.
-
-To help us investigate, please try to rerun the validate command
-as `validate -vvv <your_current_options_and_arguments>` and paste
-the output of that command into the issue.
-
-Thanks for your help,
-
-the OParl Team
-    """.strip()
-
-    print(error_fatal_crash)
-    raise OSError()
-
 class Validator:
     url = ""
     schema_cache = {}
@@ -67,8 +50,6 @@ class Validator:
     seen = []
 
     def __init__(self, url, options):
-        signal.signal(signal.SIGSEGV, catch_segfault)
-
         self.url = url
         self.options = options
 
@@ -95,7 +76,8 @@ class Validator:
                 return r.text
             else:
                 self.result.debug("Cache hit: {}".format(url))
-                return self.cache.get(url)
+                text = self.cache.get(url)
+                return str(text, 'utf-8')
         except Exception as e:
             self.result.error("Failed fetching {}, error was\n{}".format(url, e))
             return None
