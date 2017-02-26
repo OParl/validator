@@ -24,11 +24,9 @@ import redis
 
 class Cache:
     basekey = ""
-    ttl = 300
 
-    def __init__(self, basekey="", ttl=300):
+    def __init__(self, basekey=""):
         self.basekey = basekey
-        self.ttl = ttl
 
     def has(self, key):
         return False
@@ -36,7 +34,7 @@ class Cache:
     def get(self, key):
         return ""
 
-    def set(self, key, value, ttl=300):
+    def set(self, key, value, ttl=0):
         pass
 
     def fullkey(self, key):
@@ -48,8 +46,8 @@ class Cache:
 class RedisCache(Cache):
     redis = None
 
-    def __init__(self, basekey="", ttl=300, redis_server='localhost', redis_port=6379):
-        Cache.__init__(self, basekey, ttl)
+    def __init__(self, basekey="", redis_server='localhost', redis_port=6379):
+        Cache.__init__(self, basekey)
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
 
     def has(self, key):
@@ -58,5 +56,5 @@ class RedisCache(Cache):
     def get(self, key):
         return self.redis.get(self.fullkey(key))
 
-    def set(self, key, value, ttl=300):
+    def set(self, key, value, ttl=600):
         return self.redis.set(self.fullkey(key), value, ttl)
