@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import redis
-
 class Cache:
     basekey = ""
 
@@ -47,6 +45,8 @@ class RedisCache(Cache):
     redis = None
 
     def __init__(self, basekey="", redis_server='localhost', redis_port=6379):
+        import redis
+
         Cache.__init__(self, basekey)
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
 
