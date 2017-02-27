@@ -26,35 +26,38 @@ import sys
 from src.validator import Validator
 from colorama import init
 from optparse import OptionParser
+import argparse
+
+def init_validator(endpoint, options):
+    validator = Validator(url=endpoint, options=options)
+    validator.validate()
 
 def main():
-    # TODO: switch over to argparse as optparse is deprecated
-    parser = OptionParser("Usage: validate [options] oparl_endpoint")
+    parser = argparse.ArgumentParser(prog='validate')
 
-    parser.add_option(
-        "-R",
-        "--no-redis",
-        help="disable redis based caching",
-        default=True,
-        action="store_false",
-        dest="redis"
+    parser.add_argument(
+        '--no-redis',
+        help='disable redis based caching',
+        action='store_false',
+        dest='redis',
+        default=True
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--porcelain",
         help="disable colored output",
         default=False,
         action="store_true"
     )
 
-    parser.add_option(
+    parser.add_argument(
         "--silent",
         help="disable CLI output",
         default=False,
         action="store_true"
     )
 
-    parser.add_option(
+    parser.add_argument(
         "-l",
         "--log-output",
         help="store the validation output in a log file",
@@ -63,7 +66,7 @@ def main():
         dest="save_results"
     )
 
-    parser.add_option(
+    parser.add_argument(
         "-s",
         "--validate-schema",
         help="additionally validate each object against the json schema (This WILL take longer)",
@@ -72,19 +75,23 @@ def main():
         dest="validate_schema"
     )
 
+    parser.add_argument(
+        'oparl_endpoint',
+        nargs='+'
+    )
+
+    args = parser.parse_args()
+
     # TODO: verbosity options
 
-    (options, args) = parser.parse_args()
-
-    if len(args) != 1:
-        parser.print_help()
-        exit()
-
     # init colorama
-    init(strip=options.porcelain, autoreset=True)
+    init(strip=args.porcelain, autoreset=True)
 
-    validator = Validator(url=args[0], options=options)
-    validator.validate()
+    if type(args.oparl_endpoint) == list:
+        for endpoint in args.oparl_endpoint:
+            init_validator(endpoint, args)
+    else:
+        init_validator(endpoint, args)
 
 if __name__ == "__main__":
     main()
