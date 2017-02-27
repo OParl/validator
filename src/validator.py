@@ -63,7 +63,7 @@ class Validator:
         else:
             self.cache = Cache()
 
-    def resolve_url(self, client, url):
+    def resolve_url(self, client, url, status):
         try:
             if not self.cache.has(url):
                 self.result.debug("Requesting {}".format(url))
@@ -72,11 +72,13 @@ class Validator:
                 r.raise_for_status()
 
                 self.cache.set(url, r.text)
+                status = r.status_code
 
                 return r.text
             else:
                 self.result.debug("Cache hit: {}".format(url))
                 text = self.cache.get(url)
+                status = -1
                 return str(text, 'utf-8')
         except Exception as e:
             self.result.error("Failed fetching {}, error was\n{}".format(url, e))
@@ -85,8 +87,11 @@ class Validator:
     def validate(self):
         self.result.debug("-- validation started --")
 
-        system = self.client.open(self.url)
-        self.validate_object(system)
+        try:
+            system = self.client.open(self.url)
+            self.validate_object(system)
+        except GLib.Error as e:
+            print(type(e))
 
         if self.options.validate_schema:
             version = system.get_oparl_version()
@@ -143,6 +148,8 @@ class Validator:
         try:
             validation_result = object.validate()
         except GLib.Error as e:
+            print(type(e))
+
             self.result.error("Object validation for '{}' failed".format(object_id))
 
         for validation_result in object.validate():
@@ -160,7 +167,10 @@ class Validator:
 #            # TODO: schema based validation
 #            pass
 
-        self.validate_neighbors(object.get_neighbors())
+        try:
+            self.validate_neighbors(object.get_neighbors())
+        except GLib.Error as e:
+            print(e)
 
     def get_schema_for_type(self, type):
         # TODO: implement this once liboparl objects support get_type
