@@ -25,7 +25,6 @@ from pathlib import Path
 import requests
 import hashlib
 import datetime
-import signal
 
 import gi
 gi.require_version('OParl', '0.2')
@@ -54,7 +53,10 @@ class Validator:
         self.options = options
 
         self.client = OParl.Client()
+        self.client.set_strict(False)
+
         self.client.connect("resolve_url", self.resolve_url)
+        self.client.connect("shit_happened", self.cleanup_occured_excrement)
 
         self.result = Result(silent=options.silent)
 
@@ -92,6 +94,7 @@ class Validator:
             self.validate_object(system)
         except GLib.Error as e:
             print(type(e))
+            exit()
 
         if self.options.validate_schema:
             version = system.get_oparl_version()
@@ -119,6 +122,9 @@ class Validator:
             except GLib.Error as e:
                 self.result.error("Failed to traverse object {}, error was: {}", type(neighbor), e)
                 continue
+            except TypeError as e:
+                print(e)
+                exit()
 
         if len(sub_neighbors) > 0:
             self.validate_neighbors(sub_neighbors)
@@ -129,7 +135,7 @@ class Validator:
     def validate_object(self, object):
         try:
             object_id = object.get_id()
-        except GLibError as e:
+        except GLib.Error as e:
             self.result.error("Malformed object")
             return
 
@@ -144,37 +150,40 @@ class Validator:
 
         self.result.info("Validating {}", object_id)
 
-        validation_result = []
         try:
-            validation_result = object.validate()
+            validation_results = object.validate()
+            for validation_result in validation_results:
+                self.parse_validation_result(validation_result)
         except GLib.Error as e:
-            print(type(e))
-
             self.result.error("Object validation for '{}' failed".format(object_id))
-
-        for validation_result in object.validate():
-            severity = validation_result.get_severity()
-            description = validation_result.get_description()
-
-            if severity == OParl.ErrorSeverity.INFO:
-                self.result.info(description)
-            if severity == OParl.ErrorSeverity.WARNING:
-                self.result.warning(description)
-            if severity == OParl.ErrorSeverity.ERROR:
-                self.result.error(description)
-
 #        if self.options.validate_schema:
 #            # TODO: schema based validation
 #            pass
 
         try:
-            self.validate_neighbors(object.get_neighbors())
+            neighbors = object.get_neighbors()
+            self.validate_neighbors(neighbors)
         except GLib.Error as e:
             print(e)
+            exit()
 
     def get_schema_for_type(self, type):
         # TODO: implement this once liboparl objects support get_type
         print(type)
+
+    def cleanup_occured_excrement(self, client, excrement):
+        self.parse_validation_result(excrement)
+
+    def parse_validation_result(self, validation_result):
+        severity = validation_result.get_severity()
+        description = validation_result.get_description()
+
+        if severity == OParl.ErrorSeverity.INFO:
+            self.result.info(description)
+        if severity == OParl.ErrorSeverity.WARNING:
+            self.result.warning(description)
+        if severity == OParl.ErrorSeverity.ERROR:
+            self.result.error(description)
 
     def check_schema_cache(self, schema_version):
         self.result.info("Building schema cache")
