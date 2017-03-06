@@ -129,8 +129,8 @@ class Validator:
         if len(sub_neighbors) > 0:
             self.validate_neighbors(sub_neighbors)
 
-    def get_object_hash(self, object):
-        return hashlib.sha1(object.get_id().encode('ascii')).hexdigest()
+    def get_object_hash(self, id):
+        return hashlib.sha1(id.encode('ascii')).hexdigest()
 
     def validate_object(self, object):
         try:
@@ -139,14 +139,17 @@ class Validator:
             self.result.error("Malformed object")
             return
 
+        if object_id == None:
+            raise Error
+
         self.result.debug("In {}".format(object_id))
 
-        if self.get_object_hash(object) in self.seen:
+        if self.get_object_hash(object_id) in self.seen:
             self.result.debug("Revisiting {}".format(object_id))
             return
 
         self.result.debug("Appending to seen list")
-        self.seen.append(self.get_object_hash(object))
+        self.seen.append(self.get_object_hash(object_id))
 
         self.result.info("Validating {}", object_id)
 
@@ -175,6 +178,10 @@ class Validator:
         self.parse_validation_result(excrement)
 
     def parse_validation_result(self, validation_result):
+        if self.get_object_hash(validation_result.get_object_id()) in self.seen:
+            self.result.debug("Skipping result info for {}".format(validation_result.get_object_id()))
+            return
+
         severity = validation_result.get_severity()
         description = validation_result.get_description()
 
