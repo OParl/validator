@@ -58,7 +58,11 @@ class Validator:
         self.client.connect("resolve_url", self.resolve_url)
         self.client.connect("shit_happened", self.cleanup_occured_excrement)
 
-        self.result = Result(silent=options.silent)
+        mode = Result.Mode.Human
+        if (options.format == 'json'):
+            mode = Result.Mode.Json
+
+        self.result = Result(silent=options.silent, mode=mode)
 
         if options.redis:
             self.cache = RedisCache()
