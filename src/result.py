@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 from colorama import Fore, Style
+import json
 
 class Result:
     silent = False
@@ -31,34 +32,21 @@ class Result:
 
     mode = Mode.Human
 
-    messages = []
-
     def __init__(self, mode=Mode.Human, silent=False):
         self.mode = mode
         self.silent = silent
 
     def process_message(self, type, message, *args):
+        if self.silent:
+            return
+
         message = message.format(*args)
 
-        self.messages.append({
-            "type": type,
-            "message": message
-        })
+        if self.mode == Result.Mode.Human:
+            self._print_human(type, message)
 
-        if self.mode != Result.Mode.Human:
-            # TODO: Implement Json output
-            pass
-
-        color = Fore.WHITE
-        if type == "ok":
-            color = Fore.GREEN
-        if type == "warn":
-            color = Fore.YELLOW
-        if type == "err":
-            color = Fore.RED
-
-        if not self.silent:
-            print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
+        if self.mode == Result.Mode.Json:
+            self._print_json(type, message)
 
     def debug(self, message, *args):
         self.process_message("debug", message, *args)
@@ -74,3 +62,22 @@ class Result:
 
     def error(self, message, *args):
         self.process_message("err", message, *args)
+
+    def _print_human(self, type, message):
+        color = Fore.WHITE
+        if type == "ok":
+            color = Fore.GREEN
+        if type == "warn":
+            color = Fore.YELLOW
+        if type == "err":
+            color = Fore.RED
+
+        print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
+
+    def _print_json(self, type, message):
+        data = {
+            "type": type,
+            "message": message
+        }
+
+        print(json.dumps(data))
