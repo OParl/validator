@@ -58,21 +58,20 @@ def main():
     )
 
     parser.add_argument(
-        "-l",
-        "--log-output",
-        help="store the validation output in a log file",
-        default=False,
-        action="store_true",
-        dest="save_results"
-    )
-
-    parser.add_argument(
         "-s",
         "--validate-schema",
         help="additionally validate each object against the json schema (This WILL take longer)",
         default=False,
         action="store_true",
         dest="validate_schema"
+    )
+
+    parser.add_argument(
+        "-f",
+        "--format",
+        help="configure the output format for validation results (text or json, defaults to text)",
+        default="text",
+        dest="format"
     )
 
     parser.add_argument(
