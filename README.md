@@ -5,7 +5,7 @@
 **on the system**
 
 - liboparl and liboparl requirements
-- redis for caching
+- redis (for caching)
 - Python 3
 
 **Python specific**
@@ -13,4 +13,10 @@
 - pygobject
 - requests
 - colorama
-- redis
+- redis (only if you want to use caching)
+
+## Usage
+
+```sh
+$ ./validate https://my.oparl.endpoint/
+```

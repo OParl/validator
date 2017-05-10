@@ -1,30 +1,32 @@
-# The MIT License (MIT)
-#
-# Copyright (c) 2017 Stefan Graupner
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+"""
+The MIT License (MIT)
+
+Copyright (c) 2017 Stefan Graupner
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 
 import json
-from pathlib import Path
-import requests
 import hashlib
 import datetime
+from pathlib import Path
+import requests
 
 import gi
 gi.require_version('OParl', '0.2')
@@ -39,7 +41,11 @@ VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
 ]
 
-class Validator:
+
+class Validator(object):
+    """
+        This is the Validator base class
+    """
     url = ""
     schema_cache = {}
     client = None
@@ -47,10 +53,17 @@ class Validator:
     options = None
     result = None
     seen = []
+    known_entities = 0
+    valid_entities = 0
 
     def __init__(self, url, options):
         self.url = url
         self.options = options
+
+        # warn the user that schema validation is not yet implemented
+        # TODO: this code should be removed eventually
+        if options.validate_schema:
+            print("Schema validation is not implemented yet and will be skipped.")
 
         self.client = OParl.Client()
         self.client.set_strict(False)
@@ -59,7 +72,8 @@ class Validator:
         self.client.connect("shit_happened", self.cleanup_occured_excrement)
 
         mode = Result.Mode.Human
-        if (options.format == 'json'):
+
+        if options.format == 'json':
             mode = Result.Mode.Json
 
         self.result = Result(silent=options.silent, mode=mode)
@@ -87,7 +101,8 @@ class Validator:
                 status = -1
                 return str(text, 'utf-8')
         except Exception as e:
-            self.result.error("Failed fetching {}, error was\n{}".format(url, e))
+            self.result.error(
+                "Failed fetching {}, error was\n{}".format(url, e))
             return None
 
     def validate(self):
@@ -108,7 +123,8 @@ class Validator:
                 self.result.ok(msg, version)
                 self.check_schema_cache(version)
             else:
-                self.result.error(msg + "\nExpected one of: {}", version, VALID_OPARL_VERSIONS)
+                self.result.error(msg + "\nExpected one of: {}",
+                                  version, VALID_OPARL_VERSIONS)
 
         if self.options.save_results:
             with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
@@ -124,7 +140,8 @@ class Validator:
                 self.validate_object(neighbor)
                 sub_neighbors.extend(neighbor.get_neighbors())
             except GLib.Error as e:
-                self.result.error("Failed to traverse object {}, error was: {}", type(neighbor), e)
+                self.result.error(
+                    "Failed to traverse object {}, error was: {}", type(neighbor), e)
                 continue
             except TypeError as e:
                 print(e)
@@ -134,9 +151,11 @@ class Validator:
             self.validate_neighbors(sub_neighbors)
 
     def get_object_hash(self, id):
+        """ Compute the hash with which the an object is tracked by the validator """
         return hashlib.sha1(id.encode('ascii')).hexdigest()
 
     def validate_object(self, object):
+        """ Validate a single object """
         try:
             object_id = object.get_id()
         except GLib.Error as e:
@@ -162,7 +181,8 @@ class Validator:
             for validation_result in validation_results:
                 self.parse_validation_result(validation_result)
         except GLib.Error as e:
-            self.result.error("Object validation for '{}' failed".format(object_id))
+            self.result.error(
+                "Object validation for '{}' failed".format(object_id))
 #        if self.options.validate_schema:
 #            # TODO: schema based validation
 #            pass
@@ -175,15 +195,19 @@ class Validator:
             exit()
 
     def get_schema_for_type(self, type):
+        """ Get the schema for an entity """
         # TODO: implement this once liboparl objects support get_type
         print(type)
 
     def cleanup_occured_excrement(self, client, excrement):
+        """ Process the shit happened signal from liboparl """
         self.parse_validation_result(excrement)
 
     def parse_validation_result(self, validation_result):
+        """ Parse a liboparl ValidationResult into a validator message """
         if self.get_object_hash(validation_result.get_object_id()) in self.seen:
-            self.result.debug("Skipping result info for {}".format(validation_result.get_object_id()))
+            self.result.debug("Skipping result info for {}".format(
+                validation_result.get_object_id()))
             return
 
         severity = validation_result.get_severity()
@@ -197,14 +221,17 @@ class Validator:
             self.result.error(description)
 
     def check_schema_cache(self, schema_version):
+        """ Updates the schema cache for the given version """
         self.result.info("Building schema cache")
-        schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
+        schema_path = Path(
+            "schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
 
         schema_listing = requests.get(schema_version).json()
 
         for schema in schema_listing:
-            entity_path = schema_path / hashlib.sha1(schema.encode('ascii')).hexdigest()
+            entity_path = schema_path / \
+                hashlib.sha1(schema.encode('ascii')).hexdigest()
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
                     self.schema_cache[schema] = json.loads(f.read())
