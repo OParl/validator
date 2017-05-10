@@ -63,39 +63,51 @@ class Result(object):
         self.silent = silent
         self.verbosity = verbosity
 
-    def add_message(self, severity, text, context):
-        
-
-    def process_message(self, type, message, *args):
+    def add_message(self, severity, text, *context):
         if self.silent:
             return
 
-        if type == Result.Verbosity.Default:
-            type = Result.Verbosity.Error
-
-        message = message.format(*args)
-
-        if self.mode == Result.Mode.Human:
-            self._print_human(type, message)
+        if context and len(context) > 0:
+            text = text.format(context)
 
         if self.mode == Result.Mode.Json:
-            self._print_json(type, message)
+            data = {
+                "severity": self.format_severity(severity),
+                "text": text,
+                "context": context
+            }
 
-    def _print_human(self, type, message):
-        color = Fore.WHITE
-        if type == "ok":
-            color = Fore.GREEN
-        if type == "warn":
-            color = Fore.YELLOW
-        if type == "err":
-            color = Fore.RED
+            print(json.dumps(data))
 
-        print("{}[{}] {}{}".format(color, type.center(4).upper(), message, Style.RESET_ALL))
+        if self.mode == Result.Mode.Human:
+            color = Fore.WHITE
+            if severity == Result.Severity.Info:
+                color = Fore.GREEN
+            if severity == Result.Severity.Warning:
+                color = Fore.YELLOW
+            if severity == Result.Severity.Error:
+                color = Fore.RED
 
-    def _print_json(self, type, message):
-        data = {
-            "type": type,
-            "message": message
-        }
+            print("{}[{}] {}{}".format(color, self.format_severity(severity).center(8).upper(), text, Style.RESET_ALL))
 
-        print(json.dumps(data))
+    def format_severity(self, severity):
+        if severity == Result.Severity.Debug:
+            return "Debug"
+        if severity == Result.Severity.Info:
+            return "Info"
+        if severity == Result.Severity.Warning:
+            return "Warning"
+        if severity == Result.Severity.Error:
+            return "Error"
+
+    def debug(self, text, *context):
+        self.add_message(Result.Severity.Debug, text, context)
+    
+    def info(self, text, *context):
+        self.add_message(Result.Severity.Info, text, context)
+
+    def warning(self, text, *context):
+        self.add_message(Result.Severity.Warning, text, context)
+
+    def error(self, text, *context):
+        self.add_message(Result.Severity.Error, text, context)
