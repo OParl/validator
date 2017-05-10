@@ -34,6 +34,10 @@ class Cache:
     """ the cache's base key """
     basekey = ""
 
+    hits = 0
+    misses = 0
+    lookups = 0
+
     def __init__(self, basekey=""):
         """
             Initialize a Cache instance
@@ -81,10 +85,27 @@ class RedisCache(Cache):
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
 
     def has(self, key):
-        return self.redis.exists(self.fullkey(key))
+        self.lookups += 1
+        result = self.redis.exists(self.fullkey(key))
+        
+        if result:
+            self.hits += 1
+        else: 
+            self.misses += 1
+        
+        return result
 
     def get(self, key):
-        return self.redis.get(self.fullkey(key))
+        self.lookups += 1
+
+        result = self.redis.get(self.fullkey(key))
+        
+        if result:
+            self.hits += 1
+        else: 
+            self.misses += 1
+        
+        return result
 
     def set(self, key, value, ttl=600):
         return self.redis.set(self.fullkey(key), value, ttl)
