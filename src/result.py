@@ -37,34 +37,32 @@ class Result(object):
         """
             Result.Verbosity simultaneously describes the verbosity of the output
         """
-        Default = 0
-        Info = 1
-        Warning = 2
-        Error = 3
-        Debug = 4
-
-    class Severity(object):
-        """
-            Severity of messages - This is quite similar to the output verbosity except
-            that there is no default.
-        """
         Debug = 0
         Info = 1
         Warning = 2
         Error = 3
 
+    class Severity(Verbosity):
+        """
+            Type redifinition of Verbosity for Severity
+        """
+        pass
+
     silent = False
 
     mode = Mode.Human
-    verbosity = Verbosity.Default
+    verbosity = Verbosity.Error
 
-    def __init__(self, mode=Mode.Human, silent=False, verbosity=Verbosity.Default):
+    def __init__(self, mode, silent, verbosity):
         self.mode = mode
         self.silent = silent
         self.verbosity = verbosity
 
     def add_message(self, severity, text, *context):
         if self.silent:
+            return
+
+        if self.check_severity(severity):
             return
 
         if context and len(context) > 0:
@@ -89,6 +87,12 @@ class Result(object):
                 color = Fore.RED
 
             print("{}[{}] {}{}".format(color, self.format_severity(severity).center(8).upper(), text, Style.RESET_ALL))
+
+    def check_severity(self, severity):
+        if severity >= self.verbosity:
+            return False
+        
+        return True
 
     def format_severity(self, severity):
         if severity == Result.Severity.Debug:

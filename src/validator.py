@@ -53,8 +53,9 @@ class Validator(object):
     options = None
     result = None
     seen = []
-    known_entities = 0
+    total_entities = 0
     valid_entities = 0
+    failed_entities = 0
 
     def __init__(self, url, options):
         self.url = url
@@ -76,7 +77,7 @@ class Validator(object):
         if options.format == 'json':
             mode = Result.Mode.Json
 
-        self.result = Result(silent=options.silent, mode=mode)
+        self.result = Result(silent=options.silent, mode=mode, verbosity=options.verbosity)
 
         if options.redis:
             self.cache = RedisCache()
@@ -86,7 +87,7 @@ class Validator(object):
     def resolve_url(self, client, url, status):
         try:
             if not self.cache.has(url):
-                self.result.debug("Requesting {}".format(url))
+                self.result.debug("Requesting {}", url)
 
                 r = requests.get(url)
                 r.raise_for_status()
@@ -98,15 +99,15 @@ class Validator(object):
             else:
                 self.result.debug("Cache hit: {}".format(url))
                 text = self.cache.get(url)
-                status = -1
+                status = 304 # report as not modified because cache hit
+
                 return str(text, 'utf-8')
         except Exception as e:
-            self.result.error(
-                "Failed fetching {}, error was\n{}".format(url, e))
+            self.result.error("Failed fetching {}", url, e)
             return None
 
     def validate(self):
-        self.result.debug("-- validation started --")
+        self.result.debug("Validation started")
 
         try:
             system = self.client.open(self.url)

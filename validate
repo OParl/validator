@@ -90,9 +90,12 @@ def main():
 
     args = parser.parse_args()
 
-    if args.verbosity > 2:
+    if args.verbosity > 3:
         print("You cannot possibly make me embarrass myself that much.")
         exit()
+    
+    # actual verbosity is ordered naturally
+    args.verbosity = 3 - args.verbosity
 
     # init colorama
     init(strip=args.porcelain, autoreset=True)
