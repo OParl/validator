@@ -73,36 +73,6 @@ class Result(object):
         self.silent = silent
         self.verbosity = verbosity
 
-    def add_message(self, severity, text, *context):
-        if self.silent:
-            return
-
-        if self.check_severity(severity):
-            return
-
-        if context and len(context) > 0:
-            text = text.format(context)
-
-        if self.mode == Result.Mode.Json:
-            data = {
-                "severity": self.format_severity(severity),
-                "text": text,
-                "context": context
-            }
-
-            print(json.dumps(data))
-
-        if self.mode == Result.Mode.Human:
-            color = Fore.WHITE
-            if severity == Result.Severity.Info:
-                color = Fore.GREEN
-            if severity == Result.Severity.Warning:
-                color = Fore.YELLOW
-            if severity == Result.Severity.Error:
-                color = Fore.RED
-
-            print("{}[{}] {}{}".format(color, self.format_severity(severity).center(8).upper(), text, Style.RESET_ALL))
-
     def check_severity(self, severity):
         if severity >= self.verbosity:
             return False
@@ -118,15 +88,3 @@ class Result(object):
             return "Warning"
         if severity == Result.Severity.Error:
             return "Error"
-
-    def debug(self, text, *context):
-        self.add_message(Result.Severity.Debug, text, context)
-    
-    def info(self, text, *context):
-        self.add_message(Result.Severity.Info, text, context)
-
-    def warning(self, text, *context):
-        self.add_message(Result.Severity.Warning, text, context)
-
-    def error(self, text, *context):
-        self.add_message(Result.Severity.Error, text, context)
