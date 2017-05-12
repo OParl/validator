@@ -27,7 +27,16 @@ from colorama import Fore, Style
 
 
 class Result(object):
-    """ Validator result object """
+    """ 
+        Validation Result 
+
+        The validation result contains a set of messages for each object
+        type as well as some general statistics and messages regarding
+        validation events that do not belong into the above categories.
+        That last category, among other things, keeps taps on what objects
+        or files were unreachable.
+    """
+
     class Mode(object):
         """ Output mode """
         Human = 0
@@ -52,6 +61,12 @@ class Result(object):
 
     mode = Mode.Human
     verbosity = Verbosity.Error
+
+    total_entities = 0
+    valid_entities = 0
+    failed_entities = 0
+
+    object_messages = {}
 
     def __init__(self, mode, silent, verbosity):
         self.mode = mode
