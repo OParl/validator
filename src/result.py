@@ -46,10 +46,10 @@ class Result(object):
         """
             Result.Verbosity simultaneously describes the verbosity of the output
         """
-        Debug = 0
-        Info = 1
-        Warning = 2
-        Error = 3
+        Debug = 3
+        Info = 2
+        Warning = 1
+        Error = 0
 
     class Severity(Verbosity):
         """
@@ -74,9 +74,9 @@ class Result(object):
         self.verbosity = verbosity
 
     def check_severity(self, severity):
-        if severity >= self.verbosity:
+        if severity <= self.verbosity:
             return False
-        
+
         return True
 
     def format_severity(self, severity):
