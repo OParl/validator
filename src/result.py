@@ -27,8 +27,8 @@ from colorama import Fore, Style
 
 
 class Result(object):
-    """ 
-        Validation Result 
+    """
+        Validation Result
 
         The validation result contains a set of messages for each object
         type as well as some general statistics and messages regarding
