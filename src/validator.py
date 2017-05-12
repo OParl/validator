@@ -53,9 +53,6 @@ class Validator(object):
     options = None
     result = None
     seen = []
-    total_entities = 0
-    valid_entities = 0
-    failed_entities = 0
 
     def __init__(self, url, options):
         self.url = url
@@ -87,7 +84,7 @@ class Validator(object):
     def resolve_url(self, client, url, status):
         try:
             if not self.cache.has(url):
-                self.result.debug("Requesting {}", url)
+                #self.result.debug("Requesting {}", url)
 
                 r = requests.get(url)
                 r.raise_for_status()
@@ -97,17 +94,17 @@ class Validator(object):
 
                 return r.text
             else:
-                self.result.debug("Cache hit: {}".format(url))
+                #self.result.debug("Cache hit: {}".format(url))
                 text = self.cache.get(url)
                 status = 304 # report as not modified because cache hit
 
                 return str(text, 'utf-8')
         except Exception as e:
-            self.result.error("Failed fetching {}", url, e)
+            #self.result.error("Failed fetching {}", url, e)
             return None
 
     def validate(self):
-        self.result.debug("Validation started")
+        #self.result.debug("Validation started")
 
         try:
             system = self.client.open(self.url)
@@ -121,17 +118,17 @@ class Validator(object):
 
             msg = "Detected OParl Version {}"
             if version in VALID_OPARL_VERSIONS:
-                self.result.ok(msg, version)
+                #self.result.ok(msg, version)
                 self.check_schema_cache(version)
             else:
-                self.result.error(msg + "\nExpected one of: {}",
+                #self.result.error(msg + "\nExpected one of: {}",
                                   version, VALID_OPARL_VERSIONS)
 
         if self.options.save_results:
-            with open('validation-log-{}.json'.format(str(datetime.datetime.now())[:19]), 'w') as f:
-                f.write(json.dumps(self.result.messages))
+            # TODO: Reimplement result saving
+            pass
 
-        self.result.debug("-- validation completed --")
+        #self.result.debug("-- validation completed --")
 
     def validate_neighbors(self, neighbors):
         sub_neighbors = []
@@ -141,7 +138,7 @@ class Validator(object):
                 self.validate_object(neighbor)
                 sub_neighbors.extend(neighbor.get_neighbors())
             except GLib.Error as e:
-                self.result.error(
+                #self.result.error(
                     "Failed to traverse object {}, error was: {}", type(neighbor), e)
                 continue
             except TypeError as e:
@@ -160,29 +157,29 @@ class Validator(object):
         try:
             object_id = object.get_id()
         except GLib.Error as e:
-            self.result.error("Malformed object")
+            #self.result.error("Malformed object")
             return
 
         if object_id == None:
             raise Error
 
-        self.result.debug("In {}".format(object_id))
+        #self.result.debug("In {}".format(object_id))
 
         if self.get_object_hash(object_id) in self.seen:
-            self.result.debug("Revisiting {}".format(object_id))
+            #self.result.debug("Revisiting {}".format(object_id))
             return
 
-        self.result.debug("Appending to seen list")
+        #self.result.debug("Appending to seen list")
         self.seen.append(self.get_object_hash(object_id))
 
-        self.result.info("Validating {}", object_id)
+        #self.result.info("Validating {}", object_id)
 
         try:
             validation_results = object.validate()
             for validation_result in validation_results:
                 self.parse_validation_result(validation_result)
         except GLib.Error as e:
-            self.result.error(
+            #self.result.error(
                 "Object validation for '{}' failed".format(object_id))
 #        if self.options.validate_schema:
 #            # TODO: schema based validation
@@ -207,7 +204,7 @@ class Validator(object):
     def parse_validation_result(self, validation_result):
         """ Parse a liboparl ValidationResult into a validator message """
         if self.get_object_hash(validation_result.get_object_id()) in self.seen:
-            self.result.debug("Skipping result info for {}".format(
+            #self.result.debug("Skipping result info for {}".format(
                 validation_result.get_object_id()))
             return
 
@@ -215,15 +212,15 @@ class Validator(object):
         description = validation_result.get_description()
 
         if severity == OParl.ErrorSeverity.INFO:
-            self.result.info(description)
+            #self.result.info(description)
         if severity == OParl.ErrorSeverity.WARNING:
-            self.result.warning(description)
+            #self.result.warning(description)
         if severity == OParl.ErrorSeverity.ERROR:
-            self.result.error(description)
+            #self.result.error(description)
 
     def check_schema_cache(self, schema_version):
         """ Updates the schema cache for the given version """
-        self.result.info("Building schema cache")
+        #self.result.info("Building schema cache")
         schema_path = Path(
             "schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
