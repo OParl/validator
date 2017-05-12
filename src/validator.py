@@ -55,13 +55,17 @@ class Validator(object):
     seen = []
 
     def __init__(self, url, options):
-        self.url = url
-        self.options = options
-
         # warn the user that schema validation is not yet implemented
         # TODO: this code should be removed eventually
         if options.validate_schema:
             print("Schema validation is not implemented yet and will be skipped.")
+
+        self.url = url
+        self.options = options
+
+        if not self.is_reachable_uri(url):
+            print("Endpoint {} is not reachable, aborting validation.".format(url))
+            exit(1)
 
         self.client = OParl.Client()
         self.client.set_strict(False)
@@ -84,8 +88,6 @@ class Validator(object):
     def resolve_url(self, client, url, status):
         try:
             if not self.cache.has(url):
-                #self.result.debug("Requesting {}", url)
-
                 r = requests.get(url)
                 r.raise_for_status()
 
@@ -94,23 +96,19 @@ class Validator(object):
 
                 return r.text
             else:
-                #self.result.debug("Cache hit: {}".format(url))
                 text = self.cache.get(url)
                 status = 304 # report as not modified because cache hit
 
                 return str(text, 'utf-8')
         except Exception as e:
-            #self.result.error("Failed fetching {}", url, e)
             return None
 
     def validate(self):
-        #self.result.debug("Validation started")
-
         try:
             system = self.client.open(self.url)
             self.validate_object(system)
         except GLib.Error as e:
-            print(type(e))
+            print(e)
             exit()
 
         if self.options.validate_schema:
@@ -118,17 +116,11 @@ class Validator(object):
 
             msg = "Detected OParl Version {}"
             if version in VALID_OPARL_VERSIONS:
-                #self.result.ok(msg, version)
                 self.check_schema_cache(version)
-            else:
-                #self.result.error(msg + "\nExpected one of: {}",
-                                  version, VALID_OPARL_VERSIONS)
 
         if self.options.save_results:
             # TODO: Reimplement result saving
             pass
-
-        #self.result.debug("-- validation completed --")
 
     def validate_neighbors(self, neighbors):
         sub_neighbors = []
@@ -138,8 +130,6 @@ class Validator(object):
                 self.validate_object(neighbor)
                 sub_neighbors.extend(neighbor.get_neighbors())
             except GLib.Error as e:
-                #self.result.error(
-                    "Failed to traverse object {}, error was: {}", type(neighbor), e)
                 continue
             except TypeError as e:
                 print(e)
@@ -157,33 +147,25 @@ class Validator(object):
         try:
             object_id = object.get_id()
         except GLib.Error as e:
-            #self.result.error("Malformed object")
             return
 
         if object_id == None:
             raise Error
 
-        #self.result.debug("In {}".format(object_id))
-
         if self.get_object_hash(object_id) in self.seen:
-            #self.result.debug("Revisiting {}".format(object_id))
             return
 
-        #self.result.debug("Appending to seen list")
         self.seen.append(self.get_object_hash(object_id))
-
-        #self.result.info("Validating {}", object_id)
 
         try:
             validation_results = object.validate()
             for validation_result in validation_results:
                 self.parse_validation_result(validation_result)
         except GLib.Error as e:
-            #self.result.error(
-                "Object validation for '{}' failed".format(object_id))
-#        if self.options.validate_schema:
-#            # TODO: schema based validation
-#            pass
+            pass
+
+        if object is OParl.File:
+            print("Found a file!")
 
         try:
             neighbors = object.get_neighbors()
@@ -194,7 +176,6 @@ class Validator(object):
 
     def get_schema_for_type(self, type):
         """ Get the schema for an entity """
-        # TODO: implement this once liboparl objects support get_type
         print(type)
 
     def cleanup_occured_excrement(self, client, excrement):
@@ -204,25 +185,21 @@ class Validator(object):
     def parse_validation_result(self, validation_result):
         """ Parse a liboparl ValidationResult into a validator message """
         if self.get_object_hash(validation_result.get_object_id()) in self.seen:
-            #self.result.debug("Skipping result info for {}".format(
-                validation_result.get_object_id()))
             return
 
         severity = validation_result.get_severity()
         description = validation_result.get_description()
 
         if severity == OParl.ErrorSeverity.INFO:
-            #self.result.info(description)
+            pass
         if severity == OParl.ErrorSeverity.WARNING:
-            #self.result.warning(description)
+            pass
         if severity == OParl.ErrorSeverity.ERROR:
-            #self.result.error(description)
+            pass
 
     def check_schema_cache(self, schema_version):
         """ Updates the schema cache for the given version """
-        #self.result.info("Building schema cache")
-        schema_path = Path(
-            "schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
+        schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
 
         schema_listing = requests.get(schema_version).json()
@@ -238,3 +215,10 @@ class Validator(object):
                 self.schema_cache[schema] = requests.get(schema).json()
                 with open(entity_path, 'w') as f:
                     f.write(json.dumps(self.schema_cache[schema]))
+
+    def is_reachable_uri(self, uri):
+        try:
+            r = requests.head(uri)
+            return r.status_code in [200, 304]
+        except requests.exceptions.ConnectionError:
+            return False
