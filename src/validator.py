@@ -138,10 +138,6 @@ class Validator(object):
             self.validate_object(neighbor)
             neighbors.extend(neighbor.get_neighbors())
 
-    def get_object_hash(self, id):
-        """ Compute the hash with which the an object is tracked by the validator """
-        return hashlib.sha1(id.encode('ascii')).hexdigest()
-
     def validate_object(self, object, recurse=True):
         """ Validate a single object """
         self.current_object = object
@@ -173,6 +169,10 @@ class Validator(object):
             self.validate_neighbors(object)
         else:
             return object
+
+    def get_object_hash(self, id):
+        """ Compute the hash with which the an object is tracked by the validator """
+        return hashlib.sha1(id.encode('ascii')).hexdigest()
 
     def get_schema_for_type(self, type):
         """ Get the schema for an entity """
