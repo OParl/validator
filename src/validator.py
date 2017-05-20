@@ -107,45 +107,42 @@ class Validator(object):
             return None
 
     def validate(self):
-        try:
-            system = self.client.open(self.url)
-            self.validate_object(system)
-        except GLib.Error as e:
-            print(e)
-            exit()
-
         if self.options.validate_schema:
             version = system.get_oparl_version()
 
-            msg = "Detected OParl Version {}"
             if version in VALID_OPARL_VERSIONS:
                 self.check_schema_cache(version)
+
+        system = self.client.open(self.url)
+        self.validate_object(system, recurse=False)
+
+        bodies = system.get_body()
+        for body in bodies:
+            self.validate_object(body)
 
         if self.options.save_results:
             # TODO: Reimplement result saving
             pass
 
-    def validate_neighbors(self, neighbors):
-        sub_neighbors = []
+    def validate_neighbors(self, object):
+        neighbors = []
 
-        for neighbor in neighbors:
-            try:
-                self.validate_object(neighbor)
-                sub_neighbors.extend(neighbor.get_neighbors())
-            except GLib.Error as e:
-                continue
-            except TypeError as e:
-                print(e)
-                exit()
+        try:
+            neighbors = object.get_neighbors()
+        except GLib.Error:
+            # TODO: track objects that should have had neighbors
+            pass
 
-        if len(sub_neighbors) > 0:
-            self.validate_neighbors(sub_neighbors)
+        while len(neighbors) > 0:
+            neighbor = neighbors.pop(0)
+            self.validate_object(neighbor)
+            neighbors.extend(neighbor.get_neighbors())
 
     def get_object_hash(self, id):
         """ Compute the hash with which the an object is tracked by the validator """
         return hashlib.sha1(id.encode('ascii')).hexdigest()
 
-    def validate_object(self, object):
+    def validate_object(self, object, recurse=True):
         """ Validate a single object """
         self.current_object = object
 
@@ -172,12 +169,10 @@ class Validator(object):
         if object is OParl.File:
             print("Found a file!")
 
-        try:
-            neighbors = object.get_neighbors()
-            self.validate_neighbors(neighbors)
-        except GLib.Error as e:
-            print(e)
-            exit()
+        if recurse:
+            self.validate_neighbors(object)
+        else:
+            return object
 
     def get_schema_for_type(self, type):
         """ Get the schema for an entity """
