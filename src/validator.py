@@ -53,6 +53,7 @@ class Validator(object):
     options = None
     result = None
     seen = []
+    current_object = None
 
     def __init__(self, url, options):
         # warn the user that schema validation is not yet implemented
@@ -144,6 +145,8 @@ class Validator(object):
 
     def validate_object(self, object):
         """ Validate a single object """
+        self.current_object = object
+
         try:
             object_id = object.get_id()
         except GLib.Error as e:
