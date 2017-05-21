@@ -40,6 +40,7 @@ from gi.repository import GLib
 
 from src.cache import Cache, RedisCache
 from src.result import Result
+from src.utils import sha1_hexdigest
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
@@ -83,7 +84,7 @@ class Validator(object):
         else:
             self.cache = Cache()
 
-        self.result = Result(cache)
+        self.result = Result(self.cache)
 
     def resolve_url(self, client, url, status):
         try:
@@ -207,7 +208,7 @@ class Validator(object):
             # TODO: track invalid object id
             return None
 
-        return utils.sha1_hexdigest(object_id.encode('ascii'))
+        return sha1_hexdigest(object_id.encode('ascii'))
 
     def get_schema_for_type(self, type):
         """ Get the schema for an entity """
@@ -219,14 +220,14 @@ class Validator(object):
 
     def check_schema_cache(self, schema_version):
         """ Updates the schema cache for the given version """
-        schema_path = Path('schema_cache/{}'.format(utils.sha1_hexdigest(schema_version.encode('ascii'))))
+        schema_path = Path('schema_cache/{}'.format(sha1_hexdigest(schema_version.encode('ascii'))))
         schema_path.mkdir(parents=True, exist_ok=True)
 
         schema_listing = requests.get(schema_version).json()
 
         for schema in schema_listing:
             entity_path = schema_path / \
-                utils.sha1_hexdigest(schema.encode('ascii'))
+                sha1_hexdigest(schema.encode('ascii'))
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
                     self.schema_cache[schema] = json.loads(f.read())
