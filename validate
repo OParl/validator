@@ -68,16 +68,8 @@ def main():
     )
 
     parser.add_argument(
-        "-f",
-        "--format",
-        help="configure the output format for validation results (text or json, defaults to text)",
-        default="text",
-        dest="format"
-    )
-
-    parser.add_argument(
         "-v",
-        help="configure the output verbosity",
+        help="configure the output verbosity (this is only relevant for direct cli usage, writing to file will always output everything)",
         dest="verbosity",
         action="count",
         default=0,
