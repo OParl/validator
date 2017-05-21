@@ -190,7 +190,8 @@ class Validator(object):
             pass
 
         for neighbor in object_neighbors:
-            if self.get_object_hash(object) not in self.seen:
+            hash = self.get_object_hash(neighbor)
+            if hash not in self.seen:
                 unseen_neighbors.append(neighbor)
 
         return unseen_neighbors
