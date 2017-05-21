@@ -64,13 +64,13 @@ class Validator(object):
         # warn the user that schema validation is not yet implemented
         # TODO: this code should be removed eventually
         if options.validate_schema:
-            print('Schema validation is not implemented yet and will be skipped.')
+            self.print('Schema validation is not implemented yet and will be skipped.')
 
         self.url = url
         self.options = options
 
         if not self.is_reachable_uri(url):
-            print('Endpoint {} is not reachable, aborting validation.'.format(url))
+            self.print('Endpoint {} is not reachable, aborting validation.'.format(url))
             exit(1)
 
         self.client = OParl.Client()
