@@ -23,8 +23,13 @@ SOFTWARE.
 """
 
 import json
+
 from colorama import Fore, Style
 
+from gi.repository import OParl
+
+from src.utils import *
+from src.cache import *
 
 class Result(object):
     """
@@ -37,49 +42,18 @@ class Result(object):
         or files were unreachable.
     """
 
-    class Mode(object):
-        """ Output mode """
-        Human = 0
-        Json = 1
-
-    class Verbosity(object):
-        """
-            Result.Verbosity simultaneously describes the verbosity of the output
-        """
-        Debug = 3
-        Info = 2
-        Warning = 1
-        Error = 0
-
-    class Severity(Verbosity):
-        """
-            Type redifinition of Verbosity for Severity
-        """
-        pass
-
-    silent = False
-
-    mode = Mode.Human
-    verbosity = Verbosity.Error
-
     total_entities = 0
-    valid_entities = 0
     failed_entities = 0
 
     object_messages = {}
 
-    def __init__(self, mode, silent, verbosity):
-        self.mode = mode
-        self.silent = silent
-        self.verbosity = verbosity
+    cache = None
 
-    def check_severity(self, severity):
-        if severity <= self.verbosity:
-            return False
-
-        return True
+    def __init__(self, cache):
+        self.cache = cache
 
     def format_severity(self, severity):
+        # TODO: Rewrite this to handle ValidationResult Severities?
         if severity == Result.Severity.Debug:
             return "Debug"
         if severity == Result.Severity.Info:
@@ -88,3 +62,31 @@ class Result(object):
             return "Warning"
         if severity == Result.Severity.Error:
             return "Error"
+
+    def parse_validation_result(self, object, validation_result):
+        """
+            Parse a liboparl ValidationResult into a validator message
+        """
+        severity = validation_result.get_severity()
+        description = validation_result.get_description()
+
+        oparl_type = OParlType(object)
+
+        if oparl_type.entity not in self.object_messages:
+            self.object_messages[oparl_type.entity] = []
+
+        if validation_result not in self.object_messages[oparl_type.entity]:
+            self.object_messages[oparl_type.entity].append({
+                'severity': severity,
+                'message': description
+            })
+
+    def __str__(self):
+        return json.dumps({
+            'counts': {
+                'total': self.total_entities,
+                'valid': self.total_entities - self.failed_entities,
+                'failed': self.failed_entities
+            },
+            'object_messages': self.object_messages
+        })

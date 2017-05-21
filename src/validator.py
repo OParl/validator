@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import sys
 import json
 import hashlib
-import datetime
+from datetime import datetime
 from pathlib import Path
 from collections import deque
 
@@ -57,7 +58,6 @@ class Validator(object):
     result = None
     seen = []
     current_object = None
-    object_count = 0
 
     def __init__(self, url, options):
         # warn the user that schema validation is not yet implemented
@@ -78,17 +78,12 @@ class Validator(object):
         self.client.connect('resolve_url', self.resolve_url)
         self.client.connect('shit_happened', self.cleanup_occured_excrement)
 
-        mode = Result.Mode.Human
-
-        if options.format == 'json':
-            mode = Result.Mode.Json
-
-        self.result = Result(silent=options.silent, mode=mode, verbosity=options.verbosity)
-
         if options.redis:
             self.cache = RedisCache()
         else:
             self.cache = Cache()
+
+        self.result = Result(cache)
 
     def resolve_url(self, client, url, status):
         try:
@@ -120,29 +115,28 @@ class Validator(object):
         system = self.client.open(self.url)
         self.print('Validating {}', self.url)
         self.validate_object(system)
-        self.object_count = 1
+        self.result.total_entities = 1
 
         bodies = system.get_body()
-        self.object_count += len(bodies)
+        self.result.total_entities += len(bodies)
 
         for body in bodies:
             self.validate_object(body)
             self.validate_neighbors(body)
 
-        # if self.options.save_results:
-        #     # TODO: Reimplement result saving
-        #     pass
+        with open('validation-result-{}.json'.format(datetime.now()), 'w') as f:
+            f.write(str(self.result))
 
     def validate_neighbors(self, object):
         neighbors = deque(self.get_unseen_neighbors(object))
         neighbors_count = len(neighbors)
 
-        self.object_count += neighbors_count
+        self.result.total_entities += neighbors_count
 
         if self.options.silent:
             progress_bar = None
         else:
-            progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects')
+            progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects', file=sys.stderr)
 
         while len(neighbors) > 0:
             neighbor = neighbors.popleft()
@@ -153,7 +147,7 @@ class Validator(object):
             if additional_neighbors_count > 0:
                 neighbors.extend(additional_neighbors)
                 neighbors_count += additional_neighbors_count
-                self.object_count += additional_neighbors_count
+                self.result.total_entities += additional_neighbors_count
 
             if type(progress_bar) == tqdm:
                 progress_bar.total = neighbors_count
@@ -173,8 +167,11 @@ class Validator(object):
         try:
             validation_results = object.validate()
 
+            if len(validation_results) > 0:
+                self.result.failed_entities += 1
+
             for validation_result in validation_results:
-                self.parse_validation_result(validation_result)
+                self.result.parse_validation_result(object, validation_result)
         except GLib.Error as e:
             pass
 
@@ -210,7 +207,7 @@ class Validator(object):
             # TODO: track invalid object id
             return None
 
-        return hashlib.sha1(object_id.encode('ascii')).hexdigest()
+        return utils.sha1_hexdigest(object_id.encode('ascii'))
 
     def get_schema_for_type(self, type):
         """ Get the schema for an entity """
@@ -218,33 +215,18 @@ class Validator(object):
 
     def cleanup_occured_excrement(self, client, excrement):
         """ Process the shit happened signal from liboparl """
-        self.parse_validation_result(excrement)
-
-    def parse_validation_result(self, validation_result):
-        """ Parse a liboparl ValidationResult into a validator message """
-        if self.get_object_hash(None, validation_result.get_object_id()) in self.seen:
-            return
-
-        severity = validation_result.get_severity()
-        description = validation_result.get_description()
-
-        if severity == OParl.ErrorSeverity.INFO:
-            pass
-        if severity == OParl.ErrorSeverity.WARNING:
-            pass
-        if severity == OParl.ErrorSeverity.ERROR:
-            pass
+        self.result.parse_validation_result(self.current_object, excrement)
 
     def check_schema_cache(self, schema_version):
         """ Updates the schema cache for the given version """
-        schema_path = Path('schema_cache/{}'.format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
+        schema_path = Path('schema_cache/{}'.format(utils.sha1_hexdigest(schema_version.encode('ascii'))))
         schema_path.mkdir(parents=True, exist_ok=True)
 
         schema_listing = requests.get(schema_version).json()
 
         for schema in schema_listing:
             entity_path = schema_path / \
-                hashlib.sha1(schema.encode('ascii')).hexdigest()
+                utils.sha1_hexdigest(schema.encode('ascii'))
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
                     self.schema_cache[schema] = json.loads(f.read())
@@ -263,4 +245,4 @@ class Validator(object):
 
     def print(self, message, *args):
         if not self.options.silent:
-            print(message.format(*args))
+            print(message.format(*args), file=sys.stderr)
