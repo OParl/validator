@@ -63,20 +63,20 @@ class Validator(object):
         # warn the user that schema validation is not yet implemented
         # TODO: this code should be removed eventually
         if options.validate_schema:
-            print("Schema validation is not implemented yet and will be skipped.")
+            print('Schema validation is not implemented yet and will be skipped.')
 
         self.url = url
         self.options = options
 
         if not self.is_reachable_uri(url):
-            print("Endpoint {} is not reachable, aborting validation.".format(url))
+            print('Endpoint {} is not reachable, aborting validation.'.format(url))
             exit(1)
 
         self.client = OParl.Client()
         self.client.set_strict(False)
 
-        self.client.connect("resolve_url", self.resolve_url)
-        self.client.connect("shit_happened", self.cleanup_occured_excrement)
+        self.client.connect('resolve_url', self.resolve_url)
+        self.client.connect('shit_happened', self.cleanup_occured_excrement)
 
         mode = Result.Mode.Human
 
@@ -92,7 +92,7 @@ class Validator(object):
 
     def resolve_url(self, client, url, status):
         try:
-            if url == "unknown id": # This is from objects liboparl failed to resolve!
+            if url == 'unknown id': # This is from objects liboparl failed to resolve!
                 return None
             if not self.cache.has(url):
                 r = requests.get(url)
@@ -118,7 +118,7 @@ class Validator(object):
                 self.check_schema_cache(version)
 
         system = self.client.open(self.url)
-        self.print("Validating {}", self.url)
+        self.print('Validating {}', self.url)
         self.validate_object(system)
         self.object_count = 1
 
@@ -179,7 +179,7 @@ class Validator(object):
             pass
 
         if object is OParl.File:
-            print("Found a file!")
+            print('Found a file!')
 
     def get_unseen_neighbors(self, object):
         unseen_neighbors = []
@@ -237,7 +237,7 @@ class Validator(object):
 
     def check_schema_cache(self, schema_version):
         """ Updates the schema cache for the given version """
-        schema_path = Path("schema_cache/{}".format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
+        schema_path = Path('schema_cache/{}'.format(hashlib.sha1(schema_version.encode('ascii')).hexdigest()))
         schema_path.mkdir(parents=True, exist_ok=True)
 
         schema_listing = requests.get(schema_version).json()
