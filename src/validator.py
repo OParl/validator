@@ -108,7 +108,7 @@ class Validator(object):
 
     def validate(self):
         system = self.client.open(self.url)
-        self.print('Validating {}', self.url)
+        self.print('Validating {} [{}]', self.url, system.get_product())
         self.validate_object(system)
         self.result.total_entities = 1
 
