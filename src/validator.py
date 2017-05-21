@@ -107,16 +107,16 @@ class Validator(object):
             return None
 
     def validate(self):
+        system = self.client.open(self.url)
+        self.print('Validating {}', self.url)
+        self.validate_object(system)
+        self.result.total_entities = 1
+
         if self.options.validate_schema:
             version = system.get_oparl_version()
 
             if version in VALID_OPARL_VERSIONS:
                 self.check_schema_cache(version)
-
-        system = self.client.open(self.url)
-        self.print('Validating {}', self.url)
-        self.validate_object(system)
-        self.result.total_entities = 1
 
         bodies = system.get_body()
         self.result.total_entities += len(bodies)
