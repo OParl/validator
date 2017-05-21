@@ -84,6 +84,14 @@ def main():
     )
 
     parser.add_argument(
+        "-o",
+        help='configure the output file',
+        dest="output",
+        action="store",
+        default="validation-result.json"
+    )
+
+    parser.add_argument(
         'oparl_endpoint',
         nargs='+'
     )

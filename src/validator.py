@@ -125,7 +125,7 @@ class Validator(object):
             self.validate_object(body)
             self.validate_neighbors(body)
 
-        with open('validation-result-{}.json'.format(datetime.now()), 'w') as f:
+        with open(self.config.output, 'w') as f:
             f.write(str(self.result))
 
     def validate_neighbors(self, object):
