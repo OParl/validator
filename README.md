@@ -14,6 +14,7 @@
 - requests
 - colorama
 - redis (only if you want to use caching)
+- tqdm
 
 ## Usage
 
