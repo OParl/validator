@@ -118,6 +118,7 @@ class Validator(object):
                 self.check_schema_cache(version)
 
         system = self.client.open(self.url)
+        self.print("Validating {}", self.url)
         self.validate_object(system)
         self.object_count = 1
 
