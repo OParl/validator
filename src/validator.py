@@ -26,6 +26,8 @@ import json
 import hashlib
 import datetime
 from pathlib import Path
+from collections import deque
+
 import requests
 
 import gi
