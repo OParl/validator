@@ -259,3 +259,7 @@ class Validator(object):
             return r.status_code in [200, 304]
         except requests.exceptions.ConnectionError:
             return False
+
+    def print(self, message, *args):
+        if not self.options.silent:
+            print(message.format(*args))
