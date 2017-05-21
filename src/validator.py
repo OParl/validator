@@ -116,49 +116,38 @@ class Validator(object):
                 self.check_schema_cache(version)
 
         system = self.client.open(self.url)
-        self.validate_object(system, recurse=False)
+        self.validate_object(system)
 
         bodies = system.get_body()
         for body in bodies:
             self.validate_object(body)
+            self.validate_neighbors(body)
 
-        if self.options.save_results:
-            # TODO: Reimplement result saving
-            pass
+        # if self.options.save_results:
+        #     # TODO: Reimplement result saving
+        #     pass
 
     def validate_neighbors(self, object):
-        neighbors = []
-
-        try:
-            neighbors = object.get_neighbors()
-        except GLib.Error:
-            # TODO: track objects that should have had neighbors
-            pass
+        neighbors = deque(self.get_unseen_neighbors(object))
 
         while len(neighbors) > 0:
-            neighbor = neighbors.pop(0)
+            neighbor = neighbors.popleft()
             self.validate_object(neighbor)
-            neighbors.extend(neighbor.get_neighbors())
+            neighbors.extend(self.get_unseen_neighbors(object))
 
-    def validate_object(self, object, recurse=True):
+    def validate_object(self, object):
         """ Validate a single object """
         self.current_object = object
 
-        try:
-            object_id = object.get_id()
-        except GLib.Error as e:
+        hash = self.get_object_hash(object)
+        if hash in self.seen:
             return
-
-        if object_id == None:
-            raise Error
-
-        if self.get_object_hash(object_id) in self.seen:
-            return
-
-        self.seen.append(self.get_object_hash(object_id))
+        else:
+            self.seen.append(hash)
 
         try:
             validation_results = object.validate()
+
             for validation_result in validation_results:
                 self.parse_validation_result(validation_result)
         except GLib.Error as e:
@@ -167,14 +156,35 @@ class Validator(object):
         if object is OParl.File:
             print("Found a file!")
 
-        if recurse:
-            self.validate_neighbors(object)
-        else:
-            return object
+    def get_unseen_neighbors(self, object):
+        unseen_neighbors = []
 
-    def get_object_hash(self, id):
+        try:
+            object_neighbors = object.get_neighbors()
+        except GLib.Error:
+            # TODO: track objects that should have had neighbors
+            pass
+
+        for neighbor in object_neighbors:
+            if self.get_object_hash(object) not in self.seen:
+                unseen_neighbors.append(neighbor)
+
+        return unseen_neighbors
+
+    def get_object_hash(self, object, object_id = None):
         """ Compute the hash with which the an object is tracked by the validator """
-        return hashlib.sha1(id.encode('ascii')).hexdigest()
+
+        if object != None:
+            try:
+                object_id = object.get_id()
+            except GLib.Error as e:
+                return None
+
+        if object_id == None:
+            # TODO: track invalid object id
+            return None
+
+        return hashlib.sha1(object_id.encode('ascii')).hexdigest()
 
     def get_schema_for_type(self, type):
         """ Get the schema for an entity """
@@ -186,7 +196,7 @@ class Validator(object):
 
     def parse_validation_result(self, validation_result):
         """ Parse a liboparl ValidationResult into a validator message """
-        if self.get_object_hash(validation_result.get_object_id()) in self.seen:
+        if self.get_object_hash(None, validation_result.get_object_id()) in self.seen:
             return
 
         severity = validation_result.get_severity()
