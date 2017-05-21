@@ -125,8 +125,10 @@ class Validator(object):
             self.validate_object(body)
             self.validate_neighbors(body)
 
-        with open(self.config.output, 'w') as f:
+        with open(self.options.output, 'w') as f:
             f.write(str(self.result))
+
+        self.print("Validation completed, results have been written to:\n\t{}", self.options.output)
 
     def validate_neighbors(self, object):
         neighbors = deque(self.get_unseen_neighbors(object))
