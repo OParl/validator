@@ -41,7 +41,7 @@ class Cache:
     def __init__(self, basekey=""):
         """
             Initialize a Cache instance
-            
+
             Caches can preprend a basekey to every cached item.
             This makes it possible to use one cache provider (i.e. Redis)
             with multiple Cache instances
@@ -57,8 +57,8 @@ class Cache:
         return ""
 
     def set(self, key, value, ttl=0):
-        """ 
-            Set the contents of a key 
+        """
+            Set the contents of a key
 
             This allows to optionally set the time this cache item will be kept
         """
@@ -87,25 +87,25 @@ class RedisCache(Cache):
     def has(self, key):
         self.lookups += 1
         result = self.redis.exists(self.fullkey(key))
-        
+
         if result:
             self.hits += 1
-        else: 
+        else:
             self.misses += 1
-        
+
         return result
 
     def get(self, key):
         self.lookups += 1
 
         result = self.redis.get(self.fullkey(key))
-        
+
         if result:
             self.hits += 1
-        else: 
+        else:
             self.misses += 1
-        
+
         return result
 
-    def set(self, key, value, ttl=600):
+    def set(self, key, value, ttl=3600):
         return self.redis.set(self.fullkey(key), value, ttl)
