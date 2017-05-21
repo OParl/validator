@@ -88,7 +88,7 @@ class Validator(object):
 
     def resolve_url(self, client, url, status):
         try:
-            if url == 'unknown id': # This is from objects liboparl failed to resolve!
+            if url == None: # This is from objects liboparl failed to resolve!
                 return None
             if not self.cache.has(url):
                 r = requests.get(url)
