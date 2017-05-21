@@ -29,6 +29,7 @@ from pathlib import Path
 from collections import deque
 
 import requests
+from tqdm import tqdm
 
 import gi
 gi.require_version('OParl', '0.2')
@@ -56,6 +57,7 @@ class Validator(object):
     result = None
     seen = []
     current_object = None
+    object_count = 0
 
     def __init__(self, url, options):
         # warn the user that schema validation is not yet implemented
@@ -117,8 +119,11 @@ class Validator(object):
 
         system = self.client.open(self.url)
         self.validate_object(system)
+        self.object_count = 1
 
         bodies = system.get_body()
+        self.object_count += len(bodies)
+
         for body in bodies:
             self.validate_object(body)
             self.validate_neighbors(body)
@@ -129,11 +134,30 @@ class Validator(object):
 
     def validate_neighbors(self, object):
         neighbors = deque(self.get_unseen_neighbors(object))
+        neighbors_count = len(neighbors)
+
+        self.object_count += neighbors_count
+
+        if self.options.silent:
+            progress_bar = None
+        else:
+            progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects')
 
         while len(neighbors) > 0:
             neighbor = neighbors.popleft()
             self.validate_object(neighbor)
-            neighbors.extend(self.get_unseen_neighbors(object))
+
+            additional_neighbors = self.get_unseen_neighbors(object)
+            additional_neighbors_count = len(additional_neighbors)
+            if additional_neighbors_count > 0:
+                neighbors.extend(additional_neighbors)
+                neighbors_count += additional_neighbors_count
+                self.object_count += additional_neighbors_count
+
+            if type(progress_bar) == tqdm:
+                progress_bar.total = neighbors_count
+                progress_bar.update()
+
 
     def validate_object(self, object):
         """ Validate a single object """
