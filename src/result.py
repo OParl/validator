@@ -47,6 +47,9 @@ class Result(object):
 
     object_messages = {}
 
+    """ this is a list of objects that lead to unrecoverable error in respect to the spec """
+    fatal_objects = []
+
     cache = None
 
     def __init__(self, cache):
@@ -86,7 +89,8 @@ class Result(object):
             'counts': {
                 'total': self.total_entities,
                 'valid': self.total_entities - self.failed_entities,
-                'failed': self.failed_entities
+                'failed': self.failed_entities,
+                'fatal': len(self.fatal_objects)
             },
-            'object_messages': self.object_messages
+            'object_messages': self.object_messages,
         })

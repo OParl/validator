@@ -1,2 +1,3 @@
 schema_cache
 *.log
+*.json

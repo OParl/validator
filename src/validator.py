@@ -188,7 +188,8 @@ class Validator(object):
             object_neighbors = object.get_neighbors()
         except GLib.Error:
             # TODO: track objects that should have had neighbors
-            pass
+            self.result.fatal_objects.append(object)
+            return unseen_neighbors
 
         for neighbor in object_neighbors:
             hash = self.get_object_hash(neighbor)
