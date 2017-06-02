@@ -78,11 +78,13 @@ class Result(object):
         if oparl_type.entity not in self.object_messages:
             self.object_messages[oparl_type.entity] = []
 
-        if validation_result not in self.object_messages[oparl_type.entity]:
-            self.object_messages[oparl_type.entity].append({
-                'severity': severity,
-                'message': description
-            })
+        new_message = {
+            'severity': severity,
+            'message': description
+        }
+
+        if new_message not in self.object_messages[oparl_type.entity]:
+            self.object_messages[oparl_type.entity].append(new_message)
 
     def __str__(self):
         return json.dumps({
