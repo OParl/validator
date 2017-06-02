@@ -55,7 +55,8 @@ def main():
         "--silent",
         help="disable CLI output",
         default=False,
-        action="store_true"
+        action="store_true",
+        dest="silent"
     )
 
     parser.add_argument(
