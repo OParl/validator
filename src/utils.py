@@ -42,4 +42,6 @@ class OParlType(object):
         self.entity = type[-1]
 
 def sha1_hexdigest(string):
+    string = str(string).encode('utf_8')
+
     return hashlib.sha1(string).hexdigest()
