@@ -76,15 +76,29 @@ class Result(object):
         oparl_type = OParlType(object)
 
         if oparl_type.entity not in self.object_messages:
-            self.object_messages[oparl_type.entity] = []
+            self.object_messages[oparl_type.entity] = {}
 
         new_message = {
             'severity': severity,
-            'message': description
+            'message': description,
+            'count': 0,
+            'objects': []
         }
 
-        if new_message not in self.object_messages[oparl_type.entity]:
-            self.object_messages[oparl_type.entity].append(new_message)
+        message_hash = sha1_hexdigest(oparl_type.entity + description)
+
+        # insert message dict
+        if message_hash not in self.object_messages[oparl_type.entity]:
+            self.object_messages[oparl_type.entity][message_hash] = new_message
+
+        # increment message occurence counter and add object id to reference list
+        message = self.object_messages[oparl_type.entity][message_hash]
+
+        message['count'] += 1
+        if object.get_id() not in message['objects']:
+            message['objects'].append(object.get_id())
+
+        self.object_messages[oparl_type.entity][message_hash] = message
 
     def __str__(self):
         return json.dumps({
