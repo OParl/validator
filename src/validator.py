@@ -90,7 +90,7 @@ class Validator(object):
                 self.result.network['ssl'] = True
 
         except requests.exceptions.SSLError:
-            self.result.network['ssl'] = False
+            pass
 
         self.client = OParl.Client()
         self.client.set_strict(False)
