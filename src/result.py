@@ -50,6 +50,12 @@ class Result(object):
     """ this is a list of objects that lead to unrecoverable error in respect to the spec """
     fatal_objects = []
 
+    network = {
+        'average_ttl': 0,
+        'ssl': False,
+        'encodings': []
+    }
+
     cache = None
 
     def __init__(self, cache):
@@ -109,4 +115,5 @@ class Result(object):
                 'fatal': len(self.fatal_objects)
             },
             'object_messages': self.object_messages,
+            'network': self.network
         })

@@ -28,6 +28,7 @@ import hashlib
 from datetime import datetime
 from pathlib import Path
 from collections import deque
+from urllib.parse import urlparse
 
 import requests
 from tqdm import tqdm
@@ -59,6 +60,7 @@ class Validator(object):
     result = None
     seen = []
     current_object = None
+    request_ttl = 0
 
     def __init__(self, url, options):
         # warn the user that schema validation is not yet implemented
@@ -69,16 +71,6 @@ class Validator(object):
         self.url = url
         self.options = options
 
-        if not self.is_reachable_uri(url):
-            self.print('Endpoint {} is not reachable, aborting validation.'.format(url))
-            exit(1)
-
-        self.client = OParl.Client()
-        self.client.set_strict(False)
-
-        self.client.connect('resolve_url', self.resolve_url)
-        self.client.connect('shit_happened', self.cleanup_occured_excrement)
-
         if options.redis:
             self.cache = RedisCache()
         else:
@@ -86,16 +78,44 @@ class Validator(object):
 
         self.result = Result(self.cache)
 
+        if not self.is_reachable_uri(url):
+            self.print('Endpoint {} is not reachable, aborting validation.'.format(url))
+            exit(1)
+
+        try:
+            ssl_test_request = requests.get(url)
+
+            components = urlparse(url)
+            if components.scheme != 'http':
+                self.result.network['ssl'] = True
+
+        except requests.exceptions.SSLError:
+            self.result.network['ssl'] = False
+
+        self.client = OParl.Client()
+        self.client.set_strict(False)
+
+        self.client.connect('resolve_url', self.resolve_url)
+        self.client.connect('shit_happened', self.cleanup_occured_excrement)
+
     def resolve_url(self, client, url, status):
         try:
             if url == None: # This is from objects liboparl failed to resolve!
                 return None
             if not self.cache.has(url):
-                r = requests.get(url)
+                r = requests.get(url, verify=self.result.network['ssl'])
                 r.raise_for_status()
 
                 self.cache.set(url, r.text)
                 status = r.status_code
+
+                if self.result.network['average_ttl'] == 0:
+                    self.result.network['average_ttl'] = r.elapsed
+                else:
+                    self.result.network['average_ttl'] = (self.result.network['average_ttl'] + r.elapsed) / 2
+
+                if 'content-encoding' in r.headers and r.headers['content-encoding'] not in self.result.network['encodings']:
+                    self.result.network['encodings'].append(r.headers['content-encoding'])
 
                 return r.text
             else:
