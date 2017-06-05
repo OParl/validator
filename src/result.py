@@ -120,5 +120,5 @@ class Result(object):
             'object_messages': [v for v in self.object_messages.values()],
             'network': self.network,
             'oparl_version': self.oparl_version,
-            'timestamp': time.time()
+            'timestamp': int(time.time())
         })
