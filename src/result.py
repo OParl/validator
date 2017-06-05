@@ -23,6 +23,7 @@ SOFTWARE.
 """
 
 import json
+import time
 
 from colorama import Fore, Style
 
@@ -55,6 +56,8 @@ class Result(object):
         'ssl': False,
         'encodings': []
     }
+
+    oparl_version = '1.0'
 
     cache = None
 
@@ -114,6 +117,8 @@ class Result(object):
                 'failed': self.failed_entities,
                 'fatal': len(self.fatal_objects)
             },
-            'object_messages': self.object_messages,
-            'network': self.network
+            'object_messages': [v for v in self.object_messages.values()],
+            'network': self.network,
+            'oparl_version': self.oparl_version,
+            'timestamp': time.time()
         })

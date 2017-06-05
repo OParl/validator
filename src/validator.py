@@ -41,7 +41,7 @@ from gi.repository import GLib
 
 from src.cache import Cache, RedisCache
 from src.result import Result
-from src.utils import sha1_hexdigest
+from src.utils import *
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
@@ -131,6 +131,7 @@ class Validator(object):
         self.print('Validating {} [{}]', self.url, system.get_product())
         self.validate_object(system)
         self.result.total_entities = 1
+        self.result.oparl_version = OParlType(system).version
 
         if self.options.validate_schema:
             version = system.get_oparl_version()
