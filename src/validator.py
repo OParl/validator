@@ -34,6 +34,7 @@ import requests
 from tqdm import tqdm
 
 import gi
+
 gi.require_version('OParl', '0.2')
 
 from gi.repository import OParl
@@ -100,7 +101,7 @@ class Validator(object):
 
     def resolve_url(self, client, url, status):
         try:
-            if url == None: # This is from objects liboparl failed to resolve!
+            if url == None:  # This is from objects liboparl failed to resolve!
                 return None
             if not self.cache.has(url):
                 r = requests.get(url, verify=self.result.network['ssl'])
@@ -114,13 +115,14 @@ class Validator(object):
                 else:
                     self.result.network['average_ttl'] = (self.result.network['average_ttl'] + r.elapsed) / 2
 
-                if 'content-encoding' in r.headers and r.headers['content-encoding'] not in self.result.network['encodings']:
+                if 'content-encoding' in r.headers and r.headers['content-encoding'] not in self.result.network[
+                    'encodings']:
                     self.result.network['encodings'].append(r.headers['content-encoding'])
 
                 return r.text
             else:
                 text = self.cache.get(url)
-                status = 304 # report as not modified because cache hit
+                status = 304  # report as not modified because cache hit
 
                 return str(text, 'utf-8')
         except Exception as e:
@@ -160,7 +162,8 @@ class Validator(object):
         if self.options.silent:
             progress_bar = None
         else:
-            progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects', file=sys.stderr)
+            progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects',
+                                file=sys.stderr)
 
         while len(neighbors) > 0:
             neighbor = neighbors.popleft()
@@ -176,7 +179,6 @@ class Validator(object):
             if type(progress_bar) == tqdm:
                 progress_bar.total = neighbors_count
                 progress_bar.update()
-
 
     def validate_object(self, object):
         """ Validate a single object """
@@ -219,7 +221,7 @@ class Validator(object):
 
         return unseen_neighbors
 
-    def get_object_hash(self, object, object_id = None):
+    def get_object_hash(self, object, object_id=None):
         """ Compute the hash with which the an object is tracked by the validator """
 
         if object != None:
@@ -251,7 +253,7 @@ class Validator(object):
 
         for schema in schema_listing:
             entity_path = schema_path / \
-                sha1_hexdigest(schema.encode('ascii'))
+                          sha1_hexdigest(schema.encode('ascii'))
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
                     self.schema_cache[schema] = json.loads(f.read())

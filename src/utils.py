@@ -26,6 +26,7 @@ import hashlib
 
 from gi.repository import OParl
 
+
 class OParlType(object):
     """
         Simple wrapper class around OParl type urls
@@ -40,6 +41,7 @@ class OParlType(object):
 
         self.version = type[-2]
         self.entity = type[-1]
+
 
 def sha1_hexdigest(string):
     string = str(string).encode('utf_8')

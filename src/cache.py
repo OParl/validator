@@ -30,6 +30,8 @@ SOFTWARE.
     load on the endpoint, eliminate network latency and speed up the validation
     process.
 """
+
+
 class Cache:
     """ the cache's base key """
     basekey = ""
@@ -74,6 +76,7 @@ class Cache:
             return "{}:{}".format(self.basekey, key)
         else:
             return key
+
 
 class RedisCache(Cache):
     redis = None

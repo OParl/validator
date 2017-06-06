@@ -29,9 +29,11 @@ from colorama import init
 from optparse import OptionParser
 import argparse
 
+
 def init_validator(endpoint, options):
     validator = Validator(url=endpoint, options=options)
     validator.validate()
+
 
 def main():
     parser = argparse.ArgumentParser(prog='validate')
@@ -103,6 +105,7 @@ def main():
             init_validator(endpoint, args)
     else:
         init_validator(endpoint, args)
+
 
 if __name__ == "__main__":
     main()

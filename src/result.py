@@ -32,6 +32,7 @@ from gi.repository import OParl
 from src.utils import *
 from src.cache import *
 
+
 class Result(object):
     """
         Validation Result
