@@ -110,6 +110,8 @@ class Result(object):
         self.object_messages[oparl_type.entity][message_hash] = message
 
     def compiled_result(self):
+        timestamp = datetime.now().isoformat()
+
         return {
             'counts': {
                 'total': self.total_entities,
@@ -120,7 +122,7 @@ class Result(object):
             'object_messages': self.object_messages,
             'network': self.network,
             'oparl_version': self.oparl_version,
-            'timestamp': datetime.now().isoformat()
+            'timestamp': timestamp
         }
 
     def __str__(self):
