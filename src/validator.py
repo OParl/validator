@@ -64,13 +64,13 @@ class Validator(object):
     request_ttl = 0
 
     def __init__(self, url, options):
+        self.options = options
+        self.url = url
+
         # warn the user that schema validation is not yet implemented
         # TODO: this code should be removed eventually
         if options.validate_schema:
             self.print('Schema validation is not implemented yet and will be skipped.')
-
-        self.url = url
-        self.options = options
 
         if options.redis:
             self.cache = RedisCache()
@@ -110,6 +110,7 @@ class Validator(object):
                 self.cache.set(url, r.text)
                 status = r.status_code
 
+                # TODO: should probably switch this code over to a moving average of a few (all?) requests
                 if self.result.network['average_ttl'] == 0:
                     self.result.network['average_ttl'] = r.elapsed
                 else:
@@ -201,8 +202,11 @@ class Validator(object):
         except GLib.Error as e:
             pass
 
-        if object is OParl.File:
-            print('Found a file!')
+        if OParlType(object).entity == 'File':
+            # TODO: test reachability of file access and download uris
+            self.print(object.get_download_url())
+            self.print(object.get_access_url())
+            pass
 
     def get_unseen_neighbors(self, object):
         unseen_neighbors = []
