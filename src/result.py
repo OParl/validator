@@ -28,6 +28,7 @@ from datetime import datetime
 from colorama import Fore, Style
 
 from gi.repository import OParl
+from gi.repository.OParl import ErrorSeverity
 
 from src.utils import *
 from src.cache import *
@@ -67,14 +68,12 @@ class Result(object):
 
     def format_severity(self, severity):
         # TODO: Rewrite this to handle ValidationResult Severities?
-        if severity == Result.Severity.Debug:
-            return "Debug"
-        if severity == Result.Severity.Info:
-            return "Info"
-        if severity == Result.Severity.Warning:
-            return "Warning"
-        if severity == Result.Severity.Error:
-            return "Error"
+        if severity == ErrorSeverity.ERROR:
+            return 'error'
+        if severity == ErrorSeverity.WARNING:
+            return 'warning'
+        if severity == ErrorSeverity.INFO:
+            return 'info'
 
     def parse_validation_result(self, object, validation_result):
         """
@@ -89,7 +88,7 @@ class Result(object):
             self.object_messages[oparl_type.entity] = {}
 
         new_message = {
-            'severity': severity,
+            'severity': self.format_severity(severity),
             'message': description,
             'count': 0,
             'objects': []
