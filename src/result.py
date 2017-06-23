@@ -23,7 +23,7 @@ SOFTWARE.
 """
 
 import json
-import time
+from datetime import datetime
 
 from colorama import Fore, Style
 
@@ -110,16 +110,19 @@ class Result(object):
 
         self.object_messages[oparl_type.entity][message_hash] = message
 
-    def __str__(self):
-        return json.dumps({
+    def compiled_result(self):
+        return {
             'counts': {
                 'total': self.total_entities,
                 'valid': self.total_entities - self.failed_entities,
                 'failed': self.failed_entities,
                 'fatal': len(self.fatal_objects)
             },
-            'object_messages': [v for v in self.object_messages.values()],
+            'object_messages': self.object_messages,
             'network': self.network,
             'oparl_version': self.oparl_version,
-            'timestamp': int(time.time())
-        })
+            'timestamp': datetime.now().isoformat()
+        }
+
+    def __str__(self):
+        return json.dumps(self.compiled_result())
