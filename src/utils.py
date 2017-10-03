@@ -25,20 +25,12 @@ SOFTWARE.
 import hashlib
 
 
-class OParlType(object):
-    """
-        Simple wrapper class around OParl type urls
-    """
+def get_oparl_version_from_object(oparl_object):
+    return oparl_object.get_oparl_type().split('/')[-2]
 
-    entity = 'Unknown'
-    version = '1.0'
 
-    def __init__(self, object):
-        type = object.get_oparl_type()
-        type = type.split('/')
-
-        self.version = type[-2]
-        self.entity = type[-1]
+def get_entity_type_from_object(oparl_object):
+    return oparl_object.get_oparl_type().split('/')[-1]
 
 
 def sha1_hexdigest(string):

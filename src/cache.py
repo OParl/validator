@@ -33,47 +33,43 @@ SOFTWARE.
 
 
 class Cache:
-    """ the cache's base key """
-    basekey = ""
-
-    hits = 0
-    misses = 0
-    lookups = 0
-
-    def __init__(self, basekey=""):
+    def __init__(self, basekey=None):
         """
-            Initialize a Cache instance
+        Initialize a Cache instance
 
-            Caches can preprend a basekey to every cached item.
-            This makes it possible to use one cache provider (i.e. Redis)
-            with multiple Cache instances
+        Caches can preprend a basekey to every cached item, e.g. for using a cache provider such as Redis with multiple
+        Cache instances. Remember to include a seperator in the base key
         """
+        # the cache's base key
         self.basekey = basekey
+        self.hits = 0
+        self.misses = 0
+        self.lookups = 0
 
     def has(self, key):
-        """ Check wether a key exists """
+        """ Checks wether a key exists. """
         return False
 
     def get(self, key):
-        """ Get the contents of a key """
+        """ Gets the contents of a key. """
         return ""
 
     def set(self, key, value, ttl=0):
         """
-            Set the contents of a key
+        Sets the contents of a key
 
-            This allows to optionally set the time this cache item will be kept
+        This allows to optionally set the time this cache item will be kept
         """
         pass
 
     def fullkey(self, key):
         """
-            Get the full key name of a key
+        Gets the full key name of a key
 
-            This will preprend the key with the Cache instance's base key value
+        This will preprend the key with the Cache instance's base key value
         """
-        if len(self.basekey) > 0:
-            return "{}:{}".format(self.basekey, key)
+        if self.basekey:
+            return "{}{}".format(self.basekey, key)
         else:
             return key
 
@@ -82,6 +78,7 @@ class RedisCache(Cache):
     redis = None
 
     def __init__(self, basekey="", redis_server='localhost', redis_port=6379):
+        # noinspection PyUnresolvedReferences
         import redis
 
         Cache.__init__(self, basekey)
@@ -108,7 +105,7 @@ class RedisCache(Cache):
         else:
             self.misses += 1
 
-        return result
+        return str(result, 'utf-8')
 
     def set(self, key, value, ttl=3600):
         return self.redis.set(self.fullkey(key), value, ttl)

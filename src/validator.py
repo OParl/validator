@@ -32,38 +32,32 @@ import gi
 import requests
 from tqdm import tqdm
 
+from src.utils import get_entity_type_from_object
 from .cache import Cache, RedisCache
 from .result import Result
-from .utils import OParlType, sha1_hexdigest
+from .utils import sha1_hexdigest, get_oparl_version_from_object
 
 gi.require_version('OParl', '0.2')
 
 from gi.repository import OParl
 from gi.repository import GLib
 
-
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
 ]
 
 
-class Validator(object):
+class Validator:
     """
         This is the Validator base class
     """
-    url = ""
-    schema_cache = {}
-    client = None
-    cache = None
-    options = None
-    result = None
-    seen = []
-    current_object = None
-    request_ttl = 0
 
     def __init__(self, url, options):
         self.options = options
         self.url = url
+        self.schema_cache = {}
+        self.seen = []
+        self.current_object = None
 
         # warn the user that schema validation is not yet implemented
         # TODO: this code should be removed eventually
@@ -82,12 +76,11 @@ class Validator(object):
             exit(1)
 
         try:
-            ssl_test_request = requests.get(url)
+            requests.get(url)
 
             components = urlparse(url)
             if components.scheme != 'http':
                 self.result.network['ssl'] = True
-
         except requests.exceptions.SSLError:
             pass
 
@@ -98,15 +91,15 @@ class Validator(object):
         self.client.connect('shit_happened', self.cleanup_occured_excrement)
 
     def resolve_url(self, client, url, status):
+        if url is None:  # This is from objects liboparl failed to resolve!
+            return None
+
         try:
-            if url == None:  # This is from objects liboparl failed to resolve!
-                return None
             if not self.cache.has(url):
                 r = requests.get(url, verify=self.result.network['ssl'])
                 r.raise_for_status()
 
                 self.cache.set(url, r.text)
-                status = r.status_code
 
                 # TODO: should probably switch this code over to a moving average of a few (all?) requests
                 if self.result.network['average_ttl'] == 0:
@@ -120,11 +113,8 @@ class Validator(object):
 
                 return r.text
             else:
-                text = self.cache.get(url)
-                status = 304  # report as not modified because cache hit
-
-                return str(text, 'utf-8')
-        except Exception as e:
+                return self.cache.get(url)
+        except Exception:
             return None
 
     def validate(self):
@@ -132,7 +122,7 @@ class Validator(object):
         self.print('Validating {} [{}]', self.url, system.get_product())
         self.validate_object(system)
         self.result.total_entities = 1
-        self.result.oparl_version = OParlType(system).version
+        self.result.oparl_version = get_oparl_version_from_object(system)
 
         if self.options.validate_schema:
             version = system.get_oparl_version()
@@ -170,10 +160,9 @@ class Validator(object):
 
             additional_neighbors = self.get_unseen_neighbors(object)
             additional_neighbors_count = len(additional_neighbors)
-            if additional_neighbors_count > 0:
-                neighbors.extend(additional_neighbors)
-                neighbors_count += additional_neighbors_count
-                self.result.total_entities += additional_neighbors_count
+            neighbors.extend(additional_neighbors)
+            neighbors_count += additional_neighbors_count
+            self.result.total_entities += additional_neighbors_count
 
             if type(progress_bar) == tqdm:
                 progress_bar.total = neighbors_count
@@ -197,24 +186,24 @@ class Validator(object):
 
             for validation_result in validation_results:
                 self.result.parse_validation_result(object, validation_result)
-        except GLib.Error as e:
+        except GLib.Error:
             pass
 
-        if OParlType(object).entity == 'File':
+        if get_entity_type_from_object(object) == 'File':
             # TODO: test reachability of file access and download uris
             self.print(object.get_download_url())
             self.print(object.get_access_url())
             pass
 
     def get_unseen_neighbors(self, object):
-        unseen_neighbors = []
-
         try:
             object_neighbors = object.get_neighbors()
         except GLib.Error:
             # TODO: track objects that should have had neighbors
             self.result.fatal_objects.append(object)
-            return unseen_neighbors
+            return []
+
+        unseen_neighbors = []
 
         for neighbor in object_neighbors:
             hash = self.get_object_hash(neighbor)
@@ -226,21 +215,22 @@ class Validator(object):
     def get_object_hash(self, object, object_id=None):
         """ Compute the hash with which the an object is tracked by the validator """
 
-        if object != None:
+        if object is not None:
             try:
                 object_id = object.get_id()
-            except GLib.Error as e:
+            except GLib.Error:
                 return None
 
-        if object_id == None:
+        if object_id is None:
             # TODO: track invalid object id
             return None
 
         return sha1_hexdigest(object_id.encode('ascii'))
 
-    def get_schema_for_type(self, type):
+    def get_schema_for_type(self, oparl_type):
         """ Get the schema for an entity """
-        print(type)
+        # FIXME: Method name and actual behavior do not match
+        print(oparl_type)
 
     def cleanup_occured_excrement(self, client, excrement):
         """ Process the shit happened signal from liboparl """
@@ -254,8 +244,7 @@ class Validator(object):
         schema_listing = requests.get(schema_version).json()
 
         for schema in schema_listing:
-            entity_path = schema_path / \
-                          sha1_hexdigest(schema.encode('ascii'))
+            entity_path = schema_path / sha1_hexdigest(schema.encode('ascii'))
             if entity_path.exists():
                 with open(entity_path, 'r') as f:
                     self.schema_cache[schema] = json.loads(f.read())

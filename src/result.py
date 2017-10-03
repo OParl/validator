@@ -25,63 +25,63 @@ SOFTWARE.
 import json
 from datetime import datetime
 
-from .utils import *
+import gi
 
-from gi.repository import OParl
+from .utils import get_entity_type_from_object
+from .utils import sha1_hexdigest
+
+gi.require_version('OParl', '0.2')
+
 from gi.repository.OParl import ErrorSeverity
 
-class Result(object):
+
+class Result:
     """
-        Validation Result
+    Validation Result
 
-        The validation result contains a set of messages for each object
-        type as well as some general statistics and messages regarding
-        validation events that do not belong into the above categories.
-        That last category, among other things, keeps taps on what objects
-        or files were unreachable.
+    The validation result contains a set of messages for each object
+    type as well as some general statistics and messages regarding
+    validation events that do not belong into the above categories.
+    That last category, among other things, keeps taps on what objects
+    or files were unreachable.
     """
-
-    total_entities = 0
-    failed_entities = 0
-
-    object_messages = {}
-
-    """ this is a list of objects that lead to unrecoverable error in respect to the spec """
-    fatal_objects = []
-
-    network = {
-        'average_ttl': 0,
-        'ssl': False,
-        'encodings': []
-    }
-
-    oparl_version = '1.0'
-
-    cache = None
 
     def __init__(self, cache):
+        self.total_entities = 0
+        self.failed_entities = 0
+
+        self.object_messages = {}
+
+        # this is a list of objects that lead to unrecoverable error in respect to the spec
+        self.fatal_objects = []
+
+        self.network = {
+            'average_ttl': 0,
+            'ssl': False,
+            'encodings': []
+        }
+
+        self.oparl_version = '1.0'
         self.cache = cache
 
     def format_severity(self, severity):
         # TODO: Rewrite this to handle ValidationResult Severities?
-        if severity == ErrorSeverity.ERROR:
-            return 'error'
-        if severity == ErrorSeverity.WARNING:
-            return 'warning'
-        if severity == ErrorSeverity.INFO:
-            return 'info'
+        mapping = {
+            ErrorSeverity.ERROR: 'error',
+            ErrorSeverity.WARNING: 'warning',
+            ErrorSeverity.INFO: 'info',
+        }
+        return mapping[severity]
 
     def parse_validation_result(self, object, validation_result):
-        """
-            Parse a liboparl ValidationResult into a validator message
-        """
+        """ Parses a liboparl ValidationResult into a validator message. """
         severity = validation_result.get_severity()
         description = validation_result.get_description()
 
-        oparl_type = OParlType(object)
+        entity_type = get_entity_type_from_object(object)
 
-        if oparl_type.entity not in self.object_messages:
-            self.object_messages[oparl_type.entity] = {}
+        if entity_type not in self.object_messages:
+            self.object_messages[entity_type] = {}
 
         new_message = {
             'severity': self.format_severity(severity),
@@ -90,20 +90,20 @@ class Result(object):
             'objects': []
         }
 
-        message_hash = sha1_hexdigest(oparl_type.entity + description)
+        message_hash = sha1_hexdigest(entity_type + description)
 
         # insert message dict
-        if message_hash not in self.object_messages[oparl_type.entity]:
-            self.object_messages[oparl_type.entity][message_hash] = new_message
+        if message_hash not in self.object_messages[entity_type]:
+            self.object_messages[entity_type][message_hash] = new_message
 
         # increment message occurence counter and add object id to reference list
-        message = self.object_messages[oparl_type.entity][message_hash]
+        message = self.object_messages[entity_type][message_hash]
 
         message['count'] += 1
         if object.get_id() not in message['objects']:
             message['objects'].append(object.get_id())
 
-        self.object_messages[oparl_type.entity][message_hash] = message
+        self.object_messages[entity_type][message_hash] = message
 
     def compiled_result(self):
         timestamp = datetime.now().isoformat()
@@ -116,7 +116,7 @@ class Result(object):
                 'fatal': len(self.fatal_objects)
             },
             'object_messages': self.object_messages,
-            'network': self.network,
+            'network': str(self.network),
             'oparl_version': self.oparl_version,
             'timestamp': timestamp
         }

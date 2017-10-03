@@ -1,0 +1,4 @@
+pygobject
+requests
+colorama
+tqdm
