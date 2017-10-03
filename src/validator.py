@@ -22,27 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import sys
 import json
-import hashlib
-from datetime import datetime
-from pathlib import Path
+import sys
 from collections import deque
+from pathlib import Path
 from urllib.parse import urlparse
 
+import gi
 import requests
 from tqdm import tqdm
 
-import gi
+from .cache import Cache, RedisCache
+from .result import Result
+from .utils import OParlType, sha1_hexdigest
 
 gi.require_version('OParl', '0.2')
 
 from gi.repository import OParl
 from gi.repository import GLib
 
-from src.cache import Cache, RedisCache
-from src.result import Result
-from src.utils import *
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"

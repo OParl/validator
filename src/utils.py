@@ -24,8 +24,6 @@ SOFTWARE.
 
 import hashlib
 
-from gi.repository import OParl
-
 
 class OParlType(object):
     """

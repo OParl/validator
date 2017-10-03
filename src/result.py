@@ -25,14 +25,10 @@ SOFTWARE.
 import json
 from datetime import datetime
 
-from colorama import Fore, Style
+from .utils import *
 
 from gi.repository import OParl
 from gi.repository.OParl import ErrorSeverity
-
-from src.utils import *
-from src.cache import *
-
 
 class Result(object):
     """

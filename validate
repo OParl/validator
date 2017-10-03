@@ -23,11 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import sys
-from src.validator import Validator
-from colorama import init
-from optparse import OptionParser
 import argparse
+
+from colorama import init
+
+from src.validator import Validator
 
 
 def init_validator(endpoint, options):

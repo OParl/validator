@@ -1,3 +1,4 @@
 schema_cache
 *.log
 *.json
+__pycache__*
