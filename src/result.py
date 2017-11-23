@@ -122,4 +122,33 @@ class Result:
         }
 
     def __str__(self):
-        return json.dumps(self.compiled_result())
+        return self.text()
+
+    def text(self):
+        from beautifultable import beautifultable
+
+        result = self.compiled_result()
+
+        totals = 'Totals:\n' \
+            + '{} Entities,\n' \
+            + '\t{} valid\n', \
+            + '\t{} failed\n', \
+            + '\t{} fatal'.format(
+                result['counts']['total'],
+                result['counts']['valid'],
+                result['counts']['failed'],
+                result['counts']['fatal']
+            )
+
+        entities = ''
+
+        for entity in result['object_messages']:
+            entites += ''.format(entity)
+
+        return 'Validation Result:\n\n' + totals
+
+    def json(self):
+        try:
+            return json.dumps(self.compiled_result())
+        except KeyError as e:
+            print(e)

@@ -23,6 +23,7 @@ SOFTWARE.
 """
 
 import json
+import subprocess
 import sys
 from collections import deque
 from pathlib import Path
@@ -63,6 +64,7 @@ class Validator:
         self.schema_cache = {}
         self.seen = []
         self.current_object = None
+        self.current_line_length = 0
 
         # warn the user that schema validation is not yet implemented
         # TODO: this code should be removed eventually
@@ -162,20 +164,20 @@ class Validator:
             self.validate_object(body)
             self.validate_neighbors(body)
 
-        if (self.options.output):
             output = ''
 
             if self.options.format == 'text':
-                pass
+                output = self.result.text()
             if self.options.format == 'json':
-                pass
+                output = self.result.json()
 
+        if (self.options.output):
             with open(self.options.output, 'w') as f:
                 f.write(output);
 
             self.print("Validation completed, results have been written to:\n\t{}", self.options.output)
         else:
-            self.print(self.result.print())
+            self.print(output)
 
     def validate_neighbors(self, object):
         neighbors = deque(self.get_unseen_neighbors(object))
@@ -183,7 +185,7 @@ class Validator:
 
         self.result.total_entities += neighbors_count
 
-        if self.options.silent || self.options.porcelain:
+        if self.options.silent or self.options.porcelain:
             progress_bar = None
         else:
             progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects',
@@ -205,6 +207,7 @@ class Validator:
 
             if self.options.porcelain and not self.options.silent:
                 # TODO: porcelain progress output
+                #self.print_inline('.', width=72)
                 pass
 
     def validate_object(self, object):
@@ -303,3 +306,15 @@ class Validator:
     def print(self, message, *args):
         if not self.options.silent:
             print(message.format(*args), file=sys.stderr)
+
+    def print_inline(self, message, max_columns = 72, *args):
+        if not self.options.silent:
+            print(message.format(*args), file=sys.stderr, end='')
+            self.current_line_length += 1
+
+            if max_columns < 1:
+                max_columns = int(subprocess.check_output(['stty', 'size']).split()[1])
+
+            if self.current_line_length == max_columns:
+                self.current_line_length = 0
+                print('', file=sys.stderr)
