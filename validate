@@ -47,8 +47,17 @@ def main():
     )
 
     parser.add_argument(
+        '--format',
+        '-f',
+        help='Output format, either `text` or `json`',
+        action='store',
+        dest='format',
+        default='text'
+    )
+
+    parser.add_argument(
         "--porcelain",
-        help="disable colored output",
+        help="machine readable CLI output (disables colors and progress bars)",
         default=False,
         action="store_true"
     )
@@ -83,8 +92,7 @@ def main():
         "-o",
         help='configure the output file',
         dest="output",
-        action="store",
-        default="validation-result.json"
+        action="store"
     )
 
     parser.add_argument(
