@@ -116,7 +116,7 @@ class Result:
                 'fatal': len(self.fatal_objects)
             },
             'object_messages': self.object_messages,
-            #'network': self.network,
+            'network': self.network,
             'oparl_version': self.oparl_version,
             'timestamp': timestamp
         }
