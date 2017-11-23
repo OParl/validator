@@ -23,7 +23,7 @@ SOFTWARE.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import gi
 
@@ -125,14 +125,13 @@ class Result:
         return self.text()
 
     def text(self):
-        from beautifultable import beautifultable
 
         result = self.compiled_result()
 
         totals = 'Totals:\n' \
             + '{} Entities,\n' \
-            + '\t{} valid\n', \
-            + '\t{} failed\n', \
+            + '\t{} valid\n' \
+            + '\t{} failed\n' \
             + '\t{} fatal'.format(
                 result['counts']['total'],
                 result['counts']['valid'],
@@ -143,12 +142,21 @@ class Result:
         entities = ''
 
         for entity in result['object_messages']:
-            entites += ''.format(entity)
+            entities += ''.format(entity)
 
         return 'Validation Result:\n\n' + totals
 
     def json(self):
+        class DateTimeEncoder(json.JSONEncoder):
+            """ Fixup for timedelta not being json serializable. https://stackoverflow.com/a/27058505/3549270 """
+            def default(self, o):
+                if isinstance(o, timedelta):
+                    return o.total_seconds()
+
+                return json.JSONEncoder.default(self, o)
+
         try:
-            return json.dumps(self.compiled_result())
+            return json.dumps(self.compiled_result(), cls=DateTimeEncoder)
+
         except KeyError as e:
             print(e)

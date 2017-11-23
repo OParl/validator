@@ -117,7 +117,7 @@ class Validator:
 
         return options
 
-    def resolve_url(self, client, url, status):
+    def resolve_url(self, client, url):
         if url is None:  # This is from objects liboparl failed to resolve!
             return None
 
@@ -138,11 +138,11 @@ class Validator:
                     'encodings']:
                     self.result.network['encodings'].append(r.headers['content-encoding'])
 
-                return r.text
+                return OParl.ResolveUrlResult(resolved_data=r.text, success=True, status_code=r.status_code)
             else:
-                return self.cache.get(url)
+                return OParl.ResolveUrlResult(resolved_data=self.cache.get(url), success=True, status_code=-1)
         except Exception:
-            return None
+            return OParl.ResolveUrlResult(resolved_data=None, success=False, status_code=-1)
 
     def validate(self):
         system = self.client.open(self.url)
@@ -171,7 +171,7 @@ class Validator:
         if self.options.format == 'json':
             output = self.result.json()
 
-        if (self.options.output):
+        if self.options.output:
             with open(self.options.output, 'w') as f:
                 f.write(output)
 
@@ -207,7 +207,7 @@ class Validator:
 
             if self.options.porcelain and not self.options.silent:
                 # TODO: porcelain progress output
-                #self.print_inline('.', width=72)
+                # self.print_inline('.', width=72)
                 pass
 
     def validate_object(self, object):
@@ -305,9 +305,12 @@ class Validator:
 
     def print(self, message, *args):
         if not self.options.silent:
-            print(message.format(*args), file=sys.stderr)
+            if args:
+                print(message.format(*args), file=sys.stderr)
+            else:
+                print(message, file=sys.stderr)
 
-    def print_inline(self, message, max_columns = 72, *args):
+    def print_inline(self, message, max_columns=72, *args):
         if not self.options.silent:
             print(message.format(*args), file=sys.stderr, end='')
             self.current_line_length += 1
