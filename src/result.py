@@ -30,6 +30,14 @@ import gi
 from .utils import get_entity_type_from_object
 from .utils import sha1_hexdigest
 
+summary_template = """
+Totals:
+{} Entities,
+\t{} valid
+\t{} failed
+\t{} fatal
+"""
+
 gi.require_version('OParl', '0.2')
 
 from gi.repository.OParl import ErrorSeverity
@@ -128,16 +136,12 @@ class Result:
 
         result = self.compiled_result()
 
-        totals = 'Totals:\n' \
-            + '{} Entities,\n' \
-            + '\t{} valid\n' \
-            + '\t{} failed\n' \
-            + '\t{} fatal'.format(
-                result['counts']['total'],
-                result['counts']['valid'],
-                result['counts']['failed'],
-                result['counts']['fatal']
-            )
+        totals = summary_template.format(
+            result['counts']['total'],
+            result['counts']['valid'],
+            result['counts']['failed'],
+            result['counts']['fatal']
+        )
 
         entities = ''
 
@@ -149,6 +153,7 @@ class Result:
     def json(self):
         class DateTimeEncoder(json.JSONEncoder):
             """ Fixup for timedelta not being json serializable. https://stackoverflow.com/a/27058505/3549270 """
+
             def default(self, o):
                 if isinstance(o, timedelta):
                     return o.total_seconds()
