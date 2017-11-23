@@ -20,7 +20,7 @@
 ## Usage
 
 ```sh
-$ ./validate https://my.oparl.endpoint/
+./validate https://my.oparl.endpoint/
 ```
 
 ### Usage from other Python Code
