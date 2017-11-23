@@ -164,16 +164,16 @@ class Validator:
             self.validate_object(body)
             self.validate_neighbors(body)
 
-            output = ''
+        output = ''
 
-            if self.options.format == 'text':
-                output = self.result.text()
-            if self.options.format == 'json':
-                output = self.result.json()
+        if self.options.format == 'text':
+            output = self.result.text()
+        if self.options.format == 'json':
+            output = self.result.json()
 
         if (self.options.output):
             with open(self.options.output, 'w') as f:
-                f.write(output);
+                f.write(output)
 
             self.print("Validation completed, results have been written to:\n\t{}", self.options.output)
         else:
