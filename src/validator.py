@@ -53,7 +53,12 @@ class Validator:
     """
 
     def __init__(self, url, options):
-        self.options = options
+        """
+            Create a new Validator instance
+
+            Expects an url and an argparse.Namespace options object.
+        """
+        self.options = self.parse_options(options)
         self.url = url
         self.schema_cache = {}
         self.seen = []
@@ -89,6 +94,26 @@ class Validator:
 
         self.client.connect('resolve_url', self.resolve_url)
         self.client.connect('shit_happened', self.cleanup_occured_excrement)
+
+    def parse_options(self, options):
+        # TODO: figure out how to add properties to objects
+        if 'validate_schema' not in options:
+            options.validate_schema = False
+
+        if 'silent' not in options:
+            options.silent = True
+
+        if 'redis' not in options:
+            options.redis = False
+
+        if 'porcelain' not in options:
+            options.porcelain = False
+
+        if 'format' not in options:
+            # Contrary to ./validate, this default applies when the validator is run from within python
+            options.format = 'json'
+
+        return options
 
     def resolve_url(self, client, url, status):
         if url is None:  # This is from objects liboparl failed to resolve!
@@ -137,10 +162,20 @@ class Validator:
             self.validate_object(body)
             self.validate_neighbors(body)
 
-        with open(self.options.output, 'w') as f:
-            f.write(str(self.result))
+        if (self.options.output):
+            output = ''
 
-        self.print("Validation completed, results have been written to:\n\t{}", self.options.output)
+            if self.options.format == 'text':
+                pass
+            if self.options.format == 'json':
+                pass
+
+            with open(self.options.output, 'w') as f:
+                f.write(output);
+
+            self.print("Validation completed, results have been written to:\n\t{}", self.options.output)
+        else:
+            self.print(self.result.print())
 
     def validate_neighbors(self, object):
         neighbors = deque(self.get_unseen_neighbors(object))
@@ -148,7 +183,7 @@ class Validator:
 
         self.result.total_entities += neighbors_count
 
-        if self.options.silent:
+        if self.options.silent || self.options.porcelain:
             progress_bar = None
         else:
             progress_bar = tqdm(desc='Validating Body "{}"'.format(object.get_name()), total=9e9, unit=' Objects',
@@ -167,6 +202,10 @@ class Validator:
             if type(progress_bar) == tqdm:
                 progress_bar.total = neighbors_count
                 progress_bar.update()
+
+            if self.options.porcelain and not self.options.silent:
+                # TODO: porcelain progress output
+                pass
 
     def validate_object(self, object):
         """ Validate a single object """
