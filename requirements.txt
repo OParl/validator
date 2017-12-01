@@ -1,4 +1,5 @@
 pygobject
 requests
 colorama
-tqdmredis
+tqdm
+redis
