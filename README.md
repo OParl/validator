@@ -1,5 +1,19 @@
 # OParl Validator
 
+Validates an oparl server.
+
+## Quickstart with docker
+
+We do not yet offer prebuilt images, so you need to build the container locally:
+
+```bash
+docker build . -t oparl-validator
+```
+
+```bash
+docker run --name oparl-validator oparl-validator [entrypoint]
+```
+
 ## Requirements
 
 **on the system**
