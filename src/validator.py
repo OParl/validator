@@ -31,6 +31,7 @@ from urllib.parse import urlparse
 
 import gi
 import requests
+from requests import HTTPError
 from tqdm import tqdm
 
 from src.utils import get_entity_type_from_object
@@ -121,28 +122,28 @@ class Validator:
         if url is None:  # This is from objects liboparl failed to resolve!
             return None
 
-        try:
-            if not self.cache.has(url):
-                r = requests.get(url, verify=self.result.network['ssl'])
+        if not self.cache.has(url):
+            r = requests.get(url, verify=self.result.network['ssl'])
+            try:
                 r.raise_for_status()
+            except HTTPError:
+                return OParl.ResolveUrlResult(resolved_data=None, success=False, status_code=-1)
 
-                self.cache.set(url, r.text)
+            self.cache.set(url, r.text)
 
-                # TODO: should probably switch this code over to a moving average of a few (all?) requests
-                if self.result.network['average_ttl'] == 0:
-                    self.result.network['average_ttl'] = r.elapsed
-                else:
-                    self.result.network['average_ttl'] = (self.result.network['average_ttl'] + r.elapsed) / 2
-
-                if 'content-encoding' in r.headers and r.headers['content-encoding'] not in self.result.network[
-                    'encodings']:
-                    self.result.network['encodings'].append(r.headers['content-encoding'])
-
-                return OParl.ResolveUrlResult(resolved_data=r.text, success=True, status_code=r.status_code)
+            # TODO: should probably switch this code over to a moving average of a few (all?) requests
+            if self.result.network['average_ttl'] == 0:
+                self.result.network['average_ttl'] = r.elapsed
             else:
-                return OParl.ResolveUrlResult(resolved_data=self.cache.get(url), success=True, status_code=-1)
-        except Exception:
-            return OParl.ResolveUrlResult(resolved_data=None, success=False, status_code=-1)
+                self.result.network['average_ttl'] = (self.result.network['average_ttl'] + r.elapsed) / 2
+
+            if 'content-encoding' in r.headers and r.headers['content-encoding'] not in self.result.network[
+                'encodings']:
+                self.result.network['encodings'].append(r.headers['content-encoding'])
+
+            return OParl.ResolveUrlResult(resolved_data=r.text, success=True, status_code=r.status_code)
+        else:
+            return OParl.ResolveUrlResult(resolved_data=self.cache.get(url), success=True, status_code=-1)
 
     def validate(self):
         system = self.client.open(self.url)
