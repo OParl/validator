@@ -2,3 +2,4 @@ schema_cache
 *.log
 *.json
 __pycache__*
+venv/
