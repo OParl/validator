@@ -101,7 +101,6 @@ class Output(object):
             return
 
         if Output.porcelain:
-            # TODO: json patch output
             Output.progress_bars[id]['total'] = total
             Output.progress_bars[id]['current'] += 1
 
