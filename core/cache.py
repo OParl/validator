@@ -22,69 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-"""
-    Object Cache for the Validator
-
-    Upon the first succesful retrieval of an OParl entity by the validator
-    it will be stored in the cache for a certain amount of time to reduce
-    load on the endpoint, eliminate network latency and speed up the validation
-    process.
-"""
+import redis
 
 
-class Cache:
-    def __init__(self, basekey=None):
+class Cache(object):
+    """
+        Object Cache for the Validator
+
+        Upon the first succesful retrieval of an OParl entity by the validator
+        it will be stored in the cache for a certain amount of time to reduce
+        load on the endpoint, eliminate network latency and speed up the validation
+        process.
+    """
+
+    redis = None
+
+    def __init__(self, basekey="", redis_server='localhost', redis_port=6379):
         """
         Initialize a Cache instance
 
         Caches can preprend a basekey to every cached item, e.g. for using a cache provider such as Redis with multiple
         Cache instances. Remember to include a seperator in the base key
         """
-        # the cache's base key
         self.basekey = basekey
         self.hits = 0
         self.misses = 0
         self.lookups = 0
-
-    def has(self, key):
-        """ Checks wether a key exists. """
-        return False
-
-    def get(self, key):
-        """ Gets the contents of a key. """
-        return ""
-
-    def set(self, key, value, ttl=0):
-        """
-        Sets the contents of a key
-
-        This allows to optionally set the time this cache item will be kept
-        """
-        pass
-
-    def fullkey(self, key):
-        """
-        Gets the full key name of a key
-
-        This will preprend the key with the Cache instance's base key value
-        """
-        if self.basekey:
-            return "{}{}".format(self.basekey, key)
-        else:
-            return key
-
-
-class RedisCache(Cache):
-    redis = None
-
-    def __init__(self, basekey="", redis_server='localhost', redis_port=6379):
-        # noinspection PyUnresolvedReferences
-        import redis
-
-        Cache.__init__(self, basekey)
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
 
     def has(self, key):
+        """ Checks wether a key exists. """
         self.lookups += 1
         result = self.redis.exists(self.fullkey(key))
 
@@ -108,4 +75,20 @@ class RedisCache(Cache):
         return str(result, 'utf-8')
 
     def set(self, key, value, ttl=3600):
+        """
+        Sets the contents of a key
+
+        This allows to optionally set the time this cache item will be kept
+        """
         return self.redis.set(self.fullkey(key), value, ttl)
+
+    def fullkey(self, key):
+        """
+        Gets the full key name of a key
+
+        This will preprend the key with the Cache instance's base key value
+        """
+        if self.basekey:
+            return "{}{}".format(self.basekey, key)
+        else:
+            return key
