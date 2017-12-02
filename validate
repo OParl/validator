@@ -27,11 +27,11 @@ import argparse
 
 from colorama import init
 
-from src.validator import Validator
+from core.validator import Validator
 
 
 def init_validator(endpoint, options):
-    validator = Validator(url=endpoint, options=options)
+    validator = Validator(endpoint=endpoint, options=options)
     validator.validate()
 
 
