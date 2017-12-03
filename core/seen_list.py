@@ -28,7 +28,7 @@ import redis
 class SeenList(object):
     def __init__(self, redis_server='localhost', redis_port=6379):
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
-        self.seen = 'OParlValidator_SeenList_' + int(time.time())
+        self.seen = 'OParlValidator_SeenList_' + str(int(time.time()))
 
     def __contains__(self, key):
         return key in self.seen
