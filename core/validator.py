@@ -167,33 +167,32 @@ class ValidationWorker(Thread):
         self.queue = queue
         self.result = result
         self.seen_list = seen_list
+        self.current_object = None
 
     def run(self):
         while not self.queue.empty():
-            oparl_object = self.get_next_object()
+            self.get_next_object()
 
-            if not self.is_seen_object(oparl_object):
-                results = self.validate_object(oparl_object)
-                self.save_validation_results(result)
+            if not self.is_seen_object():
+                results = self.validate_object()
+                self.save_validation_results(results)
 
     def get_next_object(self):
         self.queue.acquire()
-        oparl_object = self.queue.get()
+        self.current_object = self.queue.get()
         self.queue.release()
 
-        return oparl_object
-
-    def is_seen_object(self, oparl_object):
-        if oparl_object.get_id() in self.seen_list:
+    def is_seen_object(self):
+        if self.current_object.get_id() in self.seen_list:
             return True
 
-        self.seen_list.push(oparl_object.get_id())
+        self.seen_list.push(self.current_object.get_id())
 
         return False
 
-    def validate_object(self, oparl_object):
+    def validate_object(self):
         try:
-            validation_results = oparl_object.validate()
+            validation_results = self.current_object.validate()
         except GLib.Error:
             # TODO: track liboparl validation errors
             validation_results = []
@@ -209,6 +208,6 @@ class ValidationWorker(Thread):
             self.result.failed_entities += 1
 
         for result in validation_results:
-            self.result.parse_validation_result(oparl_object, result)
+            self.result.parse_validation_result(self.current_object, result)
 
         self.result.release()
