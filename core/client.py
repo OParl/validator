@@ -39,7 +39,6 @@ from tqdm import tqdm
 from .cache import Cache
 from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
 from .output import Output
-from .result import Result
 from .utils import get_entity_type_from_object, sha1_hexdigest, get_oparl_version_from_object
 
 gi.require_version('OParl', '0.2')

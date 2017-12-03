@@ -25,11 +25,11 @@ SOFTWARE.
 from threading import activeCount, Thread
 from time import sleep
 
-from .cache import Cache
 from .client import Client
 from .entity_queue import EntityQueue
-from .exceptions import *
+from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
 from .output import Output
+from .result import Result
 from .seen_list import SeenList
 
 VALID_OPARL_VERSIONS = [
@@ -56,7 +56,6 @@ class Validator:
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
         self.options = self.parse_options(options)
-        self.seen_list = SeenList()
 
         Output.porcelain = self.options.porcelain
         Output.silent = self.options.silent
@@ -96,6 +95,9 @@ class Validator:
 
         unprocessed_entities = EntityQueue(maxsize = 1000)
 
+        seen_list = SeenList()
+        result = Result()
+
         walker_threads = []
         worker_threads = []
 
@@ -107,14 +109,19 @@ class Validator:
             thread.start()
 
         # TODO: there's most likely a better solution than this
-        sleep(2) # let walkers walk a little
+        sleep(5) # let walkers walk a little
 
         # TODO: if theres nothing in the queue by now, the oparl server
         #       is way too slow, is this a validation error?
 
-        # TODO: make this dependant on system resources / an option
+        # TODO: make this dependent on system resources / an option
         for i in range(0, Validator.NUM_VALIDATION_WORKERS):
-            worker = ValidationWorker(i, unprocessed_entities, self.seen_list)
+            worker = ValidationWorker(
+                i,
+                unprocessed_entities,
+                seen_list,
+                result
+            )
             worker_threads.append(worker)
 
         for thread in worker_threads:
@@ -128,12 +135,18 @@ class Validator:
 
         Output.message("Validation finished")
 
+        result.network = self.client.network
+        result.total_entities = len(seen_list)
+
+        print(result)
+
 
 class ValidationWorker(Thread):
-    def __init__(self, id, queue, seen_list):
+    def __init__(self, id, queue, seen_list, result):
         super(ValidationWorker, self).__init__()
         self.id = id
         self.queue = queue
+        self.result = result
         self.seen_list = seen_list
 
     def run(self):
@@ -146,5 +159,23 @@ class ValidationWorker(Thread):
                 continue
 
             self.seen_list.push(oparl_object.get_id())
+            self.validate_object(oparl_object)
 
-            validation_result = oparl_object.validate()
+    def validate_object(self, oparl_object):
+        try:
+            validation_results = oparl_object.validate()
+        except GLib.Error:
+            # TODO: track liboparl validation errors
+            validation_results = []
+
+        # TODO: implement additional checks like e.g. file reachability
+
+        self.result.acquire()
+
+        if len(validation_results) > 0:
+            self.result.failed_entities += 1
+
+        for result in validation_results:
+            self.result.parse_validation_result(oparl_object, result)
+
+        self.result.release()
