@@ -22,7 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import json
+from json import dumps
+
+def print_json_patch(json):
+    print(dumps(json, separators=(',', ':')))
 
 class Output(object):
     porcelain = False
@@ -34,10 +37,10 @@ class Output(object):
         if not Output.porcelain or Output.silent:
             return
 
-        print(json.dumps({
+        print_json_patch({
             'messages': [],
             'progress_bars': {}
-        }))
+        })
 
     @staticmethod
     def message(message, *args):
@@ -59,9 +62,14 @@ class Output(object):
                 }
             ]
 
-            formatted = json.dumps(patch)
+            print_json_patch(patch)
+        else:
+            print(formatted)
 
-        print(formatted)
+    @staticmethod
+    def exception(exception):
+        # TODO: custom exception output for porcelain mode
+        Output.message(exception)
 
     @staticmethod
     def add_progress_bar(id, desc = '', unit = 'Objects'):
@@ -84,7 +92,7 @@ class Output(object):
                 }
             ]
 
-            print(json.dumps(patch))
+            print_json_patch(patch)
         else:
             desc = 'Validating Object "{}"'.format(object.get_id())
             unit = ' ' + unit
@@ -112,6 +120,6 @@ class Output(object):
                 }
             ]
 
-            print(json.dumps(patch))
+            print_json_patch(patch)
         else:
             Output.progress_bars[id].update()
