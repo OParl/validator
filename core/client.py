@@ -80,13 +80,14 @@ class Client:
             self.cache.set(url, r.text)
 
             # TODO: should probably switch this code over to a moving average of a few (all?) requests
+            # TODO: should track ttl of cached requests to make this more accurate
             if self.network['average_ttl'] == 0:
                 self.network['average_ttl'] = r.elapsed
             else:
                 self.network['average_ttl'] = (self.network['average_ttl'] + r.elapsed) / 2
 
-            if 'content-encoding' in r.headers and r.headers['content-encoding'] not in self.network[
-                'encodings']:
+            if 'content-encoding' in r.headers and \
+                r.headers['content-encoding'] not in self.network['encodings']:
                 self.network['encodings'].append(r.headers['content-encoding'])
 
             return OParl.ResolveUrlResult(resolved_data=r.text, success=True, status_code=r.status_code)
