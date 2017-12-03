@@ -20,7 +20,7 @@ docker run --name oparl-validator oparl-validator [entrypoint]
 **on the system**
 
 - liboparl and liboparl requirements
-- redis (for caching)
+- redis
 - Python 3
 
 **Python specific**
@@ -28,7 +28,7 @@ docker run --name oparl-validator oparl-validator [entrypoint]
 - pygobject
 - requests
 - colorama
-- redis (only if you want to use caching)
+- redis
 - tqdm
 - beautifultable (only for printing results to the console, use -oresult.json instead)
 

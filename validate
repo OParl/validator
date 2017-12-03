@@ -25,8 +25,6 @@ SOFTWARE.
 
 import argparse
 
-from colorama import init
-
 from core.validator import Validator
 
 
@@ -106,8 +104,9 @@ def main():
         print("You cannot possibly make me embarrass myself that much.")
         exit()
 
-    # init colorama
-    init(strip=args.porcelain, autoreset=True)
+    if args.verbosity > 5:
+        print("Stahp!")
+        exit()
 
     for endpoint in args.oparl_endpoint:
         init_validator(endpoint, args)
