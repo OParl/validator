@@ -58,9 +58,11 @@ class Validator:
         self.endpoint = endpoint
         self.options = self.parse_options(options)
 
-        Output.porcelain = self.options.porcelain
-        Output.silent = self.options.silent
-        Output.initialize()
+        Output.initialize(
+            self.options.porcelain,
+            self.options.silent,
+            self.options.verbosity
+        )
 
         if self.options.porcelain and self.options.result is None:
             Output.message('You selected an invalid option, please provide a result destination filename')

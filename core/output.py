@@ -30,18 +30,21 @@ def print_json_patch(json):
 
 class Output:
     porcelain = False
-    silent = False
     progress_bars = {}
+    silent = False
+    verbosity = 0
 
     @staticmethod
-    def initialize():
-        if not Output.porcelain or Output.silent:
-            return
+    def initialize(porcelain = False, silent = False, verbosity = 0):
+        Output.porcelain = porcelain
+        Output.silent = silent
+        Output.verbosity = verbosity
 
-        print_json_patch({
-            'messages': [],
-            'progress_bars': {}
-        })
+        if porcelain and not silent:
+            print_json_patch({
+                'messages': [],
+                'progress_bars': {}
+            })
 
     @staticmethod
     def message(message, *args):
