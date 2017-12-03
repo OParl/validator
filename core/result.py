@@ -164,4 +164,4 @@ class Result:
             return json.dumps(self.compiled_result(), cls=DateTimeEncoder)
 
         except KeyError as e:
-            print(e)
+            Output.exception(e)
