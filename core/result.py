@@ -83,6 +83,7 @@ class Result:
 
     def format_severity(self, severity):
         # TODO: Rewrite this to handle ValidationResult Severities?
+        # NOTE: What are ValidationResult severities?
         mapping = {
             ErrorSeverity.ERROR: 'error',
             ErrorSeverity.WARNING: 'warning',
@@ -170,7 +171,7 @@ class Result:
 
         for entity, messages in self.object_messages.items():
             table = BeautifulTable(max_columns)
-            table.column_headers = ['', 'severity', 'message']
+            table.column_headers = ['', 'severity', 'message', 'occurences']
 
             entity_list = ''
 
@@ -183,6 +184,7 @@ class Result:
                 row.append(message_key)
                 row.append(message['severity'])
                 row.append(message['message'])
+                row.append(message['count'])
 
                 for object in message['objects']:
                     entity_list += '[{}] {},\n'.format(message_key, object)
