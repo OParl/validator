@@ -118,11 +118,9 @@ class Validator:
         for thread in walker_threads:
             thread.start()
 
-        # TODO: there's most likely a better solution than this
-        sleep(5) # let walkers walk a little
-
-        # TODO: if theres nothing in the queue by now, the oparl server
-        #       is way too slow, is this a validation error?
+        # let the walkers walk a little
+        while unprocessed_entities.empty():
+            pass
 
         # TODO: make this dependent on system resources / an option
         for i in range(0, Validator.NUM_VALIDATION_WORKERS):
@@ -136,6 +134,9 @@ class Validator:
 
         for thread in worker_threads:
             thread.start()
+
+        for thread in walker_threads:
+            thread.join()
 
         while not unprocessed_entities.empty():
             pass
@@ -163,6 +164,7 @@ class Validator:
 class ValidationWorker(Thread):
     def __init__(self, id, queue, seen_list, result):
         super(ValidationWorker, self).__init__()
+        # TODO: add progress reporters
         self.id = id
         self.queue = queue
         self.result = result
