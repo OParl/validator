@@ -80,7 +80,7 @@ class Validator:
         self.result = Result(self.cache)
 
         if not self.is_reachable_uri(url):
-            self.print('Endpoint {} is not reachable, aborting validation.'.format(url))
+            self.print()
             exit(1)
 
         try:

@@ -88,9 +88,10 @@ def main():
 
     parser.add_argument(
         "-o",
-        help='configure the output file',
-        dest="output",
-        action="store"
+        help='configure the result output file',
+        dest="result",
+        action="store",
+        default=None
     )
 
     parser.add_argument(

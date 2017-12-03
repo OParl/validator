@@ -23,9 +23,10 @@ SOFTWARE.
 """
 
 from json import dumps
+import sys
 
 def print_json_patch(json):
-    print(dumps(json, separators=(',', ':')))
+    print(dumps(json, separators=(',', ':')), file=sys.stderr)
 
 class Output:
     porcelain = False
@@ -64,7 +65,7 @@ class Output:
 
             print_json_patch(patch)
         else:
-            print(formatted)
+            print(formatted, file=sys.stderr)
 
     @staticmethod
     def exception(exception):
@@ -100,7 +101,8 @@ class Output:
             Output.progres_bars[id] = tqdm(
                 desc=desc,
                 total=9e9,
-                unit=unit
+                unit=unit,
+                file=sys.stderr
             )
 
     @staticmethod

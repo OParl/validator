@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import sys
 from threading import activeCount, Thread
 from time import sleep
 
@@ -61,6 +62,10 @@ class Validator:
         Output.silent = self.options.silent
         Output.initialize()
 
+        if self.options.porcelain and self.options.result is None:
+            Output.message('You selected an invalid option, please provide a result destination filename')
+            exit(1)
+
         try:
             self.client = Client(endpoint)
         except EndpointNotReachableException:
@@ -75,14 +80,17 @@ class Validator:
         # if 'validate_schema' not in options:
         #     options.validate_schema = False
 
-        if 'silent' not in options:
-            options.silent = True
+        if 'format' not in options:
+            options.format = 'json'
+
+        if 'result' not in options:
+            options.output = None
 
         if 'porcelain' not in options:
             options.porcelain = False
 
-        if 'format' not in options:
-            options.format = 'json'
+        if 'silent' not in options:
+            options.silent = True
 
         return options
 
@@ -138,7 +146,16 @@ class Validator:
         result.network = self.client.network
         result.total_entities = len(seen_list)
 
-        print(result)
+        formatted_result = result.text()
+        if self.options.format == 'json':
+            formatted_result = result.json()
+
+        if Output.porcelain or self.options.result is not None:
+            with open(self.options.result, 'w+') as f:
+                f.write(formatted_result)
+                exit(0)
+
+        print(formatted_result)
 
 
 class ValidationWorker(Thread):
