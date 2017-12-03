@@ -27,6 +27,8 @@ import subprocess
 import sys
 from collections import deque
 from pathlib import Path
+from threading import Thread
+from time import sleep
 from urllib.parse import urlparse
 
 import gi
@@ -35,9 +37,14 @@ from requests import HTTPError
 from tqdm import tqdm
 
 from .cache import Cache
+from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
+from .output import Output
 from .result import Result
 from .utils import get_entity_type_from_object, sha1_hexdigest, get_oparl_version_from_object
-from .exceptions import EndpointNotReachableException
+
+gi.require_version('OParl', '0.2')
+from gi.repository import OParl
+from gi.repository import GLib
 
 class Client:
     """
@@ -54,10 +61,7 @@ class Client:
         if not self.is_reachable():
             raise EndpointNotReachableException()
 
-        gi.require_version('OParl', '0.2')
-
-        from gi.repository import OParl
-        from gi.repository import GLib
+        self.check_ssl()
 
         self.cache = Cache()
 
@@ -65,6 +69,8 @@ class Client:
         self.client.set_strict(False)
 
         self.client.connect('resolve_url', self.resolve_url)
+
+        self.open_client()
 
     def resolve_url(self, client, url):
         if url is None:  # This is from objects liboparl failed to resolve!
@@ -100,3 +106,46 @@ class Client:
             return r.status_code in [200, 304]
         except requests.exceptions.RequestException:
             return False
+
+    def check_ssl(self):
+        # TODO: this feels very much incorrect to me
+        try:
+            requests.get(self.endpoint)
+
+            components = urlparse(self.endpoint)
+            if components.scheme != 'http':
+                self.network['ssl'] = True
+        except requests.exceptions.SSLError:
+            pass
+
+    def open_client(self):
+        try:
+            self.system = self.client.open(self.endpoint)
+        except GLib.Error:
+            raise EndpointIsNotAnOParlEndpointException()
+
+    def create_body_walker(self, body, queue):
+        return BodyWalker(self.client, body, queue)
+
+class BodyWalker(Thread):
+    def __init__(self, client, body, queue):
+        super(BodyWalker, self).__init__()
+        self.client = client
+        self.body = body
+        self.queue = queue
+        self.done = False
+        self.neighbors = []
+
+    def run(self):
+        try:
+            self.neighbors = self.body.get_neighbors()
+        except GLib.Error:
+            Output.message('Body {} failed to provide entities', self.body.get_id())
+            return
+
+        for neighbor in self.neighbors:
+            self.queue.acquire()
+            self.queue.put(neighbor)
+            self.queue.release()
+
+        Output.message("Fetched {} objects from {}", len(self.neighbors), self.body.get_id())

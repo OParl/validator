@@ -22,11 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from .seen_list import SeenList
-from .client import Client
-from .exceptions import EndpointNotReachableException
-from .output import Output
+from threading import activeCount, Thread
+from time import sleep
+
 from .cache import Cache
+from .client import Client
+from .entity_queue import EntityQueue
+from .exceptions import *
+from .output import Output
+from .seen_list import SeenList
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
@@ -47,9 +51,12 @@ class Validator:
         which currently must be on the same machine.
     """
 
+    NUM_VALIDATION_WORKERS = 3
+
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
         self.options = self.parse_options(options)
+        self.seen_list = SeenList()
 
         Output.porcelain = self.options.porcelain
         Output.silent = self.options.silent
@@ -57,14 +64,17 @@ class Validator:
 
         try:
             self.client = Client(endpoint)
-        except EndpointNotReachableException as e:
+        except EndpointNotReachableException:
             Output.message('Endpoint {} is not reachable, aborting validation.', endpoint)
             exit(1)
-
+        except EndpointIsNotAnOParlEndpointException:
+            Output.message('Endpoint {} is not an OParl-Endpoint, aborting validation.', endpoint)
+            exit(1)
 
     def parse_options(self, options):
-        if 'validate_schema' not in options:
-            options.validate_schema = False
+        # TODO: implement schema validation
+        # if 'validate_schema' not in options:
+        #     options.validate_schema = False
 
         if 'silent' not in options:
             options.silent = True
@@ -77,5 +87,64 @@ class Validator:
 
         return options
 
-    def validate():
-        pass
+    def validate(self):
+        Output.message("Beginning validation of {}", self.endpoint)
+        Output.message("Found '{}'", self.client.system.get_name())
+
+        bodies = self.client.system.get_body()
+        num_bodies = len(bodies)
+
+        unprocessed_entities = EntityQueue(maxsize = 1000)
+
+        walker_threads = []
+        worker_threads = []
+
+        for body in bodies:
+            walker = self.client.create_body_walker(body, unprocessed_entities)
+            walker_threads.append(walker)
+
+        for thread in walker_threads:
+            thread.start()
+
+        # TODO: there's most likely a better solution than this
+        sleep(2) # let walkers walk a little
+
+        # TODO: if theres nothing in the queue by now, the oparl server
+        #       is way too slow, is this a validation error?
+
+        # TODO: make this dependant on system resources / an option
+        for i in range(0, Validator.NUM_VALIDATION_WORKERS):
+            worker = ValidationWorker(i, unprocessed_entities, self.seen_list)
+            worker_threads.append(worker)
+
+        for thread in worker_threads:
+            thread.start()
+
+        while not unprocessed_entities.empty():
+            pass
+
+        for thread in worker_threads:
+            thread.join()
+
+        Output.message("Validation finished")
+
+
+class ValidationWorker(Thread):
+    def __init__(self, id, queue, seen_list):
+        super(ValidationWorker, self).__init__()
+        self.id = id
+        self.queue = queue
+        self.seen_list = seen_list
+
+    def run(self):
+        while not self.queue.empty():
+            self.queue.acquire()
+            oparl_object = self.queue.get()
+            self.queue.release()
+
+            if oparl_object.get_id() in self.seen_list:
+                continue
+
+            self.seen_list.push(oparl_object.get_id())
+
+            validation_result = oparl_object.validate()
