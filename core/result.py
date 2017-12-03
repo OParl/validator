@@ -24,7 +24,10 @@ SOFTWARE.
 
 import json
 from datetime import datetime, timedelta
+from subprocess import check_output
+from threading import Lock
 
+from beautifultable import BeautifulTable
 import gi
 
 from .utils import get_entity_type_from_object
@@ -32,10 +35,16 @@ from .utils import sha1_hexdigest
 
 summary_template = """
 Totals:
-{} Entities,
+\t{} Entities
 \t{} valid
 \t{} failed
 \t{} fatal
+"""
+
+network_template = """
+Network:
+\t{}
+\tAverage response time: {}
 """
 
 gi.require_version('OParl', '0.2')
@@ -54,7 +63,7 @@ class Result:
     or files were unreachable.
     """
 
-    def __init__(self, cache):
+    def __init__(self):
         self.total_entities = 0
         self.failed_entities = 0
 
@@ -70,7 +79,7 @@ class Result:
         }
 
         self.oparl_version = '1.0'
-        self.cache = cache
+        self.lock = Lock()
 
     def format_severity(self, severity):
         # TODO: Rewrite this to handle ValidationResult Severities?
@@ -143,12 +152,47 @@ class Result:
             result['counts']['fatal']
         )
 
+        ssl_info = 'No valid SSL certificate detected'
+        if self.network['ssl']:
+            ssl_info = 'Valid SSL certificate detected'
+
+        network = network_template.format(
+            ssl_info,
+            self.network['average_ttl']
+        )
+
+        try:
+            max_columns = int(subprocess.check_output(['stty', 'size']).split()[1])
+        except Exception:
+            max_columns = 80
+
         entities = ''
 
-        for entity in result['object_messages']:
-            entities += ''.format(entity)
+        for entity, messages in self.object_messages.items():
+            table = BeautifulTable(max_columns)
+            table.column_headers = ['', 'severity', 'message']
 
-        return 'Validation Result:\n\n' + totals
+            entity_list = ''
+
+            message_key = 1
+            for message in messages:
+                message = self.object_messages[entity][message]
+
+                row = []
+
+                row.append(message_key)
+                row.append(message['severity'])
+                row.append(message['message'])
+
+                for object in message['objects']:
+                    entity_list += '[{}] {},\n'.format(message_key, object)
+
+                table.append_row(row)
+                message_key += 1
+
+            entities += '# {}\n{}\n\nAffected Entities:\n\n{}\n\n'.format(entity, table, entity_list[:-2])
+
+        return 'Validation Result:\n\n{}\n{}\n{}'.format(totals, network, entities[:-2])
 
     def json(self):
         class DateTimeEncoder(json.JSONEncoder):
@@ -165,3 +209,9 @@ class Result:
 
         except KeyError as e:
             Output.exception(e)
+
+    def acquire(self):
+        self.lock.acquire()
+
+    def release(self):
+        self.lock.release()
