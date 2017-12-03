@@ -25,7 +25,7 @@ SOFTWARE.
 import redis
 
 
-class Cache(object):
+class Cache:
     """
         Object Cache for the Validator
 

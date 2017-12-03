@@ -25,7 +25,7 @@ SOFTWARE.
 import time
 import redis
 
-class SeenList(object):
+class SeenList:
     def __init__(self, redis_server='localhost', redis_port=6379):
         self.redis = redis.Redis(host=redis_server, port=redis_port, db=0)
         self.seen = 'OParlValidator_SeenList_' + str(int(time.time()))

@@ -27,7 +27,7 @@ from json import dumps
 def print_json_patch(json):
     print(dumps(json, separators=(',', ':')))
 
-class Output(object):
+class Output:
     porcelain = False
     silent = False
     progress_bars = {}
