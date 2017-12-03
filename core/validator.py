@@ -170,15 +170,26 @@ class ValidationWorker(Thread):
 
     def run(self):
         while not self.queue.empty():
-            self.queue.acquire()
-            oparl_object = self.queue.get()
-            self.queue.release()
+            oparl_object = self.get_next_object()
 
-            if oparl_object.get_id() in self.seen_list:
-                continue
+            if not self.is_seen_object(oparl_object):
+                results = self.validate_object(oparl_object)
+                self.save_validation_results(result)
 
-            self.seen_list.push(oparl_object.get_id())
-            self.validate_object(oparl_object)
+    def get_next_object(self):
+        self.queue.acquire()
+        oparl_object = self.queue.get()
+        self.queue.release()
+
+        return oparl_object
+
+    def is_seen_object(self, oparl_object):
+        if oparl_object.get_id() in self.seen_list:
+            return True
+
+        self.seen_list.push(oparl_object.get_id())
+
+        return False
 
     def validate_object(self, oparl_object):
         try:
@@ -189,6 +200,9 @@ class ValidationWorker(Thread):
 
         # TODO: implement additional checks like e.g. file reachability
 
+        return validation_results
+
+    def save_validation_results(self, validation_results):
         self.result.acquire()
 
         if len(validation_results) > 0:
