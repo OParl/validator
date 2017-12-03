@@ -22,11 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import json
-import subprocess
-import sys
-from collections import deque
-from pathlib import Path
 from threading import Thread
 from time import sleep
 from urllib.parse import urlparse
@@ -34,7 +29,6 @@ from urllib.parse import urlparse
 import gi
 import requests
 from requests import HTTPError
-from tqdm import tqdm
 
 from .cache import Cache
 from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
