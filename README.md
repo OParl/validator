@@ -1,6 +1,6 @@
 # OParl Validator
 
-Validates an oparl server.
+Checks an oparl server for compliance with the [oparl specification](https://github.com/oparl/spec)
 
 ## Quickstart with docker
 
@@ -9,6 +9,7 @@ We do not yet offer prebuilt images, so you need to build the container locally:
 ```bash
 docker build . -t oparl-validator
 ```
+Run the validator with
 
 ```bash
 docker run --name oparl-validator oparl-validator [entrypoint]
