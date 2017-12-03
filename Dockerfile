@@ -18,7 +18,6 @@ RUN meson ..
 RUN ninja
 RUN ninja install
 RUN cp OParl-0.2.typelib /usr/lib/x86_64-linux-gnu/girepository-1.0/OParl-0.2.typelib
-RUN cd ../..
 
 WORKDIR /
 RUN apt install -y python3-pip python3-venv python3-gi
