@@ -86,7 +86,7 @@ class Output:
             Output.progress_bars[id] = {
                 'desc': desc,
                 'unit': unit,
-                'remaining': None,
+                'remaining': 0,
                 'current': 0
             }
 
