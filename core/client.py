@@ -22,18 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from threading import Thread
-from time import sleep
 from urllib.parse import urlparse
 
 import gi
 import requests
 from requests import HTTPError
 
+from .body_walker import BodyWalker
 from .cache import Cache
 from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
 from .output import Output
-from .utils import get_entity_type_from_object, sha1_hexdigest, get_oparl_version_from_object
 
 gi.require_version('OParl', '0.2')
 from gi.repository import OParl
@@ -120,32 +118,3 @@ class Client:
 
     def create_body_walker(self, body, queue):
         return BodyWalker(self.client, body, queue)
-
-class BodyWalker(Thread):
-    def __init__(self, client, body, queue):
-        super(BodyWalker, self).__init__()
-        self.client = client
-        self.body = body
-        self.queue = queue
-        self.done = False
-
-    def run(self):
-        progress_id = sha1_hexdigest(self.body.get_id())
-        Output.add_progress_bar(progress_id, 'Fetching from \'{}\''.format(self.body.get_name()))
-
-        try:
-            neighbors = self.body.get_neighbors()
-        except GLib.Error:
-            Output.message('Body {} failed to provide entities', self.body.get_id())
-            return
-
-        total_neighbors = len(neighbors)
-
-        for index, neighbor in enumerate(neighbors):
-            self.queue.acquire()
-            self.queue.put(neighbor)
-            self.queue.release()
-
-            Output.update_progress_bar(progress_id, remaining=total_neighbors - index - 1)
-
-        Output.message("Fetched {} objects from {}", total_neighbors, self.body.get_id())
