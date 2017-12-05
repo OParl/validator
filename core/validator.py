@@ -56,7 +56,7 @@ class Validator:
     """
 
     NUM_VALIDATION_WORKERS = 3
-    ENTITY_QUEUE_SIZE = 10
+    ENTITY_QUEUE_SIZE = 10000
 
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
@@ -129,6 +129,15 @@ class Validator:
             walker = self.client.create_body_walker(body, unprocessed_entities)
             walker_threads.append(walker)
 
+        for i in range(0, Validator.NUM_VALIDATION_WORKERS):
+            worker = ValidationWorker(
+                'validation_worker_{}'.format(i),
+                unprocessed_entities,
+                seen_list,
+                result
+            )
+            worker_threads.append(worker)
+
         for thread in walker_threads:
             thread.start()
 
@@ -139,15 +148,6 @@ class Validator:
         # TODO: make this dependent on system resources / an option
 
         Output.add_progress_bar('validation_progress', 'Validating')
-
-        for i in range(0, Validator.NUM_VALIDATION_WORKERS):
-            worker = ValidationWorker(
-                'validation_worker_{}'.format(i),
-                unprocessed_entities,
-                seen_list,
-                result
-            )
-            worker_threads.append(worker)
 
         for thread in worker_threads:
             thread.start()

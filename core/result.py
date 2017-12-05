@@ -84,8 +84,6 @@ class Result:
         self.compiled_result = compiled_result
 
     def format_severity(self, severity):
-        # TODO: Rewrite this to handle ValidationResult Severities?
-        # NOTE: What are ValidationResult severities?
         mapping = {
             ErrorSeverity.ERROR: 'error',
             ErrorSeverity.WARNING: 'warning',

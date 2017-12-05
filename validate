@@ -27,7 +27,6 @@ import argparse
 
 from core.validator import Validator
 
-
 def init_validator(endpoint, options):
     validator = Validator(endpoint=endpoint, options=options)
     validator.run()
