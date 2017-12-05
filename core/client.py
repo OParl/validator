@@ -128,18 +128,24 @@ class BodyWalker(Thread):
         self.body = body
         self.queue = queue
         self.done = False
-        self.neighbors = []
 
     def run(self):
+        progress_id = sha1_hexdigest(self.body.get_id())
+        Output.add_progress_bar(progress_id, 'Fetching from \'{}\''.format(self.body.get_name()))
+
         try:
-            self.neighbors = self.body.get_neighbors()
+            neighbors = self.body.get_neighbors()
         except GLib.Error:
             Output.message('Body {} failed to provide entities', self.body.get_id())
             return
 
-        for neighbor in self.neighbors:
+        total_neighbors = len(neighbors)
+
+        for index, neighbor in enumerate(neighbors):
             self.queue.acquire()
             self.queue.put(neighbor)
             self.queue.release()
 
-        Output.message("Fetched {} objects from {}", len(self.neighbors), self.body.get_id())
+            Output.update_progress_bar(progress_id, remaining=total_neighbors - index - 1)
+
+        Output.message("Fetched {} objects from {}", total_neighbors, self.body.get_id())

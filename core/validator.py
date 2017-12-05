@@ -136,9 +136,12 @@ class Validator:
             pass
 
         # TODO: make this dependent on system resources / an option
+
+        Output.add_progress_bar('validation_progress', 'Validating')
+
         for i in range(0, Validator.NUM_VALIDATION_WORKERS):
             worker = ValidationWorker(
-                i,
+                'validation_worker_{}'.format(i),
                 unprocessed_entities,
                 seen_list,
                 result
@@ -181,6 +184,7 @@ class ValidationWorker(Thread):
     def __init__(self, id, queue, seen_list, result):
         super(ValidationWorker, self).__init__()
         # TODO: add progress reporters
+
         self.id = id
         self.queue = queue
         self.result = result
@@ -197,6 +201,8 @@ class ValidationWorker(Thread):
                     self.save_validation_results(results)
                 except ObjectValidationFailedException:
                     self.save_failed_object()
+
+                Output.update_progress_bar('validation_progress', remaining=self.queue.qsize())
 
     def get_next_object(self):
         self.queue.acquire()

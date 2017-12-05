@@ -25,6 +25,8 @@ SOFTWARE.
 from json import dumps
 import sys
 
+from tqdm import tqdm
+
 def print_json_patch(json):
     print(dumps(json, separators=(',', ':')), file=sys.stderr)
 
@@ -76,7 +78,7 @@ class Output:
         Output.message(exception)
 
     @staticmethod
-    def add_progress_bar(id, desc = '', unit = 'Objects'):
+    def add_progress_bar(id, desc, unit = 'Objects'):
         if Output.silent:
             return
 
@@ -84,7 +86,7 @@ class Output:
             Output.progress_bars[id] = {
                 'desc': desc,
                 'unit': unit,
-                'total': None,
+                'remaining': None,
                 'current': 0
             }
 
@@ -98,23 +100,24 @@ class Output:
 
             print_json_patch(patch)
         else:
-            desc = 'Validating Object "{}"'.format(object.get_id())
-            unit = ' ' + unit
+            # FIXME: tqdm does not appear to be thread safe
+            pass
+            # unit = ' ' + unit
 
-            Output.progres_bars[id] = tqdm(
-                desc=desc,
-                total=9e9,
-                unit=unit,
-                file=sys.stderr
-            )
+            # Output.progress_bars[id] = tqdm(
+            #     desc=desc,
+            #     total=9e9,
+            #     unit=unit,
+            #     file=sys.stderr
+            # )
 
     @staticmethod
-    def update_progress_bar(id, total=9e9):
+    def update_progress_bar(id, remaining=9e9):
         if Output.silent:
             return
 
         if Output.porcelain:
-            Output.progress_bars[id]['total'] = total
+            Output.progress_bars[id]['remaining'] = remaining
             Output.progress_bars[id]['current'] += 1
 
             patch = [
@@ -127,4 +130,5 @@ class Output:
 
             print_json_patch(patch)
         else:
-            Output.progress_bars[id].update()
+            # Output.progress_bars[id].update()
+            pass
