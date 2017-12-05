@@ -219,7 +219,6 @@ class ValidationWorker(Thread):
         try:
             validation_results = self.current_object.validate()
         except GLib.Error as glib_error:
-            # TODO: track liboparl validation errors
             raise ObjectValidationFailedException from glib_error
 
         # TODO: implement additional checks like e.g. file reachability
