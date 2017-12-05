@@ -183,8 +183,6 @@ class Validator:
 class ValidationWorker(Thread):
     def __init__(self, id, queue, seen_list, result):
         super(ValidationWorker, self).__init__()
-        # TODO: add progress reporters
-
         self.id = id
         self.queue = queue
         self.result = result
