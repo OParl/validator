@@ -59,3 +59,12 @@ in the [Json Patch](http://jsonpatch.com/) Format. However, in porcelain mode th
 the validation result. Instead, you must set an explicit output file.
 
 **All output the validator produces while running is sent to `stdout`.**
+
+## Development Setup
+
+This repository uses git hooks which are being tracked in the repository under the `.hooks` directory.
+To configure these hooks on your clone, please run
+
+`git config include.path ../.gitconfig`
+
+in the repository root directory after cloning.
