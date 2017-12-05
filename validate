@@ -30,37 +30,27 @@ from core.validator import Validator
 
 def init_validator(endpoint, options):
     validator = Validator(endpoint=endpoint, options=options)
-    validator.validate()
+    validator.run()
 
-
-def main():
-    parser = argparse.ArgumentParser(prog='validate')
-
-    parser.add_argument(
-        '--no-redis',
-        help='disable redis based caching',
-        action='store_false',
-        dest='redis',
-        default=True
+def configure_argument_parser():
+    parser = argparse.ArgumentParser(
+        prog='validate',
+        epilog='''
+            The OParl Validator is distributed under the terms of the
+            MIT License. To learn more, run `./validate --license`
+        '''
     )
 
-    parser.add_argument(
-        '--format',
-        '-f',
-        help='Output format, either `text` or `json`',
-        action='store',
-        dest='format',
-        default='text'
+    output_options = parser.add_mutually_exclusive_group()
+    output_options.add_argument(
+        "-v",
+        help="configure the output verbosity (this is only relevant for direct cli usage, " \
+             "writing to file will always output everything)",
+        dest="verbosity",
+        action="count",
+        default=0,
     )
-
-    parser.add_argument(
-        "--porcelain",
-        help="machine readable CLI output (disables colors and progress bars)",
-        default=False,
-        action="store_true"
-    )
-
-    parser.add_argument(
+    output_options.add_argument(
         "--silent",
         help="disable CLI output",
         default=False,
@@ -68,22 +58,45 @@ def main():
         dest="silent"
     )
 
-    parser.add_argument(
-        "-s",
-        "--validate-schema",
-        help="additionally validate each object against the json schema (This WILL take longer)",
-        default=False,
-        action="store_true",
-        dest="validate_schema"
+    format_options = parser.add_mutually_exclusive_group()
+    format_options.add_argument(
+        '--format',
+        '-f',
+        help='Output format, either `text` or `json`, defaults to `text`',
+        action='store',
+        dest='format',
+        default='text'
+    )
+
+    format_options.add_argument(
+        '--text', '--plain',
+        help='Output format: text',
+        action='store_const',
+        dest='format',
+        const='text'
+    )
+
+    format_options.add_argument(
+        '--json',
+        help='Output format: json',
+        action='store_const',
+        dest='format',
+        const='json'
     )
 
     parser.add_argument(
-        "-v",
-        help="configure the output verbosity (this is only relevant for direct cli usage, writing to file will always "
-             "output everything)",
-        dest="verbosity",
-        action="count",
-        default=0,
+        "--read",
+        help="read a stored result",
+        default=False,
+        action="store_true",
+        dest="read"
+    )
+
+    parser.add_argument(
+        "--porcelain",
+        help="Json Patch formatted output during execution (does not affect result format)",
+        default=False,
+        action="store_true"
     )
 
     parser.add_argument(
@@ -95,22 +108,45 @@ def main():
     )
 
     parser.add_argument(
-        'oparl_endpoint',
-        nargs='+'
+        '--license',
+        help='print the license text and exit',
+        action='store_true',
+        default=False
     )
 
+    parser.add_argument(
+        'location',
+        help='Either a file name (read mode) or an endpoint url',
+        nargs='*'
+    )
+
+    return parser
+
+def run_argument_parser(parser):
     args = parser.parse_args()
 
-    if args.verbosity > 3:
-        print("You cannot possibly make me embarrass myself that much.")
+    if args.license:
+        with open('LICENSE') as f:
+            for line in f.readlines():
+                print(line, end='')
         exit()
 
     if args.verbosity > 5:
         print("Stahp!")
         exit()
 
-    for endpoint in args.oparl_endpoint:
-        init_validator(endpoint, args)
+    if args.verbosity > 3:
+        print("You cannot possibly make me embarrass myself that much.")
+        exit()
+
+    return args
+
+def main():
+    parser = configure_argument_parser()
+    args = run_argument_parser(parser)
+
+    for location in args.location:
+        init_validator(location, args)
 
 
 if __name__ == "__main__":
