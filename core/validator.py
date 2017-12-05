@@ -28,7 +28,10 @@ from time import sleep
 
 from .client import Client
 from .entity_queue import EntityQueue
-from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
+from .exceptions import \
+    EndpointNotReachableException, \
+    EndpointIsNotAnOParlEndpointException, \
+    ObjectValidationFailedException
 from .output import Output
 from .result import Result
 from .seen_list import SeenList
@@ -87,9 +90,10 @@ class Validator:
         return options
 
     def run(self):
+        result = None
+
         if self.options.read:
             result = Result.from_file(self.endpoint)
-            self.handle_result(result)
         else:
             try:
                 self.client = Client(self.endpoint)
@@ -101,7 +105,9 @@ class Validator:
                 exit(1)
 
             result = self.validate()
-            self.handle_result(result)
+            result.compile()
+
+        self.handle_result(result)
 
     def validate(self):
         Output.message("Beginning validation of {}", self.endpoint)
@@ -156,6 +162,8 @@ class Validator:
         result.network = self.client.network
         result.total_entities = len(seen_list)
 
+        return result
+
     def handle_result(self, result):
         formatted_result = result.text()
         if self.options.format == 'json':
@@ -184,8 +192,11 @@ class ValidationWorker(Thread):
             self.get_next_object()
 
             if not self.is_seen_object():
-                results = self.validate_object()
-                self.save_validation_results(results)
+                try:
+                    results = self.validate_object()
+                    self.save_validation_results(results)
+                except ObjectValidationFailedException:
+                    self.save_failed_object()
 
     def get_next_object(self):
         self.queue.acquire()
@@ -203,9 +214,9 @@ class ValidationWorker(Thread):
     def validate_object(self):
         try:
             validation_results = self.current_object.validate()
-        except GLib.Error:
+        except GLib.Error as glib_error:
             # TODO: track liboparl validation errors
-            validation_results = []
+            raise ObjectValidationFailedException from glib_error
 
         # TODO: implement additional checks like e.g. file reachability
 
@@ -220,4 +231,9 @@ class ValidationWorker(Thread):
         for result in validation_results:
             self.result.parse_validation_result(self.current_object, result)
 
+        self.result.release()
+
+    def save_failed_object(self):
+        self.result.acquire()
+        self.result.fatal_objects.append(self.current_object)
         self.result.release()

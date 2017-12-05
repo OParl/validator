@@ -25,6 +25,9 @@ SOFTWARE.
 class ValidatorException(Exception):
     """ A generic validator exception """
 
+class ObjectValidationFailedException(Exception):
+    """ A error occured during validation of an object """
+
 class ClientException(ValidatorException):
     """ A generic client exception """
 

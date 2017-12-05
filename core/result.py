@@ -125,10 +125,10 @@ class Result:
 
         self.object_messages[entity_type][message_hash] = message
 
-    def compile_result(self):
+    def compile(self):
         timestamp = datetime.now().isoformat()
 
-        return {
+        self.compiled_result = {
             'counts': {
                 'total': self.total_entities,
                 'valid': self.total_entities - self.failed_entities,
@@ -145,9 +145,6 @@ class Result:
         return self.text()
 
     def text(self):
-        if not self.compiled_result:
-            self.compile_result()
-
         totals = summary_template.format(
             self.compiled_result['counts']['total'],
             self.compiled_result['counts']['valid'],
@@ -207,9 +204,6 @@ class Result:
                     return o.total_seconds()
 
                 return json.JSONEncoder.default(self, o)
-
-        if not self.compiled_result:
-            self.compile_result()
 
         try:
             return json.dumps(self.compiled_result, cls=DateTimeEncoder)
