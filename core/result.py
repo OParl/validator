@@ -63,7 +63,7 @@ class Result:
     or files were unreachable.
     """
 
-    def __init__(self):
+    def __init__(self, compiled_result = None):
         self.total_entities = 0
         self.failed_entities = 0
 
@@ -80,6 +80,8 @@ class Result:
 
         self.oparl_version = '1.0'
         self.lock = Lock()
+
+        self.compiled_result = compiled_result
 
     def format_severity(self, severity):
         # TODO: Rewrite this to handle ValidationResult Severities?
@@ -123,7 +125,7 @@ class Result:
 
         self.object_messages[entity_type][message_hash] = message
 
-    def compiled_result(self):
+    def compile_result(self):
         timestamp = datetime.now().isoformat()
 
         return {
@@ -143,23 +145,23 @@ class Result:
         return self.text()
 
     def text(self):
-
-        result = self.compiled_result()
+        if not self.compiled_result:
+            self.compile_result()
 
         totals = summary_template.format(
-            result['counts']['total'],
-            result['counts']['valid'],
-            result['counts']['failed'],
-            result['counts']['fatal']
+            self.compiled_result['counts']['total'],
+            self.compiled_result['counts']['valid'],
+            self.compiled_result['counts']['failed'],
+            self.compiled_result['counts']['fatal']
         )
 
         ssl_info = 'No valid SSL certificate detected'
-        if self.network['ssl']:
+        if self.compiled_result['network']['ssl']:
             ssl_info = 'Valid SSL certificate detected'
 
         network = network_template.format(
             ssl_info,
-            self.network['average_ttl']
+            self.compiled_result['network']['average_ttl']
         )
 
         try:
@@ -169,7 +171,7 @@ class Result:
 
         entities = ''
 
-        for entity, messages in self.object_messages.items():
+        for entity, messages in self.compiled_result['object_messages'].items():
             table = BeautifulTable(max_columns)
             table.column_headers = ['', 'severity', 'message', 'occurences']
 
@@ -177,7 +179,7 @@ class Result:
 
             message_key = 1
             for message in messages:
-                message = self.object_messages[entity][message]
+                message = self.compiled_result['object_messages'][entity][message]
 
                 row = []
 
@@ -206,8 +208,11 @@ class Result:
 
                 return json.JSONEncoder.default(self, o)
 
+        if not self.compiled_result:
+            self.compile_result()
+
         try:
-            return json.dumps(self.compiled_result(), cls=DateTimeEncoder)
+            return json.dumps(self.compiled_result, cls=DateTimeEncoder)
 
         except KeyError as e:
             Output.exception(e)
@@ -217,3 +222,10 @@ class Result:
 
     def release(self):
         self.lock.release()
+
+    @staticmethod
+    def from_file(file_name):
+        with open(file_name, 'r') as f:
+            compiled_result = json.load(f)
+            result = Result(compiled_result=compiled_result)
+            return result

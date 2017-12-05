@@ -68,20 +68,7 @@ class Validator:
             Output.message('You selected an invalid option, please provide a result destination filename')
             exit(1)
 
-        try:
-            self.client = Client(endpoint)
-        except EndpointNotReachableException:
-            Output.message('Endpoint {} is not reachable, aborting validation.', endpoint)
-            exit(1)
-        except EndpointIsNotAnOParlEndpointException:
-            Output.message('Endpoint {} is not an OParl-Endpoint, aborting validation.', endpoint)
-            exit(1)
-
     def parse_options(self, options):
-        # TODO: implement schema validation
-        # if 'validate_schema' not in options:
-        #     options.validate_schema = False
-
         if 'format' not in options:
             options.format = 'json'
 
@@ -94,7 +81,27 @@ class Validator:
         if 'silent' not in options:
             options.silent = True
 
+        if 'read' not in options:
+            options.read = False
+
         return options
+
+    def run(self):
+        if self.options.read:
+            result = Result.from_file(self.endpoint)
+            self.handle_result(result)
+        else:
+            try:
+                self.client = Client(self.endpoint)
+            except EndpointNotReachableException:
+                Output.message('Endpoint {} is not reachable, aborting validation.', self.endpoint)
+                exit(1)
+            except EndpointIsNotAnOParlEndpointException:
+                Output.message('Endpoint {} is not an OParl-Endpoint, aborting validation.', self.endpoint)
+                exit(1)
+
+            result = self.validate()
+            self.handle_result(result)
 
     def validate(self):
         Output.message("Beginning validation of {}", self.endpoint)
@@ -149,6 +156,7 @@ class Validator:
         result.network = self.client.network
         result.total_entities = len(seen_list)
 
+    def handle_result(self, result):
         formatted_result = result.text()
         if self.options.format == 'json':
             formatted_result = result.json()
