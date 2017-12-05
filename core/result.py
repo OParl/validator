@@ -30,8 +30,8 @@ from threading import Lock
 from beautifultable import BeautifulTable
 import gi
 
-from .utils import get_entity_type_from_object
-from .utils import sha1_hexdigest
+from core.utils import get_entity_type_from_object
+from core.utils import sha1_hexdigest
 
 summary_template = """
 Totals:

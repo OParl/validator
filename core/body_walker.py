@@ -22,11 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from math import floor, log2
+from random import randint
+from time import sleep
 from threading import Thread
 
-from .utils import sha1_hexdigest
-from .output import Output
-from .seen_list import SeenList
+from core.utils import sha1_hexdigest
+from core.output import Output
+from core.seen_list import SeenList
 
 class BodyWalker(Thread):
     def __init__(self, client, body, queue):
@@ -60,10 +63,7 @@ class BodyWalker(Thread):
             Output.message('Body {} failed to provide entities', self.body.get_id())
             return
 
-        # total_neighbors = len(neighbors)
-
-        # for index, neighbor in enumerate(neighbors):
-
+        total_neighbors = len(self.seen_list)
 
         #Output.update_progress_bar(progress_id, remaining=total_neighbors - index - 1)
 
@@ -71,17 +71,25 @@ class BodyWalker(Thread):
         self.queue.put(self.body)
         self.queue.release()
 
-        #Output.message("Fetched {} objects from {}", total_neighbors, self.body.get_id())
+        Output.message("Fetched {} objects from {}", total_neighbors + 1, self.body.get_id())
 
     def handle_incoming(self, body, object_list):
         num_new_objects = len(object_list)
         Output.message('Received {} new objects from {}', num_new_objects, body.get_name())
 
+        sleep_count = 0
         for index, entity in enumerate(object_list):
-            if not self.is_seen_entity(entity):
-                self.queue.acquire()
-                self.queue.put(entity)
-                self.queue.release()
+            if not self.queue.full():
+                if not self.is_seen_entity(entity):
+                    self.queue.acquire()
+                    self.queue.put(entity)
+                    self.queue.release()
+            else:
+                sleep_count += 1
+                sleep_time = floor(log2(sleep_count))
+                Output.message('Queue full, waiting {} second(s)', sleep_time)
+                sleep(sleep_time)
+
 
     # NOTE: this is very similar to ValidationWorker.is_seen_object...
     def is_seen_entity(self, entity):

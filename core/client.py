@@ -28,10 +28,10 @@ import gi
 import requests
 from requests import HTTPError
 
-from .body_walker import BodyWalker
-from .cache import Cache
-from .exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
-from .output import Output
+from core.body_walker import BodyWalker
+from core.cache import Cache
+from core.exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
+from core.output import Output
 
 gi.require_version('OParl', '0.2')
 from gi.repository import OParl

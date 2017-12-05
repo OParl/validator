@@ -26,15 +26,15 @@ import sys
 from threading import activeCount, Thread
 from time import sleep
 
-from .client import Client
-from .entity_queue import EntityQueue
-from .exceptions import \
+from core.client import Client
+from core.entity_queue import EntityQueue
+from core.exceptions import \
     EndpointNotReachableException, \
     EndpointIsNotAnOParlEndpointException, \
     ObjectValidationFailedException
-from .output import Output
-from .result import Result
-from .seen_list import SeenList
+from core.output import Output
+from core.result import Result
+from core.seen_list import SeenList
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
@@ -56,6 +56,7 @@ class Validator:
     """
 
     NUM_VALIDATION_WORKERS = 3
+    ENTITY_QUEUE_SIZE = 10
 
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
@@ -116,7 +117,7 @@ class Validator:
         bodies = self.client.system.get_body()
         num_bodies = len(bodies)
 
-        unprocessed_entities = EntityQueue(maxsize = 1000)
+        unprocessed_entities = EntityQueue(maxsize = self.ENTITY_QUEUE_SIZE)
 
         seen_list = SeenList()
         result = Result()
