@@ -24,24 +24,39 @@ SOFTWARE.
 
 from math import floor, log2
 from random import randint
-from time import sleep
 from threading import Thread
+from time import sleep
 
-from core.utils import sha1_hexdigest
 from core.output import Output
 from core.seen_list import SeenList
+from core.utils import sha1_hexdigest
+import GLib
 
 
 class BodyWalker(Thread):
+    """
+        Worker Thread for fetching all entities from an OParl Body.
+
+        This may yield entities which are linked to multiple bodies,
+        which is not dealt with during the fetching process as that
+        would require communication between the fetching threads
+        which would slow the whole process down and in a worst
+        case even completely abolish all the benefits of fetching
+        in multiple threads.
+    """
     def __init__(self, client, body, queue):
         super(BodyWalker, self).__init__()
         self.client = client
         self.body = body
         self.queue = queue
-        self.id = sha1_hexdigest(self.body.get_id())
+        self.id = 'walker_{}'.format(sha1_hexdigest(self.body.get_id())[:6])
         self.seen_list = SeenList()
 
     def connect_signals(self):
+        """
+            Connect the incoming_<entity>-Signals of a liboparl Body to
+            the data processing method.
+        """
         incoming_signals = [
             'incoming_organizations',
             'incoming_meetings',
@@ -54,19 +69,21 @@ class BodyWalker(Thread):
 
     def run(self):
         self.queue.add_enqueuing_flag(self.id)
-        #Output.add_progress_bar(progress_id, 'Fetching from \'{}\''.format(self.body.get_name()))
+        Output.add_progress_bar(
+            self.id,
+            'Fetching from \'{}\''.format(self.body.get_name())
+        )
 
         self.connect_signals()
 
         try:
             self.body.get_neighbors()
         except GLib.Error:
-            Output.message('Body {} failed to provide entities', self.body.get_id())
+            Output.message(
+                'Body {} failed to provide entities',
+                self.body.get_id()
+            )
             return
-
-        total_neighbors = len(self.seen_list)
-
-        #Output.update_progress_bar(progress_id, remaining=total_neighbors - index - 1)
 
         self.queue.acquire()
         self.queue.put(self.body)
@@ -74,11 +91,20 @@ class BodyWalker(Thread):
 
         self.queue.update_enqueuing_flag(self.id, True)
 
-        Output.message("Fetched {} objects from {}", total_neighbors + 1, self.body.get_id())
+        Output.message(
+            'Fetched {} objects from {}',
+            len(self.seen_list) + 1,
+            self.body.get_id()
+        )
 
     def handle_incoming(self, body, object_list):
+        """ Process a chunk of incoming objects """
         num_new_objects = len(object_list)
-        Output.message('Received {} new objects from {}', num_new_objects, body.get_name())
+        Output.message(
+            'Received {} new objects from {}',
+            num_new_objects,
+            body.get_name()
+        )
 
         sleep_count = 0
         for index, entity in enumerate(object_list):
@@ -87,7 +113,12 @@ class BodyWalker(Thread):
                     self.queue.acquire()
                     self.queue.put(entity)
                     self.queue.release()
+
+                    Output.update_progress_bar(
+                        progress_id, remaining=total_neighbors - index - 1)
             else:
+                # Wait a little, let the validator catch up
+                # The waiting duration will slowly increase over time
                 sleep_count += 1
                 sleep_time = floor(log2(sleep_count))
                 Output.message('Queue full, waiting {} second(s)', sleep_time)
@@ -96,6 +127,7 @@ class BodyWalker(Thread):
 
     # NOTE: this is very similar to ValidationWorker.is_seen_object...
     def is_seen_entity(self, entity):
+        """ Check whether an entity was already fetched """
         if entity.get_id() in self.seen_list:
             return True
 
