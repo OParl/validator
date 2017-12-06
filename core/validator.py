@@ -30,6 +30,7 @@ from core.exceptions import \
     EndpointNotReachableException, \
     EndpointIsNotAnOParlEndpointException
 from core.output import Output
+from core.pool import Pool
 from core.result import Result
 from core.seen_list import SeenList
 from core.validation_worker import ValidationWorker
@@ -121,6 +122,7 @@ class Validator:
 
         seen_list = SeenList()
         result = Result()
+        check_pool = Pool()
 
         walker_threads = []
         worker_threads = []
@@ -134,6 +136,7 @@ class Validator:
                 'validation_worker_{}'.format(i),
                 unprocessed_entities,
                 seen_list,
+                check_pool,
                 result
             )
             worker_threads.append(worker)

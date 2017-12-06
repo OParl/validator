@@ -28,6 +28,9 @@ class ValidatorException(Exception):
 class ObjectValidationFailedException(Exception):
     """ A error occured during validation of an object """
 
+class InvalidSeverityException(Exception):
+    """ Raised when a severity for an extra check does not validate """
+
 class ClientException(ValidatorException):
     """ A generic client exception """
 

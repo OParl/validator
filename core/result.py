@@ -84,11 +84,15 @@ class Result:
         self.compiled_result = compiled_result
 
     def format_severity(self, severity):
+        if type(severity) is 'string':
+            return severity
+
         mapping = {
             ErrorSeverity.ERROR: 'error',
             ErrorSeverity.WARNING: 'warning',
             ErrorSeverity.INFO: 'info',
         }
+
         return mapping[severity]
 
     def parse_validation_result(self, object, validation_result):

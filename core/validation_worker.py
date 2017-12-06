@@ -26,16 +26,18 @@ from threading import Thread
 
 from core.exceptions import ObjectValidationFailedException
 from core.output import Output
+from core.utils import get_entity_type_from_object
 
 
 class ValidationWorker(Thread):
-    def __init__(self, id, queue, seen_list, result):
+    def __init__(self, id, queue, seen_list, check_pool, result):
         super(ValidationWorker, self).__init__()
+        self.check_pool = check_pool
+        self.current_object = None
         self.id = id
         self.queue = queue
         self.result = result
         self.seen_list = seen_list
-        self.current_object = None
 
     def run(self):
         while self.queue.is_enqueuing() or not self.queue.empty():
@@ -70,7 +72,13 @@ class ValidationWorker(Thread):
         except GLib.Error as glib_error:
             raise ObjectValidationFailedException from glib_error
 
-        # TODO: implement additional checks like e.g. file reachability
+        object_type = get_entity_type_from_object(self.current_object)
+        extra_checks = self.check_pool.get_checks_for_type(object_type)
+
+        for extra_check in extra_checks:
+            result = extra_check.evaluate(self.current_object)
+            if result is not None:
+                validation_results.append(result)
 
         return validation_results
 

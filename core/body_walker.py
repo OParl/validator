@@ -30,7 +30,9 @@ from time import sleep
 from core.output import Output
 from core.seen_list import SeenList
 from core.utils import sha1_hexdigest
-import GLib
+
+import gi
+from gi.repository import GLib
 
 
 class BodyWalker(Thread):

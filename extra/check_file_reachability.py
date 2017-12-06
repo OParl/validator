@@ -22,32 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from functools import reduce
-import hashlib
+from core.check import Check, CheckResult
 
-def camelize_snake(string):
-    parts = string.split('_')
-    return ''.join(map(lambda part: part.title(), parts))
+class CheckFileReachability (Check):
+    def evaluates_entity_type(self):
+        return 'file'
 
-def get_base_classes_from_instance(class_instance):
-    bases = []
-
-    for base in class_instance.__class__.__bases__:
-        name = base.__name__
-        module = base.__module__
-        bases.append('{}.{}'.format(module, name))
-
-    return bases
-
-def get_oparl_version_from_object(oparl_object):
-    return oparl_object.get_oparl_type().split('/')[-2]
-
-
-def get_entity_type_from_object(oparl_object):
-    return oparl_object.get_oparl_type().split('/')[-1]
-
-
-def sha1_hexdigest(string):
-    string = str(string).encode('utf_8')
-
-    return hashlib.sha1(string).hexdigest()
+    def evaluate(self, entity):
+        # TODO: Implement reachability check for file urls
+        pass
