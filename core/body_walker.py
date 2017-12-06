@@ -31,13 +31,14 @@ from core.utils import sha1_hexdigest
 from core.output import Output
 from core.seen_list import SeenList
 
+
 class BodyWalker(Thread):
     def __init__(self, client, body, queue):
         super(BodyWalker, self).__init__()
         self.client = client
         self.body = body
         self.queue = queue
-        self.done = False
+        self.id = sha1_hexdigest(self.body.get_id())
         self.seen_list = SeenList()
 
     def connect_signals(self):
@@ -52,7 +53,7 @@ class BodyWalker(Thread):
             self.body.connect(incoming_signal, self.handle_incoming)
 
     def run(self):
-        progress_id = sha1_hexdigest(self.body.get_id())
+        self.queue.add_enqueuing_flag(self.id)
         #Output.add_progress_bar(progress_id, 'Fetching from \'{}\''.format(self.body.get_name()))
 
         self.connect_signals()
@@ -70,6 +71,8 @@ class BodyWalker(Thread):
         self.queue.acquire()
         self.queue.put(self.body)
         self.queue.release()
+
+        self.queue.update_enqueuing_flag(self.id, True)
 
         Output.message("Fetched {} objects from {}", total_neighbors + 1, self.body.get_id())
 

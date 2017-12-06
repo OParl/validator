@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from functools import reduce
 from queue import Queue
 from threading import Lock
 
@@ -29,9 +30,19 @@ class EntityQueue:
     def __init__(self, maxsize = 1000):
         self.queue = Queue(maxsize)
         self.lock = Lock()
+        self.enqueuing_flags = {}
 
     def put(self, item):
         self.queue.put(item)
+
+    def add_enqueuing_flag(self, id):
+        self.enqueuing_flags[id] = False
+
+    def update_enqueuing_flag(self, id, state):
+        self.enqueuing_flags[id] = state
+
+    def is_enqueuing(self):
+        return reduce(lambda flag, ored_flags : flag or ored_flags, self.enqueuing_flags)
 
     def get(self):
         return self.queue.get()
@@ -40,7 +51,7 @@ class EntityQueue:
         return self.queue.qsize()
 
     def empty(self):
-        return self.queue.empty()
+        return self.queue.empty() and not self.is_enqueuing()
 
     def full(self):
         return self.queue.full()

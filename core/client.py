@@ -37,6 +37,7 @@ gi.require_version('OParl', '0.2')
 from gi.repository import OParl
 from gi.repository import GLib
 
+
 class Client:
     """
         The client wrapping liboparl- and general endpoint communication
