@@ -23,18 +23,17 @@ SOFTWARE.
 """
 
 import sys
-from threading import activeCount, Thread
-from time import sleep
 
 from core.client import Client
 from core.entity_queue import EntityQueue
 from core.exceptions import \
     EndpointNotReachableException, \
-    EndpointIsNotAnOParlEndpointException, \
-    ObjectValidationFailedException
+    EndpointIsNotAnOParlEndpointException
 from core.output import Output
 from core.result import Result
 from core.seen_list import SeenList
+from core.validation_worker import ValidationWorker
+
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
@@ -55,6 +54,7 @@ class Validator:
         which currently must be on the same machine.
     """
 
+    # TODO: these should be options
     NUM_VALIDATION_WORKERS = 3
     ENTITY_QUEUE_SIZE = 10000
 
@@ -145,8 +145,6 @@ class Validator:
         while unprocessed_entities.empty():
             pass
 
-        # TODO: make this dependent on system resources / an option
-
         Output.add_progress_bar('validation_progress', 'Validating')
 
         for thread in worker_threads:
@@ -154,9 +152,6 @@ class Validator:
 
         for thread in walker_threads:
             thread.join()
-
-        while not unprocessed_entities.empty():
-            pass
 
         for thread in worker_threads:
             thread.join()
@@ -176,68 +171,7 @@ class Validator:
         if Output.porcelain or self.options.result is not None:
             with open(self.options.result, 'w+') as f:
                 f.write(formatted_result)
+                Output.write('Result has been written to {} as {}.', self.options.result, self.options.format)
                 exit(0)
 
         print(formatted_result)
-
-
-class ValidationWorker(Thread):
-    def __init__(self, id, queue, seen_list, result):
-        super(ValidationWorker, self).__init__()
-        self.id = id
-        self.queue = queue
-        self.result = result
-        self.seen_list = seen_list
-        self.current_object = None
-
-    def run(self):
-        while not self.queue.empty():
-            self.get_next_object()
-
-            if not self.is_seen_object():
-                try:
-                    results = self.validate_object()
-                    self.save_validation_results(results)
-                except ObjectValidationFailedException:
-                    self.save_failed_object()
-
-                Output.update_progress_bar('validation_progress', remaining=self.queue.qsize())
-
-    def get_next_object(self):
-        self.queue.acquire()
-        self.current_object = self.queue.get()
-        self.queue.release()
-
-    def is_seen_object(self):
-        if self.current_object.get_id() in self.seen_list:
-            return True
-
-        self.seen_list.push(self.current_object.get_id())
-
-        return False
-
-    def validate_object(self):
-        try:
-            validation_results = self.current_object.validate()
-        except GLib.Error as glib_error:
-            raise ObjectValidationFailedException from glib_error
-
-        # TODO: implement additional checks like e.g. file reachability
-
-        return validation_results
-
-    def save_validation_results(self, validation_results):
-        self.result.acquire()
-
-        if len(validation_results) > 0:
-            self.result.failed_entities += 1
-
-        for result in validation_results:
-            self.result.parse_validation_result(self.current_object, result)
-
-        self.result.release()
-
-    def save_failed_object(self):
-        self.result.acquire()
-        self.result.fatal_objects.append(self.current_object)
-        self.result.release()
