@@ -116,7 +116,7 @@ def configure_argument_parser():
     parser.add_argument(
         'location',
         help='Either a file name (read mode) or an endpoint url',
-        nargs='*'
+        nargs='+'
     )
 
     return parser
