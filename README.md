@@ -4,18 +4,18 @@ Checks an oparl server for compliance with the [oparl specification](https://git
 
 ## Quickstart with Docker
 
-A continually updated Docker container for the validator is available
-in the Docker Hub at [https://hub.docker.com/r/oparl/validator].
+We offer a continually updated Docker container on [Docker Hub][https://hub.docker.com/r/oparl/validator] which is the easiest way to use the validator. You don't even need to clone the repository that way.
 
-You can run the validator with Docker, saving the results in a plain text file
+First you need to install [Docker CE](https://www.docker.com/community-edition).
+
+You can then run the validator with Docker, saving the results in a plain text file
 named `validation_result.txt` with
 
 ```bash
 docker run --rm oparl/validator -ovalidation_result.txt [entrypoint]
 ```
 
-In case you want to build the docker container on your system,
-you can do that with
+To build the Docker container on your system, you need to clone the repository. You can then build with
 
 ```bash
 docker build . -t oparl-validator
@@ -27,7 +27,9 @@ And run the local container with
 docker run --rm oparl-validator [entrypoint]
 ```
 
-## Requirements
+## Manual Setup
+
+### Requirements
 
 **on the system**
 
@@ -37,19 +39,21 @@ docker run --rm oparl-validator [entrypoint]
 
 **Python specific**
 
+You can install all python dependencies with `pip install -r requirements.txt`.
+
 - pygobject
 - requests
 - redis
 - tqdm
 - beautifultable
 
-## Usage
+### Usage
 
 ```sh
 ./validate https://my.oparl.endpoint/
 ```
 
-### Usage from other Python Code
+### Embedding the Validator
 
 You can also use the OParl Validator in your Python projects by simply
 importing it and passing it url and desired options:
