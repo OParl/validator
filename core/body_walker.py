@@ -66,8 +66,20 @@ class BodyWalker(Thread):
             'incoming_persons'
         ]
 
+        finished_signals = [
+            'finished_organizations',
+            'finished_meetings',
+            'finished_papers',
+            'finished_persons'
+        ]
+
+        self.missing_finished_signals = len(finished_signals)
+
         for incoming_signal in incoming_signals:
             self.body.connect(incoming_signal, self.handle_incoming)
+
+        for finished_signal in finished_signals:
+            self.body.connect(finished_signal, self.handle_finished)
 
     def run(self):
         self.queue.add_enqueuing_flag(self.id)
@@ -78,6 +90,10 @@ class BodyWalker(Thread):
 
         self.connect_signals()
 
+        self.queue.acquire()
+        self.queue.put(self.body)
+        self.queue.release()
+
         try:
             self.body.get_neighbors()
         except GLib.Error:
@@ -86,12 +102,6 @@ class BodyWalker(Thread):
                 self.body.get_id()
             )
             return
-
-        self.queue.acquire()
-        self.queue.put(self.body)
-        self.queue.release()
-
-        self.queue.update_enqueuing_flag(self.id, False)
 
         Output.message(
             'Fetched {} objects from {}',
@@ -128,7 +138,6 @@ class BodyWalker(Thread):
                 Output.message('Queue full, waiting {} second(s)', sleep_time)
                 sleep(sleep_time)
 
-
     # NOTE: this is very similar to ValidationWorker.is_seen_object...
     def is_seen_entity(self, entity):
         """ Check whether an entity was already fetched """
@@ -138,3 +147,9 @@ class BodyWalker(Thread):
         self.seen_list.push(entity.get_id())
 
         return False
+
+    def handle_finished(self):
+        self.missing_finished_signals -= 1
+
+        if self.missing_finished_signals == 0:
+            self.queue.update_enqueuing_flag(self.id, False)
