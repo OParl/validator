@@ -21,7 +21,7 @@ docker run --name oparl-validator oparl-validator [entrypoint]
 
 - liboparl and liboparl requirements
 - redis
-- Python 3
+- Python >= 3.5
 
 **Python specific**
 
