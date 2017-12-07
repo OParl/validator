@@ -43,7 +43,6 @@ class ValidationWorker(Thread):
     def run(self):
         sleep(1)
         while not self.queue.empty():
-            Output.message(self.queue.qsize())
             self.get_next_object()
             if not self.is_seen_object():
                 try:
