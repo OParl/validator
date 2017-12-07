@@ -63,10 +63,10 @@ class Check:
         """
         raise NotImplementedError
 
-    def evaluate(self, entity : object) -> CheckResult:
+    def evaluate(self, entity : object) -> [CheckResult]:
         """
             Evaluate an entity.
 
-            Must return a CheckResult object
+            Must return a CheckResult list
         """
         raise NotImplementedError

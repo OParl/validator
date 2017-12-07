@@ -67,6 +67,8 @@ class ValidationWorker(Thread):
         return False
 
     def validate_object(self):
+        validation_results = []
+
         try:
             validation_results = self.current_object.validate()
         except GLib.Error as glib_error:
@@ -76,9 +78,9 @@ class ValidationWorker(Thread):
         extra_checks = self.check_pool.get_checks_for_type(object_type)
 
         for extra_check in extra_checks:
-            result = extra_check.evaluate(self.current_object)
-            if result is not None:
-                validation_results.append(result)
+            extra_results = extra_check.evaluate(self.current_object)
+            if extra_results is not None and type(extra_results) is 'list':
+                 validation_results.extend(extra_results)
 
         return validation_results
 
