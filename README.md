@@ -4,7 +4,7 @@ Checks an oparl server for compliance with the [oparl specification](https://git
 
 ## Quickstart with Docker
 
-We offer a continually updated Docker container on [Docker Hub][https://hub.docker.com/r/oparl/validator] which is the easiest way to use the validator. You don't even need to clone the repository that way.
+We offer a continually updated Docker container on [Docker Hub](https://hub.docker.com/r/oparl/validator) which is the easiest way to use the validator. You don't even need to clone the repository that way.
 
 First you need to install [Docker CE](https://www.docker.com/community-edition).
 
