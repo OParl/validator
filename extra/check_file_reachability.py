@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import requests
+
 from core.check import Check, CheckResult
 
 class CheckFileReachability (Check):
@@ -29,5 +31,42 @@ class CheckFileReachability (Check):
         return 'file'
 
     def evaluate(self, entity):
-        # TODO: Implement reachability check for file urls
-        pass
+        results = []
+
+        results.join(self.check_access_url(entity))
+        results.join(self.check_download_url(entity))
+
+        return results
+
+    def check_access_url(self, entity):
+        results = []
+
+        if entity.get_access_url() is None:
+            results.append(CheckResult('error', 'Object is missing an access url'))
+            return results
+
+        try:
+            head = requests.head(entity.get_access_url())
+        except requests.exceptions.RequestException:
+            results.append(CheckResult('warning', 'Failed to connect to access url'))
+            return results
+
+        return results
+
+    def check_download_url(self, entity):
+        results = []
+
+        if entity.get_download_url() is None:
+            results.append(CheckResult('info', 'It is recommended to provide a separate download url'))
+            return results
+
+        try:
+            head = requests.head(entity.get_download_url())
+        except requests.exceptions.RequestException:
+            results.append(CheckResult('warning', 'Failed to connect to download url'))
+            return results
+
+        if 'content-disposition' not in head.headers:
+            results.append('warning', 'Download url should have a Content-Disposition header')
+
+        return results
