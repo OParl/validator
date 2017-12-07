@@ -27,10 +27,9 @@ docker run --name oparl-validator oparl-validator [entrypoint]
 
 - pygobject
 - requests
-- colorama
 - redis
 - tqdm
-- beautifultable (only for printing results to the console, use -oresult.json instead)
+- beautifultable
 
 ## Usage
 
