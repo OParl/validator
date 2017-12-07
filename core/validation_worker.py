@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from time import sleep
 from threading import Thread
 
 from core.exceptions import ObjectValidationFailedException
@@ -40,9 +41,10 @@ class ValidationWorker(Thread):
         self.seen_list = seen_list
 
     def run(self):
-        while self.queue.is_enqueuing() or not self.queue.empty():
+        sleep(1)
+        while not self.queue.empty():
+            Output.message(self.queue.qsize())
             self.get_next_object()
-
             if not self.is_seen_object():
                 try:
                     results = self.validate_object()

@@ -91,7 +91,7 @@ class BodyWalker(Thread):
         self.queue.put(self.body)
         self.queue.release()
 
-        self.queue.update_enqueuing_flag(self.id, True)
+        self.queue.update_enqueuing_flag(self.id, False)
 
         Output.message(
             'Fetched {} objects from {}',
@@ -117,7 +117,9 @@ class BodyWalker(Thread):
                     self.queue.release()
 
                     Output.update_progress_bar(
-                        progress_id, remaining=total_neighbors - index - 1)
+                        self.id,
+                        remaining=len(self.seen_list) - index - 1
+                    )
             else:
                 # Wait a little, let the validator catch up
                 # The waiting duration will slowly increase over time

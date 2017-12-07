@@ -36,13 +36,18 @@ class EntityQueue:
         self.queue.put(item)
 
     def add_enqueuing_flag(self, id):
-        self.enqueuing_flags[id] = False
+        self.enqueuing_flags[id] = True
 
     def update_enqueuing_flag(self, id, state):
         self.enqueuing_flags[id] = state
 
     def is_enqueuing(self):
-        return reduce(lambda flag, ored_flags : flag or ored_flags, self.enqueuing_flags)
+        is_enqueuing = True
+
+        for flag in self.enqueuing_flags.values():
+            is_enqueuing = is_enqueuing or flag
+
+        return is_enqueuing
 
     def get(self):
         return self.queue.get()

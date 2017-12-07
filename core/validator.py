@@ -114,6 +114,7 @@ class Validator:
     def validate(self):
         Output.message("Beginning validation of {}", self.endpoint)
         Output.message("Found '{}'", self.client.system.get_name())
+        Output.add_progress_bar('validation_progress', 'Validating')
 
         bodies = self.client.system.get_body()
         num_bodies = len(bodies)
@@ -147,8 +148,6 @@ class Validator:
         # let the walkers walk a little
         while unprocessed_entities.empty():
             pass
-
-        Output.add_progress_bar('validation_progress', 'Validating')
 
         for thread in worker_threads:
             thread.start()
