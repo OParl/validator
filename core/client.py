@@ -26,7 +26,6 @@ from urllib.parse import urlparse
 
 import gi
 import requests
-from requests import HTTPError
 
 from core.body_walker import BodyWalker
 from core.cache import Cache
