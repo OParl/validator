@@ -1,30 +1,13 @@
-FROM ubuntu:17.10
-RUN apt-get update
-RUN apt install -y \
-    gettext \
-    git \
-    gobject-introspection \
-    libjson-glib-dev \
-    libgirepository1.0-dev \
-    meson \
-    valac \
-    valadoc
+FROM oparl/liboparl
 
-RUN git clone https://github.com/oparl/liboparl
-RUN mkdir liboparl/build
-WORKDIR /liboparl/build
-RUN meson ..
-RUN ninja
-RUN ninja install
-RUN cp OParl-0.*.typelib /usr/lib/x86_64-linux-gnu/girepository-1.0/
+ENV LANG C.UTF-8
 
-WORKDIR /
-RUN apt-get update
-RUN apt install -y python3-pip python3-venv python3-gi redis-server
-RUN git clone https://github.com/OParl/validator
-WORKDIR validator
-RUN python3 -m venv venv
-RUN ln -s /usr/lib/python3/dist-packages/gi venv/lib/python*/site-packages/
-RUN venv/bin/pip install -r requirements.txt
+RUN apt-get update && apt-get install -y python3-pip python3-venv python3-gi redis-server
+RUN python3 -m venv /venv && ln -s /usr/lib/python3/dist-packages/gi /venv/lib/python*/site-packages/
 
-ENTRYPOINT venv/bin/python validate $0
+ADD . /validator
+WORKDIR /validator
+
+RUN /venv/bin/pip install -r requirements.txt
+
+ENTRYPOINT /venv/bin/python validate $0
