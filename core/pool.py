@@ -71,4 +71,9 @@ class Pool:
         self.checks[entity].append(class_instance)
 
     def get_checks_for_type(self, type : str):
-        return self.checks[type.lower()]
+        type = type.lower()
+
+        if type in self.checks.keys():
+            return self.checks[type]
+
+        return []
