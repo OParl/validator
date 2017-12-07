@@ -10,4 +10,4 @@ WORKDIR /validator
 
 RUN /venv/bin/pip install -r requirements.txt
 
-ENTRYPOINT /venv/bin/python validate $0
+ENTRYPOINT ["/venv/bin/python", "validate"]
