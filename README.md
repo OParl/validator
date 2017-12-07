@@ -2,17 +2,29 @@
 
 Checks an oparl server for compliance with the [oparl specification](https://github.com/oparl/spec)
 
-## Quickstart with docker
+## Quickstart with Docker
 
-We do not yet offer prebuilt images, so you need to build the container locally:
+A continually updated Docker container for the validator is available
+in the Docker Hub at [https://hub.docker.com/r/oparl/validator].
+
+You can run the validator with Docker, saving the results in a plain text file
+named `validation_result.txt` with
+
+```bash
+docker run --rm oparl/validator -ovalidation_result.txt [entrypoint]
+```
+
+In case you want to build the docker container on your system,
+you can do that with
 
 ```bash
 docker build . -t oparl-validator
 ```
-Run the validator with
+
+And run the local container with
 
 ```bash
-docker run --name oparl-validator oparl-validator [entrypoint]
+docker run --rm oparl-validator [entrypoint]
 ```
 
 ## Requirements
