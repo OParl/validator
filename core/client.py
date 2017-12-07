@@ -31,6 +31,7 @@ from core.body_walker import BodyWalker
 from core.cache import Cache
 from core.exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
 from core.output import Output
+#from core.validator import get_validator_version
 
 gi.require_version('OParl', '0.2')
 from gi.repository import OParl
@@ -48,6 +49,11 @@ class Client:
             'average_ttl': 0,
             'encodings': []
         }
+
+        # default_headers = requests.utils.default_headers()
+        # headers.update({
+        #     'User-Agent': 'OParlValidator/{} (https://dev.oparl.org/validator)'.format(get_validator_version())
+        # })
 
         if not self.is_reachable():
             raise EndpointNotReachableException()

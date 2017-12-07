@@ -35,6 +35,8 @@ from core.result import Result
 from core.seen_list import SeenList
 from core.validation_worker import ValidationWorker
 
+# TODO: Auto-update this line via .gitattributes
+VALIDATOR_VERSION = '0.9'
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
@@ -57,7 +59,7 @@ class Validator:
 
     # TODO: these should be options
     NUM_VALIDATION_WORKERS = 3
-    ENTITY_QUEUE_SIZE = 10000
+    ENTITY_QUEUE_SIZE = 10
 
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
@@ -152,9 +154,6 @@ class Validator:
         for thread in worker_threads:
             thread.start()
 
-        for thread in walker_threads:
-            thread.join()
-
         for thread in worker_threads:
             thread.join()
 
@@ -177,3 +176,6 @@ class Validator:
                 exit(0)
 
         print(formatted_result)
+
+def get_validator_version():
+    return VALIDATOR_VERSION
