@@ -57,10 +57,6 @@ class Validator:
         which currently must be on the same machine.
     """
 
-    # TODO: these should be options
-    NUM_VALIDATION_WORKERS = 3
-    ENTITY_QUEUE_SIZE = 1000
-
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
         self.options = self.parse_options(options)
@@ -79,17 +75,23 @@ class Validator:
         if 'format' not in options:
             options.format = 'json'
 
-        if 'result' not in options:
-            options.output = None
+        if 'num_workers' not in options:
+            options.num_workers = 3
+
+        if 'queue_size' not in options:
+            options.queue_size = 1000
 
         if 'porcelain' not in options:
             options.porcelain = False
 
-        if 'silent' not in options:
-            options.silent = True
+        if 'result' not in options:
+            options.output = None
 
         if 'read' not in options:
             options.read = False
+
+        if 'silent' not in options:
+            options.silent = True
 
         return options
 
@@ -121,7 +123,7 @@ class Validator:
         bodies = self.client.system.get_body()
         num_bodies = len(bodies)
 
-        unprocessed_entities = EntityQueue(maxsize = self.ENTITY_QUEUE_SIZE)
+        unprocessed_entities = EntityQueue(maxsize = self.options.queue_size)
 
         seen_list = SeenList()
         result = Result()
@@ -134,7 +136,7 @@ class Validator:
             walker = self.client.create_body_walker(body, unprocessed_entities)
             walker_threads.append(walker)
 
-        for i in range(0, Validator.NUM_VALIDATION_WORKERS):
+        for i in range(0, self.options.num_workers):
             worker = ValidationWorker(
                 'validation_worker_{}'.format(i),
                 unprocessed_entities,
