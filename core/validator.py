@@ -59,7 +59,7 @@ class Validator:
 
     # TODO: these should be options
     NUM_VALIDATION_WORKERS = 3
-    ENTITY_QUEUE_SIZE = 10
+    ENTITY_QUEUE_SIZE = 1000
 
     def __init__(self, endpoint, options = None):
         self.endpoint = endpoint
