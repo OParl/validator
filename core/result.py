@@ -81,6 +81,8 @@ class Result:
         self.oparl_version = '1.0'
         self.lock = Lock()
 
+        self.system = None
+
         self.compiled_result = compiled_result
 
     def format_severity(self, severity):
@@ -141,6 +143,8 @@ class Result:
             'network': self.network,
             'oparl_version': self.oparl_version,
             'timestamp': timestamp
+            # TODO: make self.system json serializable
+            # 'system': self.system
         }
 
     def __str__(self):
@@ -195,7 +199,7 @@ class Result:
 
             entities += '# {}\n{}\n\nAffected Entities:\n\n{}\n\n'.format(entity, table, entity_list[:-2])
 
-        return 'Validation Result:\n\n{}\n{}\n{}\n'.format(totals, network, entities[:-2])
+        return 'Validation Result:\n\n{}\n{}\n{}'.format(totals, network, entities[:-2])
 
     def json(self):
         class DateTimeEncoder(json.JSONEncoder):

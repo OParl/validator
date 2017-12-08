@@ -129,6 +129,8 @@ class Validator:
         result = Result()
         check_pool = Pool()
 
+        result.system = self.client.system
+
         walker_threads = []
         worker_threads = []
 
