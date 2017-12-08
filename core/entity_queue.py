@@ -29,11 +29,22 @@ from threading import Lock
 class EntityQueue:
     def __init__(self, maxsize = 1000):
         self.queue = Queue(maxsize)
-        self.lock = Lock()
         self.enqueuing_flags = {}
 
-    def put(self, item):
-        self.queue.put(item)
+    def put(self, item, block = True, timeout = None):
+        self.queue.put(item, block, timeout=timeout)
+
+    def get(self, block = True, timeout = None):
+        return self.queue.get(block, timeout)
+
+    def qsize(self):
+        return self.queue.qsize()
+
+    def empty(self):
+        return self.queue.empty() # and not self.is_enqueuing()
+
+    def full(self):
+        return self.queue.full()
 
     def add_enqueuing_flag(self, id):
         self.enqueuing_flags[id] = True
@@ -48,21 +59,3 @@ class EntityQueue:
             is_enqueuing = is_enqueuing or flag
 
         return is_enqueuing
-
-    def get(self):
-        return self.queue.get()
-
-    def qsize(self):
-        return self.queue.qsize()
-
-    def empty(self):
-        return self.queue.empty() and not self.is_enqueuing()
-
-    def full(self):
-        return self.queue.full()
-
-    def acquire(self):
-        self.lock.acquire()
-
-    def release(self):
-        self.lock.release()

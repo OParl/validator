@@ -43,7 +43,8 @@ class ValidationWorker(Thread):
     def run(self):
         sleep(1)
         while not self.queue.empty():
-            self.get_next_object()
+            self.current_object = self.queue.get()
+
             if not self.is_seen_object():
                 try:
                     results = self.validate_object()
@@ -53,11 +54,6 @@ class ValidationWorker(Thread):
 
                 Output.update_progress_bar('validation_progress', remaining=self.queue.qsize())
         Output.message('Quitting validation thread {}', self.id)
-
-    def get_next_object(self):
-        self.queue.acquire()
-        self.current_object = self.queue.get()
-        self.queue.release()
 
     def is_seen_object(self):
         if self.current_object.get_id() in self.seen_list:

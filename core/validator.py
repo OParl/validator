@@ -172,7 +172,7 @@ class Validator:
         if Output.porcelain or self.options.result is not None:
             with open(self.options.result, 'w+') as f:
                 f.write(formatted_result)
-                Output.write('Result has been written to {} as {}.', self.options.result, self.options.format)
+                Output.message('Result has been written to {} as {}.', self.options.result, self.options.format)
                 exit(0)
 
         print(formatted_result)

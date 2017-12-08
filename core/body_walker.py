@@ -22,10 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from math import floor, log2
-from random import randint
 from threading import Thread
-from time import sleep
 
 from core.output import Output
 from core.seen_list import SeenList
@@ -90,9 +87,7 @@ class BodyWalker(Thread):
 
         self.connect_signals()
 
-        self.queue.acquire()
         self.queue.put(self.body)
-        self.queue.release()
 
         try:
             self.body.get_neighbors()
@@ -118,25 +113,15 @@ class BodyWalker(Thread):
             body.get_name()
         )
 
-        sleep_count = 0
         for index, entity in enumerate(object_list):
-            if not self.queue.full():
-                if not self.is_seen_entity(entity):
-                    self.queue.acquire()
-                    self.queue.put(entity)
-                    self.queue.release()
+            if not self.is_seen_entity(entity) and not self.queue.full():
+                self.queue.put(entity)
 
-                    Output.update_progress_bar(
-                        self.id,
-                        remaining=len(self.seen_list) - index - 1
-                    )
-            else:
-                # Wait a little, let the validator catch up
-                # The waiting duration will slowly increase over time
-                sleep_count += 1
-                sleep_time = floor(log2(sleep_count))
-                Output.message('Queue full, waiting {} second(s)', sleep_time)
-                sleep(sleep_time)
+                known_remaining_entities_in_body = len(self.seen_list) - index - 1
+                Output.update_progress_bar(
+                    self.id,
+                    remaining=known_remaining_entities_in_body
+                )
 
     # NOTE: this is very similar to ValidationWorker.is_seen_object...
     def is_seen_entity(self, entity):
@@ -148,7 +133,7 @@ class BodyWalker(Thread):
 
         return False
 
-    def handle_finished(self):
+    def handle_finished(self, _):
         self.missing_finished_signals -= 1
 
         if self.missing_finished_signals == 0:
