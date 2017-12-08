@@ -138,3 +138,5 @@ class BodyWalker(Thread):
 
         if self.missing_finished_signals == 0:
             self.queue.update_enqueuing_flag(self.id, False)
+
+        print(self.queue.is_enqueuing())

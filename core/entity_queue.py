@@ -41,7 +41,7 @@ class EntityQueue:
         return self.queue.qsize()
 
     def empty(self):
-        return self.queue.empty() # and not self.is_enqueuing()
+        return self.queue.empty() and not self.is_enqueuing()
 
     def full(self):
         return self.queue.full()
@@ -56,6 +56,6 @@ class EntityQueue:
         is_enqueuing = True
 
         for flag in self.enqueuing_flags.values():
-            is_enqueuing = is_enqueuing or flag
+            is_enqueuing = is_enqueuing and flag
 
         return is_enqueuing
