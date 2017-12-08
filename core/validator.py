@@ -117,7 +117,7 @@ class Validator:
 
     def validate(self):
         Output.message("Beginning validation of {}", self.endpoint)
-        Output.message("Found '{}'", self.client.system.get_name())
+        Output.message("Found '{}'", str.encode(self.client.system.get_name()))
         Output.add_progress_bar('validation_progress', 'Validating')
 
         bodies = self.client.system.get_body()
