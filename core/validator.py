@@ -36,7 +36,7 @@ from core.seen_list import SeenList
 from core.validation_worker import ValidationWorker
 
 # TODO: Auto-update this line via .gitattributes
-VALIDATOR_VERSION = '0.9'
+VALIDATOR_VERSION = '$Id$'
 
 VALID_OPARL_VERSIONS = [
     "https://schema.oparl.org/1.0/"
