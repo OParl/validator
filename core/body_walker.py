@@ -82,7 +82,7 @@ class BodyWalker(Thread):
         self.queue.add_enqueuing_flag(self.id)
         Output.add_progress_bar(
             self.id,
-            'Fetching from \'{}\''.format(self.body.get_name())
+            'Fetching from \'{}\''.format(self.get_body_name())
         )
 
         self.connect_signals()
@@ -104,13 +104,16 @@ class BodyWalker(Thread):
             self.body.get_id()
         )
 
+    def get_body_name(self):
+        return str.encode(self.body.get_name())
+
     def handle_incoming(self, body, object_list):
         """ Process a chunk of incoming objects """
         num_new_objects = len(object_list)
         Output.message(
             'Received {} new objects from {}',
             num_new_objects,
-            body.get_name()
+            self.get_body_name()
         )
 
         for index, entity in enumerate(object_list):
