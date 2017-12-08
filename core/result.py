@@ -195,7 +195,7 @@ class Result:
 
             entities += '# {}\n{}\n\nAffected Entities:\n\n{}\n\n'.format(entity, table, entity_list[:-2])
 
-        return 'Validation Result:\n\n{}\n{}\n{}'.format(totals, network, entities[:-2])
+        return 'Validation Result:\n\n{}\n{}\n{}\n'.format(totals, network, entities[:-2])
 
     def json(self):
         class DateTimeEncoder(json.JSONEncoder):
