@@ -42,19 +42,19 @@ def configure_argument_parser():
 
     output_options = parser.add_mutually_exclusive_group()
     output_options.add_argument(
-        "-v",
-        help="configure the output verbosity (this is only relevant for direct cli usage, " \
-             "writing to file will always output everything)",
-        dest="verbosity",
-        action="count",
+        '-v',
+        help='configure the output verbosity (this is only relevant for direct cli usage, ' \
+             'writing to file will always output everything)',
+        dest='verbosity',
+        action='count',
         default=0,
     )
     output_options.add_argument(
-        "--silent",
-        help="disable CLI output",
+        '--silent',
+        help='disable CLI output',
         default=False,
-        action="store_true",
-        dest="silent"
+        action='store_true',
+        dest='silent'
     )
 
     format_options = parser.add_mutually_exclusive_group()
@@ -84,25 +84,25 @@ def configure_argument_parser():
     )
 
     parser.add_argument(
-        "--read",
-        help="read a stored result",
+        '--read',
+        help='read a stored result',
         default=False,
-        action="store_true",
-        dest="read"
+        action='store_true',
+        dest='read'
     )
 
     parser.add_argument(
-        "--porcelain",
-        help="Json Patch formatted output during execution (does not affect result format)",
+        '--porcelain',
+        help='Json Patch formatted output during execution (does not affect result format)',
         default=False,
-        action="store_true"
+        action='store_true'
     )
 
     parser.add_argument(
-        "-o",
+        '-o',
         help='configure the result output file',
-        dest="result",
-        action="store",
+        dest='result',
+        action='store',
         default='result.txt'
     )
 
@@ -145,11 +145,11 @@ def run_argument_parser(parser):
         exit()
 
     if args.verbosity > 5:
-        print("Stahp!")
+        print('Stahp!')
         exit()
 
     if args.verbosity > 3:
-        print("You cannot possibly make me embarrass myself that much.")
+        print('You cannot possibly make me embarrass myself that much.')
         exit()
 
     return args
@@ -162,5 +162,5 @@ def main():
         init_validator(location, args)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
