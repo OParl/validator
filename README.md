@@ -8,11 +8,11 @@ We offer a continually updated Docker container on [Docker Hub](https://hub.dock
 
 First you need to install [Docker CE](https://www.docker.com/community-edition).
 
-You can then run the validator with Docker, saving the results in a plain text file
-named `validation_result.txt` with
+You can run the validator with Docker, saving the results in a plain text file
+named `result.txt` with
 
 ```bash
-docker run --rm oparl/validator -ovalidation_result.txt [entrypoint]
+docker run --rm oparl/validator [entrypoint]
 ```
 
 To build the Docker container on your system, you need to clone the repository. You can then build with
