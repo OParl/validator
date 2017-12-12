@@ -105,7 +105,7 @@ class BodyWalker(Thread):
         )
 
     def get_body_name(self):
-        return str.encode(self.body.get_name())
+        return self.body.get_name()
 
     def handle_incoming(self, body, object_list):
         """ Process a chunk of incoming objects """

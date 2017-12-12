@@ -37,7 +37,7 @@ class Cache:
 
     redis = None
 
-    def __init__(self, basekey="", redis_server='localhost', redis_port=6379):
+    def __init__(self, basekey='', redis_server='localhost', redis_port=6379):
         """
         Initialize a Cache instance
 
