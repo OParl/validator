@@ -35,7 +35,6 @@ from core.result import Result
 from core.seen_list import SeenList
 from core.validation_worker import ValidationWorker
 
-# TODO: Auto-update this line via .gitattributes
 VALIDATOR_VERSION = '$Id$'
 
 VALID_OPARL_VERSIONS = [
@@ -117,7 +116,7 @@ class Validator:
 
     def validate(self):
         Output.message("Beginning validation of {}", self.endpoint)
-        Output.message("Found '{}'", str.encode(self.client.system.get_name()))
+        Output.message("Found '{}'", self.client.system.get_name())
         Output.add_progress_bar('validation_progress', 'Validating')
 
         bodies = self.client.system.get_body()
@@ -181,5 +180,14 @@ class Validator:
 
         print(formatted_result)
 
-def get_validator_version():
-    return VALIDATOR_VERSION
+    @staticmethod
+    def get_version():
+        ident = VALIDATOR_VERSION.replace('$', '').split(' ')
+        version = 'OParl Validator {}\n(c) 2017, OParl Contributors'
+
+        if len(ident) == 1:
+            ident = ''
+        else:
+            ident = ident[1][:8]
+
+        return version.format(ident)
