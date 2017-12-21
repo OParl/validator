@@ -6,6 +6,7 @@ setup(
     description = 'Validator for OParl data',
     install_requires=[
         'beautifultable',
+        'PyGObject',
         'redis',
         'requests',
         'tqdm'
