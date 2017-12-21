@@ -25,7 +25,7 @@ SOFTWARE.
 
 import argparse
 
-from core.validator import Validator
+from oparl_validator.core.validator import Validator
 
 def init_validator(endpoint, options):
     validator = Validator(endpoint=endpoint, options=options)

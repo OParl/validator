@@ -13,7 +13,7 @@ setup(
     license=open('LICENSE').read(),
     long_description=open('README.md').read(),
     name = 'oparl_validator',
-    packages=['core', 'extra'],
+    packages=['oparl_validator'],
     url='https://github.com/OParl/validator',
     version= 'master'
 )

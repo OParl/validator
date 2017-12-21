@@ -25,9 +25,9 @@ SOFTWARE.
 from time import sleep
 from threading import Thread
 
-from core.exceptions import ObjectValidationFailedException
-from core.output import Output
-from core.utils import get_entity_type_from_object
+from oparl_validator.core.exceptions import ObjectValidationFailedException
+from oparl_validator.core.output import Output
+from oparl_validator.core.utils import get_entity_type_from_object
 
 
 class ValidationWorker(Thread):

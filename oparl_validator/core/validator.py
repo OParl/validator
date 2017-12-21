@@ -24,16 +24,16 @@ SOFTWARE.
 
 import sys
 
-from core.client import Client
-from core.entity_queue import EntityQueue
-from core.exceptions import \
+from oparl_validator.core.client import Client
+from oparl_validator.core.entity_queue import EntityQueue
+from oparl_validator.core.exceptions import \
     EndpointNotReachableException, \
     EndpointIsNotAnOParlEndpointException
-from core.output import Output
-from core.pool import Pool
-from core.result import Result
-from core.seen_list import SeenList
-from core.validation_worker import ValidationWorker
+from oparl_validator.core.output import Output
+from oparl_validator.core.pool import Pool
+from oparl_validator.core.result import Result
+from oparl_validator.core.seen_list import SeenList
+from oparl_validator.core.validation_worker import ValidationWorker
 
 VALIDATOR_VERSION = '$Id$'
 

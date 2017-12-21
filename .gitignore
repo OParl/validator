@@ -1,6 +1,7 @@
 schema_cache
 *.log
 __pycache__*
-result*.*
+result*.json
+result*.txt
 venv/
 MANIFEST

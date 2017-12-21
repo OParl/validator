@@ -25,7 +25,7 @@ SOFTWARE.
 from glob import glob
 from importlib import import_module
 
-from core.utils import camelize_snake, get_base_classes_from_instance
+from oparl_validator.core.utils import camelize_snake, get_base_classes_from_instance
 
 class Pool:
     """

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from core.exceptions import InvalidSeverityException
+from oparl_validator.core.exceptions import InvalidSeverityException
 
 class CheckResult:
     def __init__(self, severity : str, description : str):

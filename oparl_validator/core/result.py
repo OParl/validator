@@ -30,8 +30,8 @@ from threading import Lock
 from beautifultable import BeautifulTable
 import gi
 
-from core.utils import get_entity_type_from_object
-from core.utils import sha1_hexdigest
+from oparl_validator.core.utils import get_entity_type_from_object
+from oparl_validator.core.utils import sha1_hexdigest
 
 summary_template = """
 Totals:

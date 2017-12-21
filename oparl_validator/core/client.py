@@ -27,10 +27,10 @@ from urllib.parse import urlparse
 import gi
 import requests
 
-from core.body_walker import BodyWalker
-from core.cache import Cache
-from core.exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
-from core.output import Output
+from oparl_validator.core.body_walker import BodyWalker
+from oparl_validator.core.cache import Cache
+from oparl_validator.core.exceptions import EndpointNotReachableException, EndpointIsNotAnOParlEndpointException
+from oparl_validator.core.output import Output
 #from core.validator import get_validator_version
 
 gi.require_version('OParl', '0.2')

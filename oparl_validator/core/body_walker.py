@@ -24,9 +24,9 @@ SOFTWARE.
 
 from threading import Thread
 
-from core.output import Output
-from core.seen_list import SeenList
-from core.utils import sha1_hexdigest
+from oparl_validator.core.output import Output
+from oparl_validator.core.seen_list import SeenList
+from oparl_validator.core.utils import sha1_hexdigest
 
 import gi
 from gi.repository import GLib
