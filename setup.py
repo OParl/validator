@@ -5,9 +5,9 @@ setup(
     author_email='stefan.graupner@oparl.org',
     description = 'Validator for OParl data',
     install_requires=[
-        'beautifultable'
-        'redis'
-        'requests'
+        'beautifultable',
+        'redis',
+        'requests',
         'tqdm'
     ],
     license=open('LICENSE').read(),
