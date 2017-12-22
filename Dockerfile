@@ -1,6 +1,11 @@
 FROM oparl/liboparl
 
-# Install Validator Apt Dependencies
+# Provide Validator
+
+ADD . /validator
+WORKDIR /validator
+
+# Install dependencies
 
 RUN apt update && \
     apt install -y --no-install-recommends \
@@ -8,16 +13,7 @@ RUN apt update && \
     apt autoremove -y && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* && \
-    echo "daemonize yes" >> /etc/redis/redis.conf
-
-# Provide Validator
-
-ADD . /validator
-WORKDIR /validator
-
-# Configure Python Dependencies
-
-RUN pip3 install  -r requirements.txt
-RUN service redis-server start
+    echo "daemonize yes" >> /etc/redis/redis.conf && \
+    pip3 install  -r requirements.txt
 
 ENTRYPOINT ["sh", "./docker-validate.sh"]
