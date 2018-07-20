@@ -99,6 +99,11 @@ class Client:
             return OParl.ResolveUrlResult(resolved_data=self.cache.get(url), success=True, status_code=-1)
 
     def is_reachable(self):
+        """
+            Try checking wether the endpoint is actually reachable.
+            This is accomplished by sending a HEAD request to
+            the provided URI and, if that 404s, trying again
+        """
         try:
             r = requests.head(self.endpoint)
             return r.status_code in [200, 304]
